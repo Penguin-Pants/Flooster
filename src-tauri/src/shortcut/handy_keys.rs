@@ -89,12 +89,30 @@ impl HandyKeysState {
     /// Create a new HandyKeysState
     pub fn new(app: AppHandle) -> Result<Self, String> {
         let (cmd_tx, cmd_rx) = mpsc::channel::<ManagerCommand>();
+        let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
 
         // Start the manager thread
         let app_clone = app.clone();
         let thread_handle = thread::spawn(move || {
-            Self::manager_thread(cmd_rx, app_clone);
+            Self::manager_thread(cmd_rx, ready_tx, app_clone);
         });
+
+        // The HotkeyManager is created inside the thread (macOS needs
+        // accessibility permission, Linux needs /dev/uinput access). Wait for
+        // that result here so a failure surfaces as `Err` and the caller can
+        // fall back to the Tauri implementation. Before this handshake `new`
+        // always returned `Ok`, every register failed on a dead channel, and
+        // the fallback branch was unreachable: zero shortcuts, every launch.
+        match ready_rx.recv_timeout(std::time::Duration::from_secs(10)) {
+            Ok(Ok(())) => {}
+            Ok(Err(e)) => {
+                let _ = thread_handle.join();
+                return Err(format!("Failed to create HotkeyManager: {}", e));
+            }
+            Err(_) => {
+                return Err("handy-keys manager thread did not start in time".to_string());
+            }
+        }
 
         Ok(Self {
             command_sender: Mutex::new(cmd_tx),
@@ -107,14 +125,23 @@ impl HandyKeysState {
     }
 
     /// The main manager thread - owns the HotkeyManager and processes commands
-    fn manager_thread(cmd_rx: Receiver<ManagerCommand>, app: AppHandle) {
+    fn manager_thread(
+        cmd_rx: Receiver<ManagerCommand>,
+        ready_tx: mpsc::Sender<Result<(), String>>,
+        app: AppHandle,
+    ) {
         info!("handy-keys manager thread started");
 
-        // Create the HotkeyManager in this thread
+        // Create the HotkeyManager in this thread and report the outcome to
+        // `new`, which is blocked on it.
         let manager = match HotkeyManager::new_with_blocking() {
-            Ok(m) => m,
+            Ok(m) => {
+                let _ = ready_tx.send(Ok(()));
+                m
+            }
             Err(e) => {
                 error!("Failed to create HotkeyManager: {}", e);
+                let _ = ready_tx.send(Err(e.to_string()));
                 return;
             }
         };

@@ -60,10 +60,12 @@ pub fn init_shortcuts(app: &AppHandle) {
 /// Written synchronously by start/stop, so it always holds the latest request.
 static CANCEL_REQUESTED: AtomicBool = AtomicBool::new(false);
 
-/// Whether the cancel shortcut is actually registered with the backend.
+/// The cancel shortcut string currently registered with the backend, if any.
+/// Tracking the string (not a bool) lets a binding change while recording
+/// swap the registration instead of leaving the old chord live.
 /// The lock also serializes reconciliation passes.
 #[cfg(not(target_os = "linux"))]
-static CANCEL_REGISTERED: std::sync::Mutex<bool> = std::sync::Mutex::new(false);
+static CANCEL_REGISTERED: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
 
 /// Register the cancel shortcut (called when recording starts)
 pub fn register_cancel_shortcut(app: &AppHandle) {
@@ -107,7 +109,7 @@ fn reconcile_cancel_shortcut(app: &AppHandle) {
     {
         let mut registered = CANCEL_REGISTERED.lock().unwrap_or_else(|e| e.into_inner());
         let requested = CANCEL_REQUESTED.load(Ordering::SeqCst);
-        if requested == *registered {
+        if requested == registered.is_some() {
             return;
         }
 
@@ -116,13 +118,20 @@ fn reconcile_cancel_shortcut(app: &AppHandle) {
         };
 
         if requested {
+            let chord = cancel_binding.current_binding.clone();
             match register_shortcut(app, cancel_binding) {
-                Ok(()) => *registered = true,
+                Ok(()) => *registered = Some(chord),
                 Err(e) => error!("Failed to register cancel shortcut: {}", e),
             }
         } else {
-            match unregister_shortcut(app, cancel_binding) {
-                Ok(()) => *registered = false,
+            // Unregister exactly what was registered, which may differ from
+            // the current setting if the binding changed mid-recording.
+            let mut to_unregister = cancel_binding;
+            if let Some(chord) = registered.as_ref() {
+                to_unregister.current_binding = chord.clone();
+            }
+            match unregister_shortcut(app, to_unregister) {
+                Ok(()) => *registered = None,
                 Err(e) => error!("Failed to unregister cancel shortcut: {}", e),
             }
         }
@@ -206,6 +215,24 @@ pub fn change_binding(
             b.current_binding = binding;
             settings.bindings.insert(id.clone(), b.clone());
             settings::write_settings(&app, settings);
+            // If a recording is in progress the old chord is live: swap it for
+            // the new one now, otherwise Escape would keep cancelling and the
+            // new key would not work until restart.
+            #[cfg(not(target_os = "linux"))]
+            {
+                let mut registered = CANCEL_REGISTERED.lock().unwrap_or_else(|e| e.into_inner());
+                if let Some(old_chord) = registered.take() {
+                    let mut old_binding = b.clone();
+                    old_binding.current_binding = old_chord;
+                    if let Err(e) = unregister_shortcut(&app, old_binding) {
+                        error!("Failed to unregister previous cancel shortcut: {}", e);
+                    }
+                    match register_shortcut(&app, b.clone()) {
+                        Ok(()) => *registered = Some(b.current_binding.clone()),
+                        Err(e) => error!("Failed to register new cancel shortcut: {}", e),
+                    }
+                }
+            }
             crate::secure_input::reconcile_fallback(&app);
             return Ok(BindingResponse {
                 success: true,
@@ -1052,19 +1079,33 @@ pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(),
 #[specta::specta]
 pub fn change_post_process_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
+    let previous = settings.post_process_enabled;
     settings.post_process_enabled = enabled;
     settings::write_settings(&app, settings.clone());
 
-    // Register or unregister the post-processing shortcut
+    // Register or unregister the post-processing shortcut. A failed
+    // registration (chord taken by another app) must not leave the toggle
+    // saved as on with a shortcut that does nothing: revert and report.
     if let Some(binding) = settings
         .bindings
         .get("transcribe_with_post_process")
         .cloned()
     {
-        if enabled {
-            let _ = register_shortcut(&app, binding);
+        let result = if enabled {
+            register_shortcut(&app, binding)
         } else {
-            let _ = unregister_shortcut(&app, binding);
+            unregister_shortcut(&app, binding)
+        };
+        if let Err(e) = result {
+            let mut settings = settings::get_settings(&app);
+            settings.post_process_enabled = previous;
+            settings::write_settings(&app, settings);
+            crate::secure_input::reconcile_fallback(&app);
+            return Err(format!(
+                "Failed to {} the post-processing shortcut: {}",
+                if enabled { "register" } else { "unregister" },
+                e
+            ));
         }
     }
 
@@ -1172,8 +1213,15 @@ pub fn add_post_process_prompt(
 ) -> Result<LLMPrompt, String> {
     let mut settings = settings::get_settings(&app);
 
-    // Generate unique ID using timestamp and random component
-    let id = format!("prompt_{}", chrono::Utc::now().timestamp_millis());
+    // Unique id: timestamp plus a process-wide counter, so two prompts added
+    // within one millisecond cannot collide (delete removed both, update hit
+    // only the first).
+    static PROMPT_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+    let id = format!(
+        "prompt_{}_{}",
+        chrono::Utc::now().timestamp_millis(),
+        PROMPT_COUNTER.fetch_add(1, Ordering::Relaxed)
+    );
 
     let new_prompt = LLMPrompt {
         id: id.clone(),
@@ -1463,14 +1511,16 @@ pub fn change_transcribe_gpu_device(app: AppHandle, device: Option<String>) -> R
 #[specta::specta]
 pub async fn get_available_accelerators(
     app: AppHandle,
-) -> crate::managers::transcription::AvailableAccelerators {
+) -> Result<crate::managers::transcription::AvailableAccelerators, String> {
+    // A panic while probing GPU devices must reach the frontend as an error;
+    // an `expect` here left the IPC promise unresolved and the page hanging.
     tauri::async_runtime::spawn_blocking(move || {
         let tm =
             app.state::<std::sync::Arc<crate::managers::transcription::TranscriptionManager>>();
         crate::managers::transcription::get_available_accelerators(&tm)
     })
     .await
-    .expect("get_available_accelerators panicked")
+    .map_err(|e| format!("Failed to enumerate accelerators: {}", e))
 }
 
 #[cfg(test)]

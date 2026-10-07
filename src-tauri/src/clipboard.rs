@@ -309,24 +309,35 @@ pub fn get_available_typing_tools() -> Vec<String> {
     tools
 }
 
+/// Whether an executable named `name` exists on `PATH`. A directory scan: the
+/// previous `which` subprocess ran up to four times per paste on the paste
+/// path itself.
+#[cfg(target_os = "linux")]
+fn command_on_path(name: &str) -> bool {
+    use std::os::unix::fs::PermissionsExt;
+    std::env::var_os("PATH")
+        .map(|paths| {
+            std::env::split_paths(&paths).any(|dir| {
+                let candidate = dir.join(name);
+                candidate
+                    .metadata()
+                    .map(|m| m.is_file() && m.permissions().mode() & 0o111 != 0)
+                    .unwrap_or(false)
+            })
+        })
+        .unwrap_or(false)
+}
+
 /// Check if wtype is available (Wayland text input tool)
 #[cfg(target_os = "linux")]
 fn is_wtype_available() -> bool {
-    Command::new("which")
-        .arg("wtype")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("wtype")
 }
 
 /// Check if dotool is available (another Wayland text input tool)
 #[cfg(target_os = "linux")]
 fn is_dotool_available() -> bool {
-    Command::new("which")
-        .arg("dotool")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("dotool")
 }
 
 #[cfg(target_os = "linux")]
@@ -406,40 +417,24 @@ fn detect_ydotool_key_syntax() -> YdotoolKeySyntax {
 /// Check if ydotool is available (uinput-based, works on both Wayland and X11)
 #[cfg(target_os = "linux")]
 fn is_ydotool_available() -> bool {
-    Command::new("which")
-        .arg("ydotool")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("ydotool")
 }
 
 #[cfg(target_os = "linux")]
 fn is_xdotool_available() -> bool {
-    Command::new("which")
-        .arg("xdotool")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("xdotool")
 }
 
 /// Check if kwtype is available (KDE Wayland virtual keyboard input tool)
 #[cfg(target_os = "linux")]
 fn is_kwtype_available() -> bool {
-    Command::new("which")
-        .arg("kwtype")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("kwtype")
 }
 
 /// Check if wl-copy is available (Wayland clipboard tool)
 #[cfg(target_os = "linux")]
 fn is_wl_copy_available() -> bool {
-    Command::new("which")
-        .arg("wl-copy")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    command_on_path("wl-copy")
 }
 
 /// Type text directly via wtype on Wayland.
@@ -924,6 +919,33 @@ pub fn paste(text: String, app_handle: AppHandle) -> Result<(), String> {
 mod tests {
     use super::*;
     use std::cell::Cell;
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn command_on_path_finds_only_executables_in_path() {
+        use std::os::unix::fs::PermissionsExt;
+        let dir = std::env::temp_dir().join(format!("handy-path-test-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let exe = dir.join("handy-fake-tool");
+        std::fs::write(&exe, "#!/bin/sh\n").unwrap();
+        std::fs::set_permissions(&exe, std::fs::Permissions::from_mode(0o755)).unwrap();
+        std::fs::write(dir.join("handy-plain-file"), "").unwrap();
+
+        let saved = std::env::var_os("PATH");
+        std::env::set_var("PATH", &dir);
+        let found = command_on_path("handy-fake-tool");
+        let plain = command_on_path("handy-plain-file");
+        let missing = command_on_path("handy-missing-tool");
+        match saved {
+            Some(p) => std::env::set_var("PATH", p),
+            None => std::env::remove_var("PATH"),
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+
+        assert!(found);
+        assert!(!plain, "a non-executable file must not count");
+        assert!(!missing);
+    }
 
     #[cfg(target_os = "linux")]
     const YDOTOOL_0_1_8_HELP: &str = r#"

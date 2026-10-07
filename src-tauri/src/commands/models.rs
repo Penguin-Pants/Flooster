@@ -170,7 +170,11 @@ pub async fn set_active_model(
     _transcription_manager: State<'_, Arc<TranscriptionManager>>,
     model_id: String,
 ) -> Result<(), String> {
-    switch_active_model(&app_handle, &model_id)
+    // The engine load is synchronous and can take tens of seconds. The tray
+    // path and `delete_model` already keep it off the async workers.
+    tauri::async_runtime::spawn_blocking(move || switch_active_model(&app_handle, &model_id))
+        .await
+        .map_err(|e| format!("Model switch task panicked: {}", e))?
 }
 
 #[tauri::command]

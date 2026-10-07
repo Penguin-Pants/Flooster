@@ -211,24 +211,29 @@ mod imp {
         }
     }
 
-    /// Best-effort culprit lookup via the IORegistry session property.
-    /// Apple documents no reliable API for this; the PID may be missing
-    /// (an app quit while holding secure input) or point at the wrong
-    /// process (often the responsible parent, or `loginwindow`).
-    fn lookup_culprit() -> Option<Culprit> {
-        let out = Command::new("ioreg")
-            .args(["-l", "-w", "0"])
-            .output()
-            .ok()?;
+    fn secure_input_pid(ioreg_args: &[&str]) -> Option<i32> {
+        let out = Command::new("ioreg").args(ioreg_args).output().ok()?;
         let text = String::from_utf8_lossy(&out.stdout);
-        let pid: i32 = text
-            .lines()
+        text.lines()
             .find_map(|l| l.split("\"kCGSSessionSecureInputPID\"=").nth(1))?
             .chars()
             .take_while(|c| c.is_ascii_digit())
             .collect::<String>()
             .parse()
-            .ok()?;
+            .ok()
+    }
+
+    /// Best-effort culprit lookup via the IORegistry session property.
+    /// Apple documents no reliable API for this; the PID may be missing
+    /// (an app quit while holding secure input) or point at the wrong
+    /// process (often the responsible parent, or `loginwindow`).
+    fn lookup_culprit() -> Option<Culprit> {
+        // The property lives on the IOHIDSystem object. Query that subtree
+        // first; a full `ioreg -l` dump is tens of megabytes and ran on every
+        // password-field focus. Fall back to the full dump only if the
+        // targeted query finds nothing.
+        let pid = Self::secure_input_pid(&["-r", "-c", "IOHIDSystem", "-d", "1", "-w", "0"])
+            .or_else(|| Self::secure_input_pid(&["-l", "-w", "0"]))?;
 
         // `ps -o comm=` returns the full executable path; show just the
         // binary name ("Terminal", not ".../Terminal.app/Contents/MacOS/Terminal")

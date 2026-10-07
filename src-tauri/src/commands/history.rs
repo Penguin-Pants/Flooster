@@ -40,6 +40,12 @@ pub async fn get_audio_file_path(
     history_manager: State<'_, Arc<HistoryManager>>,
     file_name: String,
 ) -> Result<String, String> {
+    // The name comes from the webview. Only a bare file name inside the
+    // recordings directory is acceptable; a path with separators or `..`
+    // would resolve (and be served via the asset protocol) anywhere on disk.
+    if !HistoryManager::is_safe_recording_file_name(&file_name) {
+        return Err("Invalid recording file name".to_string());
+    }
     let path = history_manager.get_audio_file_path(&file_name);
     path.to_str()
         .ok_or_else(|| "Invalid file path".to_string())
@@ -74,8 +80,14 @@ pub async fn retry_history_entry_transcription(
         .ok_or_else(|| format!("History entry {} not found", id))?;
 
     let audio_path = history_manager.get_audio_file_path(&entry.file_name);
-    let samples = crate::audio_toolkit::read_wav_samples(&audio_path)
-        .map_err(|e| format!("Failed to load audio: {}", e))?;
+    // WAV decode is file I/O; keep it off the async workers like the
+    // transcription below.
+    let samples = tauri::async_runtime::spawn_blocking(move || {
+        crate::audio_toolkit::read_wav_samples(&audio_path)
+    })
+    .await
+    .map_err(|e| format!("Audio load task panicked: {}", e))?
+    .map_err(|e| format!("Failed to load audio: {}", e))?;
 
     if samples.is_empty() {
         return Err("Recording has no audio samples".to_string());
@@ -95,14 +107,29 @@ pub async fn retry_history_entry_transcription(
 
     let processed =
         process_transcription_output(&app, &transcription, entry.post_process_requested).await;
-    history_manager
-        .update_transcription(
+    let hm = Arc::clone(&history_manager);
+    tauri::async_runtime::spawn_blocking(move || {
+        hm.update_transcription(
             id,
             transcription,
             processed.post_processed_text,
             processed.post_process_prompt,
         )
-        .map(|_| ())
+    })
+    .await
+    .map_err(|e| format!("History update task panicked: {}", e))?
+    .map(|_| ())
+    .map_err(|e| e.to_string())
+}
+
+/// Prunes history on the blocking pool: lowering the limit from hundreds to a
+/// few deletes hundreds of rows and WAV files, which must not stall other
+/// commands on a tokio worker.
+async fn cleanup_old_entries_blocking(history_manager: &Arc<HistoryManager>) -> Result<(), String> {
+    let hm = Arc::clone(history_manager);
+    tauri::async_runtime::spawn_blocking(move || hm.cleanup_old_entries())
+        .await
+        .map_err(|e| format!("History cleanup task panicked: {}", e))?
         .map_err(|e| e.to_string())
 }
 
@@ -117,11 +144,7 @@ pub async fn update_history_limit(
     settings.history_limit = limit;
     crate::settings::write_settings(&app, settings);
 
-    history_manager
-        .cleanup_old_entries()
-        .map_err(|e| e.to_string())?;
-
-    Ok(())
+    cleanup_old_entries_blocking(&history_manager).await
 }
 
 #[tauri::command]
@@ -129,26 +152,13 @@ pub async fn update_history_limit(
 pub async fn update_recording_retention_period(
     app: AppHandle,
     history_manager: State<'_, Arc<HistoryManager>>,
-    period: String,
+    period: crate::settings::RecordingRetentionPeriod,
 ) -> Result<(), String> {
-    use crate::settings::RecordingRetentionPeriod;
-
-    let retention_period = match period.as_str() {
-        "never" => RecordingRetentionPeriod::Never,
-        "preserve_limit" => RecordingRetentionPeriod::PreserveLimit,
-        "days3" => RecordingRetentionPeriod::Days3,
-        "weeks2" => RecordingRetentionPeriod::Weeks2,
-        "months3" => RecordingRetentionPeriod::Months3,
-        _ => return Err(format!("Invalid retention period: {}", period)),
-    };
-
+    // The enum deserializes itself; a hand-written name table here drifted
+    // from the serde names as variants were added.
     let mut settings = crate::settings::get_settings(&app);
-    settings.recording_retention_period = retention_period;
+    settings.recording_retention_period = period;
     crate::settings::write_settings(&app, settings);
 
-    history_manager
-        .cleanup_old_entries()
-        .map_err(|e| e.to_string())?;
-
-    Ok(())
+    cleanup_old_entries_blocking(&history_manager).await
 }

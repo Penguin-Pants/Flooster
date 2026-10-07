@@ -11,10 +11,11 @@ use log::{info, warn};
 use sha2::{Digest, Sha256};
 use std::fs;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::Read;
 use std::path::Path;
 use std::time::{Duration, Instant};
 use tauri::Emitter;
+use tokio::io::AsyncWriteExt;
 
 /// Bound on connection setup for direct HTTP downloads (mirror + URL models).
 const HTTP_CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
@@ -294,12 +295,15 @@ impl ModelManager {
             expected_size.or_else(|| response.content_length().map(|l| resume_from + l));
         let total_size = known_total.unwrap_or(0);
         let mut downloaded = resume_from;
+        // Async file I/O: the per-chunk writes of a multi-GB download must not
+        // block the tokio worker this future runs on.
         let mut file = if resume_from > 0 {
-            std::fs::OpenOptions::new()
+            tokio::fs::OpenOptions::new()
                 .append(true)
-                .open(partial_path)?
+                .open(partial_path)
+                .await?
         } else {
-            std::fs::File::create(partial_path)?
+            tokio::fs::File::create(partial_path).await?
         };
 
         let emit_progress = |downloaded: u64| {
@@ -350,14 +354,14 @@ impl ModelManager {
                     ));
                 }
             }
-            file.write_all(&chunk)?;
+            file.write_all(&chunk).await?;
             downloaded += chunk.len() as u64;
             if last_emit.elapsed() >= throttle {
                 emit_progress(downloaded);
                 last_emit = Instant::now();
             }
         }
-        file.flush()?;
+        file.flush().await?;
         drop(file);
         emit_progress(downloaded);
 

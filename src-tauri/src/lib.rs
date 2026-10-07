@@ -40,7 +40,6 @@ use managers::model::ModelManager;
 use managers::transcription::TranscriptionManager;
 use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 use std::sync::Arc;
-use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
 
 use tauri::tray::TrayIconBuilder;
@@ -239,16 +238,22 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // Choose the appropriate initial icon based on theme
     let initial_icon_path = tray::get_icon_path(initial_theme, tray::TrayIconState::Idle, false);
 
+    // A missing icon resource or a desktop without a tray host must not take
+    // the whole app down: the app then runs as if started with `--no-tray`.
+    let initial_icon = match tray::load_tray_icon(
+        app_handle
+            .path()
+            .resolve(initial_icon_path, tauri::path::BaseDirectory::Resource),
+    ) {
+        Ok(icon) => icon,
+        Err(e) => {
+            log::error!("Failed to load tray icon; continuing without a tray: {}", e);
+            return;
+        }
+    };
+
     let mut tray_builder = TrayIconBuilder::new()
-        .icon(
-            Image::from_path(
-                app_handle
-                    .path()
-                    .resolve(initial_icon_path, tauri::path::BaseDirectory::Resource)
-                    .unwrap(),
-            )
-            .unwrap(),
-        )
+        .icon(initial_icon)
         .tooltip(tray::tray_tooltip())
         .icon_as_template(true);
 
@@ -339,8 +344,17 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             }
             _ => {}
         })
-        .build(app_handle)
-        .unwrap();
+        .build(app_handle);
+    let tray = match tray {
+        Ok(tray) => tray,
+        Err(e) => {
+            log::error!(
+                "Failed to create tray icon; continuing without a tray: {}",
+                e
+            );
+            return;
+        }
+    };
     app_handle.manage(tray);
 
     // Initialize tray menu with idle state

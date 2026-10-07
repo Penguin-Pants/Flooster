@@ -6,6 +6,7 @@ use serde_json::Value;
 use std::collections::HashSet;
 use std::error::Error as StdError;
 use std::sync::{Mutex, OnceLock};
+use std::time::Duration;
 
 #[derive(Debug, Serialize)]
 struct ChatMessage {
@@ -172,13 +173,53 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     Ok(headers)
 }
 
-/// Create an HTTP client with provider-specific headers
-fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
-    let headers = build_headers(provider, api_key)?;
-    reqwest::Client::builder()
-        .default_headers(headers)
-        .build()
-        .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
+/// Time allowed to establish a TCP/TLS connection to the endpoint.
+const HTTP_CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
+/// Whole-request deadline. A local server (Ollama, LM Studio) that accepts
+/// the connection and never answers otherwise kept the dictation in
+/// "polishing" forever; a slow local model still fits comfortably.
+const HTTP_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
+/// Error bodies are logged at most this long; many OpenAI-compatible servers
+/// echo the offending `messages[].content`, i.e. the user's transcript.
+const MAX_ERROR_BODY_LOG_BYTES: usize = 2048;
+/// Portion of an error body carried into the user-facing error string.
+const MAX_ERROR_BODY_MESSAGE_CHARS: usize = 200;
+
+/// One process-wide client (connection pool, TLS config, timeouts). Headers are
+/// per request because they carry the provider's API key.
+fn http_client() -> Result<&'static reqwest::Client, String> {
+    static CLIENT: OnceLock<Result<reqwest::Client, String>> = OnceLock::new();
+    CLIENT
+        .get_or_init(|| {
+            reqwest::Client::builder()
+                .connect_timeout(HTTP_CONNECT_TIMEOUT)
+                .timeout(HTTP_REQUEST_TIMEOUT)
+                .build()
+                .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
+        })
+        .as_ref()
+        .map_err(|e| e.clone())
+}
+
+/// Reads an error response body with a size cap, logs it at debug level and
+/// returns a short, truncated excerpt for the error message. The full body is
+/// never logged at info or above because it may contain transcript text.
+async fn error_body_excerpt(response: reqwest::Response, context: &str) -> String {
+    let status = response.status();
+    let body = match response.bytes().await {
+        Ok(bytes) => {
+            let cut = bytes.len().min(MAX_ERROR_BODY_LOG_BYTES);
+            String::from_utf8_lossy(&bytes[..cut]).into_owned()
+        }
+        Err(e) => report_reqwest_error(context, &e),
+    };
+    debug!("{} (status {}): {}", context, status, body);
+    let excerpt: String = body.chars().take(MAX_ERROR_BODY_MESSAGE_CHARS).collect();
+    if excerpt.len() < body.len() {
+        format!("{}…", excerpt)
+    } else {
+        excerpt
+    }
 }
 
 /// Format a bounded error source chain.
@@ -343,7 +384,8 @@ pub async fn send_chat_completion_with_schema(
         sanitized_url_for_log(&url)
     );
 
-    let client = create_client(provider, &api_key)?;
+    let client = http_client()?;
+    let headers = build_headers(provider, &api_key)?;
 
     // Build messages vector
     let mut messages = Vec::new();
@@ -389,6 +431,7 @@ pub async fn send_chat_completion_with_schema(
 
     let mut response = client
         .post(&url)
+        .headers(headers.clone())
         .json(&request_body)
         .send()
         .await
@@ -407,17 +450,17 @@ pub async fn send_chat_completion_with_schema(
         && matches!(status.as_u16(), 400 | 422)
         && !request_body.reasoning.is_empty()
     {
-        let error_text = response.text().await.unwrap_or_else(|e| {
-            report_reqwest_error("Failed to read reasoning rejection response", &e)
-        });
+        // Body goes to the debug log only; see `error_body_excerpt`.
+        let _ = error_body_excerpt(response, "Reasoning-disable rejection").await;
         info!(
-            "Endpoint rejected request with reasoning disabled (status {}): {}. Retrying without reasoning fields",
-            status, error_text
+            "Endpoint rejected request with reasoning disabled (status {}). Retrying without reasoning fields",
+            status
         );
 
         request_body.reasoning = ReasoningParams::default();
         response = client
             .post(&url)
+            .headers(headers.clone())
             .json(&request_body)
             .send()
             .await
@@ -440,13 +483,10 @@ pub async fn send_chat_completion_with_schema(
     }
 
     if !status.is_success() {
-        let error_text = response
-            .text()
-            .await
-            .unwrap_or_else(|e| report_reqwest_error("Failed to read API error response", &e));
+        let excerpt = error_body_excerpt(response, "API error response").await;
         return Err(format!(
             "API request failed with status {}: {}",
-            status, error_text
+            status, excerpt
         ));
     }
 
@@ -472,10 +512,12 @@ pub async fn fetch_models(
 
     debug!("Fetching models from: {}", sanitized_url_for_log(&url));
 
-    let client = create_client(provider, &api_key)?;
+    let client = http_client()?;
+    let headers = build_headers(provider, &api_key)?;
 
     let response = client
         .get(&url)
+        .headers(headers)
         .send()
         .await
         .map_err(|e| report_reqwest_error("Failed to fetch models", &e))?;
@@ -488,13 +530,10 @@ pub async fn fetch_models(
         sanitized_url(response.url())
     );
     if !status.is_success() {
-        let error_text = response
-            .text()
-            .await
-            .unwrap_or_else(|e| report_reqwest_error("Failed to read model list error", &e));
+        let excerpt = error_body_excerpt(response, "Model list error response").await;
         return Err(format!(
             "Model list request failed ({}): {}",
-            status, error_text
+            status, excerpt
         ));
     }
 

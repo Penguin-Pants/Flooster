@@ -34,11 +34,18 @@ pub fn send_transcription_input(app: &AppHandle, binding_id: &str, source: &str)
 #[cfg(unix)]
 pub fn setup_signal_handler(app_handle: AppHandle) {
     #[cfg(target_os = "macos")]
-    let mut signals =
-        Signals::new([SIGUSR1, SIGUSR2]).expect("failed to register transcription signal handlers");
+    let signals = Signals::new([SIGUSR1, SIGUSR2]);
     #[cfg(not(target_os = "macos"))]
-    let mut signals =
-        Signals::new([SIGUSR2]).expect("failed to register transcription signal handlers");
+    let signals = Signals::new([SIGUSR2]);
+    // Remote control via signals is an optional feature; a failure to set it
+    // up (e.g. fd exhaustion) must not abort the launch.
+    let mut signals = match signals {
+        Ok(signals) => signals,
+        Err(e) => {
+            log::error!("Failed to register transcription signal handlers: {}", e);
+            return;
+        }
+    };
     #[cfg(target_os = "macos")]
     debug!("Signal handlers registered (SIGUSR1, SIGUSR2)");
     #[cfg(not(target_os = "macos"))]

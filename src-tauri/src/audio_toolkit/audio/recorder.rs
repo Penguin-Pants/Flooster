@@ -34,6 +34,9 @@ const AUDIO_RING_SECONDS: usize = 2;
 const CONSUMER_POLL_INTERVAL: Duration = Duration::from_millis(10);
 const MAX_DRAIN_CHUNK: Duration = Duration::from_millis(50);
 const PAUSE_ACK_TIMEOUT: Duration = Duration::from_secs(2);
+/// Upper bound on the worker's open handshake (device config, stream build,
+/// play). Generous: slow Bluetooth and USB devices take a few seconds.
+const OPEN_HANDSHAKE_TIMEOUT: Duration = Duration::from_secs(15);
 
 /// Atomics shared by the callback and consumer; audio uses a wait-free SPSC ring.
 /// The callback must remain allocation-, lock-, logging-, and blocking-free.
@@ -348,12 +351,28 @@ impl AudioRecorder {
             }
         });
 
-        match init_rx.recv() {
+        // A host backend that never answers (a misbehaving Bluetooth/USB
+        // device) used to park this call, and the coordinator thread with it,
+        // forever. Bound the wait; on timeout the worker is abandoned (its
+        // command channel closes when `cmd_tx` drops, so the consumer exits
+        // if the device ever answers).
+        match init_rx.recv_timeout(OPEN_HANDSHAKE_TIMEOUT) {
             Ok(Ok(())) => {
                 self.device = Some(device);
                 self.cmd_tx = Some(cmd_tx);
                 self.worker_handle = Some(worker);
                 Ok(())
+            }
+            Err(mpsc::RecvTimeoutError::Timeout) => {
+                self.stream_error.store(true, Ordering::Relaxed);
+                *self.config_cache.lock().unwrap() = None;
+                Err(Box::new(Error::new(
+                    std::io::ErrorKind::TimedOut,
+                    format!(
+                        "Microphone did not start within {}s",
+                        OPEN_HANDSHAKE_TIMEOUT.as_secs()
+                    ),
+                )))
             }
             Ok(Err(error_message)) => {
                 let _ = worker.join();
@@ -650,13 +669,29 @@ fn handle_frame(
     }
 
     if let Some(cfg) = vad {
-        let mut detector = cfg.detector.lock().unwrap();
-        match detector
-            .push_frame(samples)
-            .unwrap_or(VadFrame::Speech(samples))
-        {
-            VadFrame::Speech(buf) => emit(buf),
-            VadFrame::Noise => {}
+        // The detector is shared with every rebuilt capture worker. A panic
+        // inside a previous worker poisons the mutex; recover the detector
+        // rather than letting every later recording die at its first frame.
+        let mut detector = cfg.detector.lock().unwrap_or_else(|poisoned| {
+            log::warn!("VAD detector mutex poisoned by an earlier panic; resetting it");
+            let mut detector = poisoned.into_inner();
+            detector.reset();
+            detector
+        });
+        match detector.push_frame(samples) {
+            Ok(VadFrame::Speech(buf)) => emit(buf),
+            Ok(VadFrame::Noise) => {}
+            Err(e) => {
+                // Fail open (treat as speech) so audio is never lost, but say
+                // so: a silently failing VAD looked like a working one.
+                static LAST_VAD_ERROR_LOG: Mutex<Option<Instant>> = Mutex::new(None);
+                let mut last = LAST_VAD_ERROR_LOG.lock().unwrap_or_else(|p| p.into_inner());
+                if last.is_none_or(|t| t.elapsed() > Duration::from_secs(5)) {
+                    log::warn!("VAD push_frame failed; passing audio through as speech: {e}");
+                    *last = Some(Instant::now());
+                }
+                emit(samples);
+            }
         }
     } else {
         emit(samples);

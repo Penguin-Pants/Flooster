@@ -483,8 +483,13 @@ async changeTranscribeGpuDevice(device: string | null) : Promise<Result<null, st
  * probes hardware. Run it on the blocking pool so the webview thread
  * stays responsive — see also the startup pre-warm in `lib.rs`.
  */
-async getAvailableAccelerators() : Promise<AvailableAccelerators> {
-    return await TAURI_INVOKE("get_available_accelerators");
+async getAvailableAccelerators() : Promise<Result<AvailableAccelerators, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_available_accelerators") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 },
 /**
  * Start key recording mode
@@ -907,7 +912,7 @@ async updateHistoryLimit(limit: number) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async updateRecordingRetentionPeriod(period: string) : Promise<Result<null, string>> {
+async updateRecordingRetentionPeriod(period: RecordingRetentionPeriod) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("update_recording_retention_period", { period }) };
 } catch (e) {
