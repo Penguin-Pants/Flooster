@@ -16,7 +16,8 @@
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
     "debug": "Debug",
-    "about": "Info"
+    "about": "Info",
+    "navigationLabel": "Settings sections"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -152,7 +153,13 @@
     },
     "cancel": "Abbrechen",
     "cancelDownload": "Download abbrechen",
-    "legacy": "Veraltet"
+    "legacy": "Veraltet",
+    "statusTitle": "Model status: {{status}}",
+    "errors": {
+      "checkStatus": "Failed to check model status",
+      "load": "Failed to load model",
+      "switch": "Failed to switch model"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Alle Sprachen",
         "streaming": "Modelle filtern, die Live-Transkription unterstützen",
-        "translation": "Modelle filtern, die Übersetzungen ins Englische unterstützen"
+        "translation": "Modelle filtern, die Übersetzungen ins Englische unterstützen",
+        "language": "Filter by language"
       },
       "noModelsMatch": "Keine Modelle entsprechen diesem Filter.",
       "yourModels": "Heruntergeladene Modelle",
@@ -184,7 +192,8 @@
         "cancel": "Failed to cancel download: {{error}}",
         "delete": "Failed to delete model: {{error}}",
         "extract": "Failed to extract model: {{error}}"
-      }
+      },
+      "unknownSize": "Unknown size"
     },
     "general": {
       "title": "Allgemein",
@@ -213,7 +222,8 @@
           "restore": "Ursprüngliches Tastenkürzel konnte nicht wiederhergestellt werden",
           "set": "Tastenkürzel konnte nicht gesetzt werden: {{error}}",
           "reset": "Tastenkürzel konnte nicht auf Originalwert zurückgesetzt werden"
-        }
+        },
+        "changeShortcut": "Change shortcut for {{name}}"
       },
       "language": {
         "title": "Sprache",
@@ -264,7 +274,8 @@
       "volume": {
         "title": "Lautstärke",
         "description": "Lautstärke der Audio-Feedback-Töne anpassen"
-      }
+      },
+      "previewTheme": "Preview sound theme (plays start then stop)"
     },
     "advanced": {
       "groups": {
@@ -438,7 +449,9 @@
         "apiKey": {
           "title": "API-Schlüssel",
           "description": "API-Schlüssel für den ausgewählten Anbieter.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Show API key",
+          "hide": "Hide API key"
         },
         "model": {
           "title": "Modell",
@@ -446,7 +459,8 @@
           "descriptionDefault": "Wähle ein Modell des ausgewählten Anbieters.",
           "placeholderWithOptions": "Modell suchen oder auswählen",
           "placeholderNoOptions": "Modellnamen eingeben",
-          "refreshModels": "Modelle aktualisieren"
+          "refreshModels": "Modelle aktualisieren",
+          "useCustom": "Use \"{{input}}\""
         }
       },
       "prompts": {
@@ -574,7 +588,9 @@
       "paths": {
         "appData": "App-Daten:",
         "models": "Modelle:",
-        "settings": "Einstellungen:"
+        "settings": "Einstellungen:",
+        "title": "Debug Paths",
+        "description": "Display internal file paths and directories for debugging purposes"
       },
       "pasteDelay": {
         "title": "Einfügeverzögerung (vorher)",
@@ -687,7 +703,15 @@
     "open": "Öffnen",
     "copy": "Kopieren",
     "clear": "Leeren",
-    "noOptionsFound": "Keine Optionen gefunden"
+    "noOptionsFound": "Keine Optionen gefunden",
+    "cancel": "Cancel",
+    "options": "Options",
+    "selectOption": "Select an option...",
+    "moreInformation": "More information",
+    "notAvailable": "Not available",
+    "copyToClipboard": "Copy to clipboard",
+    "play": "Play",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy benötigt Bedienungshilfen-Berechtigungen, um transkribierten Text einzugeben.",
@@ -713,7 +737,8 @@
     "settingUpdateFailed": "Failed to save setting",
     "updateCheckFailed": "Failed to check for updates",
     "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "openUrlFailed": "Failed to open the link",
+    "unknown": "Unknown error"
   },
   "appLanguage": {
     "title": "Anwendungssprache",
@@ -746,5 +771,9 @@
     "learnMore": "So behebst du das",
     "recorderBlocked": "Tastenkürzel können gerade nicht aufgezeichnet werden — macOS Secure Input blockiert Tastenereignisse. Behebe zuerst die Secure-Input-Warnung.",
     "dismiss": "Ausblenden"
+  },
+  "progress": {
+    "downloading": "Downloading...",
+    "downloadingCount": "{{count}} downloading..."
   }
 }

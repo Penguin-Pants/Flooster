@@ -16,7 +16,8 @@
     "postProcessing": "Post proceso",
     "history": "Historial",
     "debug": "Depuración",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "navigationLabel": "Settings sections"
   },
   "onboarding": {
     "subtitle": "Para comenzar, elige un modelo de transcripción",
@@ -152,7 +153,13 @@
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar descarga",
-    "legacy": "Heredado"
+    "legacy": "Heredado",
+    "statusTitle": "Model status: {{status}}",
+    "errors": {
+      "checkStatus": "Failed to check model status",
+      "load": "Failed to load model",
+      "switch": "Failed to switch model"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Todos los idiomas",
         "streaming": "Filtrar modelos compatibles con la transcripción en vivo",
-        "translation": "Filtrar modelos compatibles con la traducción al inglés"
+        "translation": "Filtrar modelos compatibles con la traducción al inglés",
+        "language": "Filter by language"
       },
       "noModelsMatch": "Ningún modelo coincide con este filtro.",
       "yourModels": "Modelos descargados",
@@ -184,7 +192,8 @@
         "cancel": "Failed to cancel download: {{error}}",
         "delete": "Failed to delete model: {{error}}",
         "extract": "Failed to extract model: {{error}}"
-      }
+      },
+      "unknownSize": "Unknown size"
     },
     "general": {
       "title": "General",
@@ -213,7 +222,8 @@
           "restore": "Error al restaurar el atajo original",
           "set": "Error al configurar el atajo: {{error}}",
           "reset": "Error al restablecer el atajo al valor original"
-        }
+        },
+        "changeShortcut": "Change shortcut for {{name}}"
       },
       "language": {
         "title": "Idioma",
@@ -264,7 +274,8 @@
       "volume": {
         "title": "Volumen",
         "description": "Ajusta el volumen de los sonidos de retroalimentación de audio"
-      }
+      },
+      "previewTheme": "Preview sound theme (plays start then stop)"
     },
     "advanced": {
       "groups": {
@@ -438,7 +449,9 @@
         "apiKey": {
           "title": "Clave API",
           "description": "Clave API para el proveedor seleccionado.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Show API key",
+          "hide": "Hide API key"
         },
         "model": {
           "title": "Modelo",
@@ -446,7 +459,8 @@
           "descriptionDefault": "Elige un modelo expuesto por el proveedor seleccionado.",
           "placeholderWithOptions": "Buscar o seleccionar un modelo",
           "placeholderNoOptions": "Escribe un nombre de modelo",
-          "refreshModels": "Actualizar modelos"
+          "refreshModels": "Actualizar modelos",
+          "useCustom": "Use \"{{input}}\""
         }
       },
       "prompts": {
@@ -574,7 +588,9 @@
       "paths": {
         "appData": "Datos de la aplicación:",
         "models": "Modelos:",
-        "settings": "Configuración:"
+        "settings": "Configuración:",
+        "title": "Debug Paths",
+        "description": "Display internal file paths and directories for debugging purposes"
       },
       "pasteDelay": {
         "title": "Retraso de pegado (antes)",
@@ -687,7 +703,15 @@
     "open": "Abrir",
     "copy": "Copiar",
     "clear": "Limpiar",
-    "noOptionsFound": "No se encontraron opciones"
+    "noOptionsFound": "No se encontraron opciones",
+    "cancel": "Cancel",
+    "options": "Options",
+    "selectOption": "Select an option...",
+    "moreInformation": "More information",
+    "notAvailable": "Not available",
+    "copyToClipboard": "Copy to clipboard",
+    "play": "Play",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy necesita permisos de accesibilidad para escribir texto transcrito.",
@@ -713,7 +737,8 @@
     "settingUpdateFailed": "Failed to save setting",
     "updateCheckFailed": "Failed to check for updates",
     "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "openUrlFailed": "Failed to open the link",
+    "unknown": "Unknown error"
   },
   "appLanguage": {
     "title": "Idioma de la aplicación",
@@ -746,5 +771,9 @@
     "learnMore": "Cómo solucionarlo",
     "recorderBlocked": "Ahora mismo no se pueden grabar atajos: Secure Input de macOS está bloqueando los eventos de teclado. Resuelve primero el aviso de Secure Input.",
     "dismiss": "Descartar"
+  },
+  "progress": {
+    "downloading": "Downloading...",
+    "downloadingCount": "{{count}} downloading..."
   }
 }

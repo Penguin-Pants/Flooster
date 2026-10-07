@@ -1,5 +1,84 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Tooltip } from "./Tooltip";
+
+interface InfoTooltipButtonProps {
+  description: string;
+  position: "top" | "bottom";
+}
+
+/**
+ * The "more information" icon next to a setting title. A real button, so it
+ * is focusable and announced; the tooltip is linked with `aria-describedby`
+ * and shows on hover, focus and click.
+ */
+const InfoTooltipButton: React.FC<InfoTooltipButtonProps> = ({
+  description,
+  position,
+}) => {
+  const { t } = useTranslation();
+  const [showTooltip, setShowTooltip] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltipId = useId();
+
+  // Close on click outside while open (click toggles it on for touch/mouse).
+  useEffect(() => {
+    if (!showTooltip) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setShowTooltip(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showTooltip]);
+
+  return (
+    <div
+      ref={wrapperRef}
+      className="relative flex"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <button
+        type="button"
+        className="text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
+        aria-label={t("common.moreInformation")}
+        aria-describedby={showTooltip ? tooltipId : undefined}
+        aria-expanded={showTooltip}
+        onClick={() => setShowTooltip((open) => !open)}
+        onFocus={() => setShowTooltip(true)}
+        onBlur={() => setShowTooltip(false)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setShowTooltip(false);
+        }}
+      >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </button>
+      {showTooltip && (
+        <Tooltip id={tooltipId} targetRef={wrapperRef} position={position}>
+          <p className="text-sm text-center leading-relaxed">{description}</p>
+        </Tooltip>
+      )}
+    </div>
+  );
+};
 
 interface SettingContainerProps {
   title: string;
@@ -22,31 +101,6 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   disabled = false,
   tooltipPosition = "top",
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-
-  // Handle click outside to close tooltip
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        tooltipRef.current &&
-        !tooltipRef.current.contains(event.target as Node)
-      ) {
-        setShowTooltip(false);
-      }
-    };
-
-    if (showTooltip) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () =>
-        document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [showTooltip]);
-
-  const toggleTooltip = () => {
-    setShowTooltip(!showTooltip);
-  };
-
   const containerClasses = grouped
     ? "px-4 p-2"
     : "px-4 p-2 rounded-lg border border-mid-gray/20";
@@ -61,43 +115,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
             >
               {title}
             </h3>
-            <div
-              ref={tooltipRef}
-              className="relative"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-              onClick={toggleTooltip}
-            >
-              <svg
-                className="w-4 h-4 text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-label="More information"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleTooltip();
-                  }
-                }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {showTooltip && (
-                <Tooltip targetRef={tooltipRef} position="top">
-                  <p className="text-sm text-center leading-relaxed">
-                    {description}
-                  </p>
-                </Tooltip>
-              )}
-            </div>
+            <InfoTooltipButton description={description} position="top" />
           </div>
           <div className="w-full">{children}</div>
         </div>
@@ -134,43 +152,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
             >
               {title}
             </h3>
-            <div
-              ref={tooltipRef}
-              className="relative"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-              onClick={toggleTooltip}
-            >
-              <svg
-                className="w-4 h-4 text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-label="More information"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleTooltip();
-                  }
-                }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {showTooltip && (
-                <Tooltip targetRef={tooltipRef} position={tooltipPosition}>
-                  <p className="text-sm text-center leading-relaxed">
-                    {description}
-                  </p>
-                </Tooltip>
-              )}
-            </div>
+            <InfoTooltipButton
+              description={description}
+              position={tooltipPosition}
+            />
           </div>
         </div>
         <div className="relative">{children}</div>

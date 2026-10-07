@@ -16,7 +16,8 @@
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
-    "about": "Giới thiệu"
+    "about": "Giới thiệu",
+    "navigationLabel": "Settings sections"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -152,7 +153,13 @@
     },
     "cancel": "Hủy",
     "cancelDownload": "Hủy tải xuống",
-    "legacy": "Cũ"
+    "legacy": "Cũ",
+    "statusTitle": "Model status: {{status}}",
+    "errors": {
+      "checkStatus": "Failed to check model status",
+      "load": "Failed to load model",
+      "switch": "Failed to switch model"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Tất cả ngôn ngữ",
         "streaming": "Lọc các mô hình hỗ trợ phiên âm trực tiếp",
-        "translation": "Lọc các mô hình hỗ trợ dịch sang tiếng Anh"
+        "translation": "Lọc các mô hình hỗ trợ dịch sang tiếng Anh",
+        "language": "Filter by language"
       },
       "noModelsMatch": "Không có mô hình nào khớp với bộ lọc này.",
       "yourModels": "Mô hình đã tải",
@@ -184,7 +192,8 @@
         "cancel": "Failed to cancel download: {{error}}",
         "delete": "Failed to delete model: {{error}}",
         "extract": "Failed to extract model: {{error}}"
-      }
+      },
+      "unknownSize": "Unknown size"
     },
     "general": {
       "title": "Chung",
@@ -213,7 +222,8 @@
           "restore": "Không thể khôi phục phím tắt gốc",
           "set": "Không thể đặt phím tắt: {{error}}",
           "reset": "Không thể đặt lại phím tắt về giá trị gốc"
-        }
+        },
+        "changeShortcut": "Change shortcut for {{name}}"
       },
       "language": {
         "title": "Ngôn ngữ",
@@ -264,7 +274,8 @@
       "volume": {
         "title": "Âm lượng",
         "description": "Điều chỉnh âm lượng của âm thanh phản hồi"
-      }
+      },
+      "previewTheme": "Preview sound theme (plays start then stop)"
     },
     "advanced": {
       "groups": {
@@ -438,7 +449,9 @@
         "apiKey": {
           "title": "Khóa API",
           "description": "Khóa API cho nhà cung cấp đã chọn.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Show API key",
+          "hide": "Hide API key"
         },
         "model": {
           "title": "Mô hình",
@@ -446,7 +459,8 @@
           "descriptionDefault": "Chọn một mô hình được cung cấp bởi nhà cung cấp đã chọn.",
           "placeholderWithOptions": "Tìm kiếm hoặc chọn một mô hình",
           "placeholderNoOptions": "Nhập tên mô hình",
-          "refreshModels": "Làm mới mô hình"
+          "refreshModels": "Làm mới mô hình",
+          "useCustom": "Use \"{{input}}\""
         }
       },
       "prompts": {
@@ -574,7 +588,9 @@
       "paths": {
         "appData": "Dữ liệu ứng dụng:",
         "models": "Mô hình:",
-        "settings": "Cài đặt:"
+        "settings": "Cài đặt:",
+        "title": "Debug Paths",
+        "description": "Display internal file paths and directories for debugging purposes"
       },
       "pasteDelay": {
         "title": "Độ trễ dán (trước)",
@@ -687,7 +703,15 @@
     "open": "Mở",
     "copy": "Sao chép",
     "clear": "Xóa",
-    "noOptionsFound": "Không tìm thấy tùy chọn"
+    "noOptionsFound": "Không tìm thấy tùy chọn",
+    "cancel": "Cancel",
+    "options": "Options",
+    "selectOption": "Select an option...",
+    "moreInformation": "More information",
+    "notAvailable": "Not available",
+    "copyToClipboard": "Copy to clipboard",
+    "play": "Play",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy cần quyền truy cập để gõ văn bản đã chuyển đổi.",
@@ -713,7 +737,8 @@
     "settingUpdateFailed": "Failed to save setting",
     "updateCheckFailed": "Failed to check for updates",
     "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "openUrlFailed": "Failed to open the link",
+    "unknown": "Unknown error"
   },
   "appLanguage": {
     "title": "Ngôn ngữ ứng dụng",
@@ -746,5 +771,9 @@
     "learnMore": "Cách khắc phục",
     "recorderBlocked": "Hiện không thể ghi phím tắt — Secure Input của macOS đang chặn các sự kiện phím. Hãy xử lý cảnh báo Secure Input trước.",
     "dismiss": "Bỏ qua"
+  },
+  "progress": {
+    "downloading": "Downloading...",
+    "downloadingCount": "{{count}} downloading..."
   }
 }

@@ -29,8 +29,7 @@ export default [
             "name",
             "key",
             "data-*",
-            "aria-*",
-          ], // Ignore common non-translatable attributes
+          ], // Ignore common non-translatable attributes (aria-* and title are user-facing)
         },
       ],
     },

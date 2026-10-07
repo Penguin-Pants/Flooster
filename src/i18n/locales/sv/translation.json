@@ -16,7 +16,8 @@
     "postProcessing": "Efterbearbetning",
     "history": "Historik",
     "debug": "Felsökning",
-    "about": "Om"
+    "about": "Om",
+    "navigationLabel": "Settings sections"
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -152,7 +153,13 @@
       "translate": "Översätt till engelska",
       "streaming": "Visar transkription i realtid medan du talar"
     },
-    "legacy": "Äldre"
+    "legacy": "Äldre",
+    "statusTitle": "Model status: {{status}}",
+    "errors": {
+      "checkStatus": "Failed to check model status",
+      "load": "Failed to load model",
+      "switch": "Failed to switch model"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -185,7 +192,8 @@
           "restore": "Misslyckades med att återställa ursprungligt kortkommando",
           "set": "Misslyckades med att ställa in kortkommando: {{error}}",
           "reset": "Misslyckades med att återställa kortkommando till ursprungsvärdet"
-        }
+        },
+        "changeShortcut": "Change shortcut for {{name}}"
       },
       "language": {
         "title": "Språk",
@@ -220,7 +228,8 @@
       "filters": {
         "allLanguages": "Alla språk",
         "streaming": "Filtrera modeller som stöder transkription i realtid",
-        "translation": "Filtrera modeller som stöder översättning till engelska"
+        "translation": "Filtrera modeller som stöder översättning till engelska",
+        "language": "Filter by language"
       },
       "noModelsMatch": "Inga modeller matchar detta filter.",
       "searchPlaceholder": "Sök modeller efter namn…",
@@ -235,7 +244,8 @@
         "cancel": "Failed to cancel download: {{error}}",
         "delete": "Failed to delete model: {{error}}",
         "extract": "Failed to extract model: {{error}}"
-      }
+      },
+      "unknownSize": "Unknown size"
     },
     "sound": {
       "title": "Ljud",
@@ -264,7 +274,8 @@
       "volume": {
         "title": "Volym",
         "description": "Justera volymen för ljudåterkopplingsljud"
-      }
+      },
+      "previewTheme": "Preview sound theme (plays start then stop)"
     },
     "advanced": {
       "groups": {
@@ -438,7 +449,9 @@
         "apiKey": {
           "title": "API-nyckel",
           "description": "API-nyckel för den valda leverantören.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Show API key",
+          "hide": "Hide API key"
         },
         "model": {
           "title": "Modell",
@@ -446,7 +459,8 @@
           "descriptionDefault": "Välj en modell som exponeras av den valda leverantören.",
           "placeholderWithOptions": "Sök eller välj en modell",
           "placeholderNoOptions": "Ange ett modellnamn",
-          "refreshModels": "Uppdatera modeller"
+          "refreshModels": "Uppdatera modeller",
+          "useCustom": "Use \"{{input}}\""
         }
       },
       "prompts": {
@@ -574,7 +588,9 @@
       "paths": {
         "appData": "Appdata:",
         "models": "Modeller:",
-        "settings": "Inställningar:"
+        "settings": "Inställningar:",
+        "title": "Debug Paths",
+        "description": "Display internal file paths and directories for debugging purposes"
       },
       "pasteDelay": {
         "title": "Fördröjning vid klistra in (före)",
@@ -687,7 +703,15 @@
     "open": "Öppna",
     "copy": "Kopiera",
     "clear": "Rensa",
-    "noOptionsFound": "Inga alternativ hittades"
+    "noOptionsFound": "Inga alternativ hittades",
+    "cancel": "Cancel",
+    "options": "Options",
+    "selectOption": "Select an option...",
+    "moreInformation": "More information",
+    "notAvailable": "Not available",
+    "copyToClipboard": "Copy to clipboard",
+    "play": "Play",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy behöver behörighet för hjälpmedel för att kunna skriva transkriberad text.",
@@ -713,7 +737,8 @@
     "settingUpdateFailed": "Failed to save setting",
     "updateCheckFailed": "Failed to check for updates",
     "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "openUrlFailed": "Failed to open the link",
+    "unknown": "Unknown error"
   },
   "appLanguage": {
     "title": "Applikationsspråk",
@@ -746,5 +771,9 @@
     "learnMore": "Så här löser du det",
     "recorderBlocked": "Det går inte att spela in kortkommandon just nu — macOS Secure Input blockerar tangenthändelser. Lös varningen om Secure Input först.",
     "dismiss": "Avfärda"
+  },
+  "progress": {
+    "downloading": "Downloading...",
+    "downloadingCount": "{{count}} downloading..."
   }
 }

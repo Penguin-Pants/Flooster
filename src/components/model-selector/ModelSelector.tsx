@@ -59,14 +59,14 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
           }
         } catch {
           setModelStatus("error");
-          setModelError("Failed to check model status");
+          setModelError(t("modelSelector.errors.checkStatus"));
         }
       } else {
         setModelStatus("none");
       }
     };
     checkStatus();
-  }, [currentModel]);
+  }, [currentModel, t]);
 
   useEffect(() => {
     // Listen for model loading lifecycle events
@@ -86,7 +86,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
             break;
           case "loading_failed":
             setModelStatus("error");
-            setModelError(error || "Failed to load model");
+            setModelError(error || t("modelSelector.errors.load"));
             setPendingModelId(null);
             break;
           case "unloaded":
@@ -149,8 +149,8 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
     if (!success) {
       setPendingModelId(null);
       setModelStatus("error");
-      setModelError("Failed to switch model");
-      onError?.("Failed to switch model");
+      setModelError(t("modelSelector.errors.switch"));
+      onError?.(t("modelSelector.errors.switch"));
     }
   };
 

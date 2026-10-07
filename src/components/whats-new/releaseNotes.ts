@@ -3,11 +3,6 @@ export interface ReleaseNote {
   markdown: string;
 }
 
-interface ReleaseNoteRecord {
-  version: string;
-  markdown: string;
-}
-
 interface FindReleaseNoteOptions {
   currentVersion: string;
   lastSeenVersion: string;
@@ -22,7 +17,7 @@ const releaseNoteModules = import.meta.glob<string>(
   },
 );
 
-const releaseNotesByVersion = new Map<string, ReleaseNoteRecord>();
+const releaseNotesByVersion = new Map<string, ReleaseNote>();
 
 const parseVersion = (version: string): [number, number, number] | null => {
   const normalized = version.trim().replace(/^v/i, "");

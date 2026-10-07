@@ -271,7 +271,7 @@ const RecordingOverlay: React.FC = () => {
   const cancelBtn = (
     <button
       className="sx"
-      aria-label="cancel"
+      aria-label={t("common.cancel")}
       onClick={() => {
         commands.cancelOperation().catch((error) => {
           console.error("Failed to cancel operation:", error);

@@ -4,6 +4,7 @@ import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
 import { useSettings } from "../hooks/useSettings";
+import type { AppSettings } from "@/bindings";
 import {
   GeneralSettings,
   AdvancedSettings,
@@ -19,16 +20,14 @@ export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 interface IconProps {
   width?: number | string;
   height?: number | string;
-  size?: number | string;
   className?: string;
-  [key: string]: any;
 }
 
 interface SectionConfig {
   labelKey: string;
   icon: React.ComponentType<IconProps>;
   component: React.ComponentType;
-  enabled: (settings: any) => boolean;
+  enabled: (settings: AppSettings | null) => boolean;
 }
 
 export const SECTIONS_CONFIG = {
@@ -93,17 +92,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2">
+    <nav
+      aria-label={t("sidebar.navigationLabel")}
+      className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2"
+    >
       <HandyTextLogo width={120} className="m-4" />
       <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20">
         {availableSections.map((section) => {
           const Icon = section.icon;
           const isActive = activeSection === section.id;
 
+          // Real buttons: focusable, activate with Enter/Space, and announce
+          // the current page. A `div onClick` left keyboard users stuck.
           return (
-            <div
+            <button
               key={section.id}
-              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
+              type="button"
+              aria-current={isActive ? "page" : undefined}
+              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors text-start ${
                 isActive
                   ? "bg-logo-primary/80"
                   : "hover:bg-mid-gray/20 hover:opacity-100 opacity-85"
@@ -117,10 +123,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 {t(section.labelKey)}
               </p>
-            </div>
+            </button>
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 };

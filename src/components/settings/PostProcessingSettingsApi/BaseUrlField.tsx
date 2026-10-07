@@ -18,10 +18,6 @@ export const BaseUrlField: React.FC<BaseUrlFieldProps> = React.memo(
       setLocalValue(value);
     }, [value]);
 
-    const disabledMessage = disabled
-      ? "Base URL is managed by the selected provider."
-      : undefined;
-
     return (
       <Input
         type="text"
@@ -32,7 +28,6 @@ export const BaseUrlField: React.FC<BaseUrlFieldProps> = React.memo(
         variant="compact"
         disabled={disabled}
         className={`flex-1 min-w-[360px] ${className}`}
-        title={disabledMessage}
       />
     );
   },

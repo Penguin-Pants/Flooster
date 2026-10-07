@@ -30,7 +30,7 @@ import { WhatsNewGate } from "./components/whats-new";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
-import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
+import { getLanguageDirection } from "@/lib/utils/rtl";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
@@ -95,11 +95,6 @@ function App() {
     checkOnboardingStatus();
   }, []);
 
-  // Initialize RTL direction when language changes
-  useEffect(() => {
-    initializeRTL(i18n.language);
-  }, [i18n.language]);
-
   // Initialize Enigo, shortcuts, and refresh audio devices when main app loads
   useEffect(() => {
     if (onboardingStep === "done" && !hasCompletedPostOnboardingInit.current) {
@@ -158,7 +153,9 @@ function App() {
         });
       } else {
         toast.error(
-          t("errors.recordingFailed", { error: detail ?? "Unknown error" }),
+          t("errors.recordingFailed", {
+            error: detail ?? t("errors.unknown"),
+          }),
         );
       }
     });
