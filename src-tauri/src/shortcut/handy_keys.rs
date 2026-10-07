@@ -109,8 +109,12 @@ impl HandyKeysState {
                 let _ = thread_handle.join();
                 return Err(format!("Failed to create HotkeyManager: {}", e));
             }
-            Err(_) => {
+            Err(mpsc::RecvTimeoutError::Timeout) => {
                 return Err("handy-keys manager thread did not start in time".to_string());
+            }
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                let _ = thread_handle.join();
+                return Err("handy-keys manager thread exited before it was ready".to_string());
             }
         }
 

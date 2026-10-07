@@ -314,18 +314,21 @@ pub fn get_available_typing_tools() -> Vec<String> {
 /// path itself.
 #[cfg(target_os = "linux")]
 fn command_on_path(name: &str) -> bool {
-    use std::os::unix::fs::PermissionsExt;
     std::env::var_os("PATH")
-        .map(|paths| {
-            std::env::split_paths(&paths).any(|dir| {
-                let candidate = dir.join(name);
-                candidate
-                    .metadata()
-                    .map(|m| m.is_file() && m.permissions().mode() & 0o111 != 0)
-                    .unwrap_or(false)
-            })
-        })
+        .map(|paths| command_in_dirs(std::env::split_paths(&paths), name))
         .unwrap_or(false)
+}
+
+#[cfg(target_os = "linux")]
+fn command_in_dirs(dirs: impl Iterator<Item = std::path::PathBuf>, name: &str) -> bool {
+    use std::os::unix::fs::PermissionsExt;
+    dirs.into_iter().any(|dir| {
+        let candidate = dir.join(name);
+        candidate
+            .metadata()
+            .map(|m| m.is_file() && m.permissions().mode() & 0o111 != 0)
+            .unwrap_or(false)
+    })
 }
 
 /// Check if wtype is available (Wayland text input tool)
@@ -922,7 +925,7 @@ mod tests {
 
     #[cfg(target_os = "linux")]
     #[test]
-    fn command_on_path_finds_only_executables_in_path() {
+    fn command_in_dirs_finds_only_executables() {
         use std::os::unix::fs::PermissionsExt;
         let dir = std::env::temp_dir().join(format!("handy-path-test-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
@@ -931,15 +934,10 @@ mod tests {
         std::fs::set_permissions(&exe, std::fs::Permissions::from_mode(0o755)).unwrap();
         std::fs::write(dir.join("handy-plain-file"), "").unwrap();
 
-        let saved = std::env::var_os("PATH");
-        std::env::set_var("PATH", &dir);
-        let found = command_on_path("handy-fake-tool");
-        let plain = command_on_path("handy-plain-file");
-        let missing = command_on_path("handy-missing-tool");
-        match saved {
-            Some(p) => std::env::set_var("PATH", p),
-            None => std::env::remove_var("PATH"),
-        }
+        let dirs = || std::iter::once(dir.clone());
+        let found = command_in_dirs(dirs(), "handy-fake-tool");
+        let plain = command_in_dirs(dirs(), "handy-plain-file");
+        let missing = command_in_dirs(dirs(), "handy-missing-tool");
         let _ = std::fs::remove_dir_all(&dir);
 
         assert!(found);

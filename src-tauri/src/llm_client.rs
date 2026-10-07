@@ -177,8 +177,9 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
 const HTTP_CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 /// Whole-request deadline. A local server (Ollama, LM Studio) that accepts
 /// the connection and never answers otherwise kept the dictation in
-/// "polishing" forever; a slow local model still fits comfortably.
-const HTTP_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
+/// "polishing" forever; a slow CPU-only local model on a long transcript
+/// still fits.
+const HTTP_REQUEST_TIMEOUT: Duration = Duration::from_secs(300);
 /// Error bodies are logged at most this long; many OpenAI-compatible servers
 /// echo the offending `messages[].content`, i.e. the user's transcript.
 const MAX_ERROR_BODY_LOG_BYTES: usize = 2048;

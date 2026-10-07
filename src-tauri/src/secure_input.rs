@@ -232,8 +232,8 @@ mod imp {
         // first; a full `ioreg -l` dump is tens of megabytes and ran on every
         // password-field focus. Fall back to the full dump only if the
         // targeted query finds nothing.
-        let pid = Self::secure_input_pid(&["-r", "-c", "IOHIDSystem", "-d", "1", "-w", "0"])
-            .or_else(|| Self::secure_input_pid(&["-l", "-w", "0"]))?;
+        let pid = secure_input_pid(&["-r", "-c", "IOHIDSystem", "-d", "1", "-w", "0"])
+            .or_else(|| secure_input_pid(&["-l", "-w", "0"]))?;
 
         // `ps -o comm=` returns the full executable path; show just the
         // binary name ("Terminal", not ".../Terminal.app/Contents/MacOS/Terminal")

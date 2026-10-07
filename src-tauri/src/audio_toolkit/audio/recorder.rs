@@ -364,7 +364,10 @@ impl AudioRecorder {
                 Ok(())
             }
             Err(mpsc::RecvTimeoutError::Timeout) => {
-                self.stream_error.store(true, Ordering::Relaxed);
+                // The abandoned worker still holds a clone of the old flag; give
+                // the next stream a fresh one so a late failure in the orphan
+                // cannot trigger a rebuild of a healthy stream.
+                self.stream_error = Arc::new(AtomicBool::new(false));
                 *self.config_cache.lock().unwrap() = None;
                 Err(Box::new(Error::new(
                     std::io::ErrorKind::TimedOut,
