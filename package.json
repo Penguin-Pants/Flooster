@@ -16,7 +16,7 @@
     "format:backend": "cd src-tauri && cargo fmt",
     "typecheck": "tsc --noEmit",
     "test:keyboard": "bun src/lib/utils/keyboard.test.ts",
-    "test:unit": "bun src/lib/utils/keyboard.test.ts && bun src/lib/utils/result.test.ts && bun src/lib/utils/format.test.ts && bun src/components/settings/history/clipboard.test.ts && bun src/components/update-checker/portableInstaller.test.ts",
+    "test:unit": "bun scripts/run-unit-tests.ts",
     "test:playwright": "playwright test",
     "test:playwright:ui": "playwright test --ui",
     "check:translations": "bun scripts/check-translations.ts",
