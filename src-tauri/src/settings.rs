@@ -1122,15 +1122,11 @@ fn salvage_settings_file_on_disk(app: &AppHandle) -> Option<AppSettings> {
         ),
         Err(e) => warn!("Settings store could not be loaded and no backup could be written: {e}"),
     }
-    // Whole-file parse first, then a best-effort parse of the largest prefix
-    // that is valid JSON (a truncated write ends mid-object).
-    let value = serde_json::from_str::<serde_json::Value>(&raw)
-        .ok()
-        .or_else(|| {
-            let mut de = serde_json::Deserializer::from_str(&raw).into_iter::<serde_json::Value>();
-            de.next().and_then(|r| r.ok())
-        })?;
-    let settings_value = value.get("settings").cloned().unwrap_or(value);
+    // Only a file that still parses as JSON and carries the settings object
+    // can be salvaged; a write cut mid-object is unrecoverable and falls back
+    // to defaults (the backup above keeps the bytes for the user).
+    let value = serde_json::from_str::<serde_json::Value>(&raw).ok()?;
+    let settings_value = value.get("settings")?.clone();
     warn!("Salvaging settings from the on-disk store file");
     Some(salvage_settings(&settings_value))
 }

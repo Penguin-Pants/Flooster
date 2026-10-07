@@ -539,6 +539,69 @@ impl<'a> Drop for DownloadCleanup<'a> {
     }
 }
 
+/// Removes a model id from the in-progress extraction set on drop, on every
+/// exit path of the extraction (success, error, panic).
+struct ExtractingGuard<'a> {
+    extracting: &'a Arc<Mutex<HashSet<String>>>,
+    model_id: String,
+}
+
+impl<'a> ExtractingGuard<'a> {
+    fn new(extracting: &'a Arc<Mutex<HashSet<String>>>, model_id: &str) -> Self {
+        extracting
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .insert(model_id.to_string());
+        Self {
+            extracting,
+            model_id: model_id.to_string(),
+        }
+    }
+}
+
+impl Drop for ExtractingGuard<'_> {
+    fn drop(&mut self) {
+        self.extracting
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .remove(&self.model_id);
+    }
+}
+
+/// Unpacks a downloaded `.tar.gz` into `temp_dir` and moves the result to
+/// `final_dir`. Blocking; run it on the blocking pool.
+fn extract_model_archive(archive_path: &Path, temp_dir: &Path, final_dir: &Path) -> Result<()> {
+    // Clean up any previous incomplete extraction
+    if temp_dir.exists() {
+        let _ = fs::remove_dir_all(temp_dir);
+    }
+    fs::create_dir_all(temp_dir)?;
+
+    let tar_gz = File::open(archive_path)?;
+    let tar = GzDecoder::new(tar_gz);
+    let mut archive = Archive::new(tar);
+    archive.unpack(temp_dir)?;
+
+    // Find the actual extracted directory (archive might have a nested structure)
+    let extracted_dirs: Vec<_> = fs::read_dir(temp_dir)?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
+        .collect();
+
+    if final_dir.exists() {
+        fs::remove_dir_all(final_dir)?;
+    }
+    if extracted_dirs.len() == 1 {
+        // Single directory extracted, move it to the final location
+        fs::rename(extracted_dirs[0].path(), final_dir)?;
+        let _ = fs::remove_dir_all(temp_dir);
+    } else {
+        // Multiple items or no directories, rename the temp directory itself
+        fs::rename(temp_dir, final_dir)?;
+    }
+    Ok(())
+}
+
 pub struct ModelManager {
     app_handle: AppHandle,
     models_dir: PathBuf,
@@ -2192,8 +2255,11 @@ impl ModelManager {
         }
 
         cleanup.disarmed = true;
-        self.update_download_status()?;
+        // Remove the in-flight token first: the status refresh derives
+        // `is_downloading` from it and would otherwise report the finished
+        // model as still downloading.
         self.cancel_flags.lock().unwrap().remove(&model_id);
+        self.update_download_status()?;
         let _ = self.app_handle.emit("model-download-complete", &model_id);
         info!("HF model {} downloaded", model_id);
         Ok(())
@@ -2334,11 +2400,10 @@ impl ModelManager {
 
         // Handle directory-based models (extract tar.gz) vs file-based models
         if model_info.is_directory {
-            // Track that this model is being extracted
-            {
-                let mut extracting = self.extracting_models.lock().unwrap();
-                extracting.insert(model_id.to_string());
-            }
+            // Track that this model is being extracted. The guard removes the
+            // entry on every exit, so `update_download_status` can never be
+            // left believing an extraction is still running.
+            let _extracting = ExtractingGuard::new(&self.extracting_models, model_id);
 
             // Emit extraction started event
             let _ = self.app_handle.emit("model-extraction-started", model_id);
@@ -2350,32 +2415,27 @@ impl ModelManager {
                 .join(format!("{}.extracting", model_info.filename));
             let final_model_dir = self.models_dir.join(&model_info.filename);
 
-            // Clean up any previous incomplete extraction
-            if temp_extract_dir.exists() {
-                let _ = fs::remove_dir_all(&temp_extract_dir);
-            }
+            // Gunzip + untar of up to ~1.7 GB is blocking work; keep it off
+            // the async runtime.
+            let (archive_path, temp_dir, final_dir) = (
+                partial_path.clone(),
+                temp_extract_dir.clone(),
+                final_model_dir.clone(),
+            );
+            let extracted = tauri::async_runtime::spawn_blocking(move || {
+                extract_model_archive(&archive_path, &temp_dir, &final_dir)
+            })
+            .await
+            .map_err(|e| anyhow::anyhow!("extraction task panicked: {}", e))
+            .and_then(|r| r);
 
-            // Create temporary extraction directory
-            fs::create_dir_all(&temp_extract_dir)?;
-
-            // Open the downloaded tar.gz file
-            let tar_gz = File::open(&partial_path)?;
-            let tar = GzDecoder::new(tar_gz);
-            let mut archive = Archive::new(tar);
-
-            // Extract to the temporary directory first
-            archive.unpack(&temp_extract_dir).map_err(|e| {
+            if let Err(e) = extracted {
                 let error_msg = format!("Failed to extract archive: {}", e);
                 // Clean up failed extraction
                 let _ = fs::remove_dir_all(&temp_extract_dir);
                 // Delete the corrupt partial file so the next download attempt starts fresh
                 // instead of resuming from a broken archive (issue #858).
                 let _ = fs::remove_file(&partial_path);
-                // Remove from extracting set
-                {
-                    let mut extracting = self.extracting_models.lock().unwrap();
-                    extracting.remove(model_id);
-                }
                 let _ = self.app_handle.emit(
                     "model-extraction-failed",
                     &serde_json::json!({
@@ -2383,38 +2443,10 @@ impl ModelManager {
                         "error": error_msg
                     }),
                 );
-                anyhow::anyhow!(error_msg)
-            })?;
-
-            // Find the actual extracted directory (archive might have a nested structure)
-            let extracted_dirs: Vec<_> = fs::read_dir(&temp_extract_dir)?
-                .filter_map(|entry| entry.ok())
-                .filter(|entry| entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
-                .collect();
-
-            if extracted_dirs.len() == 1 {
-                // Single directory extracted, move it to the final location
-                let source_dir = extracted_dirs[0].path();
-                if final_model_dir.exists() {
-                    fs::remove_dir_all(&final_model_dir)?;
-                }
-                fs::rename(&source_dir, &final_model_dir)?;
-                // Clean up temp directory
-                let _ = fs::remove_dir_all(&temp_extract_dir);
-            } else {
-                // Multiple items or no directories, rename the temp directory itself
-                if final_model_dir.exists() {
-                    fs::remove_dir_all(&final_model_dir)?;
-                }
-                fs::rename(&temp_extract_dir, &final_model_dir)?;
+                return Err(anyhow::anyhow!(error_msg));
             }
 
             info!("Successfully extracted archive for model: {}", model_id);
-            // Remove from extracting set
-            {
-                let mut extracting = self.extracting_models.lock().unwrap();
-                extracting.remove(model_id);
-            }
             // Emit extraction completed event
             let _ = self.app_handle.emit("model-extraction-completed", model_id);
 
@@ -2466,15 +2498,17 @@ impl ModelManager {
             let is_alternate_quant =
                 Self::is_catalog_alternate_quant(repo_id, &model_info.filename);
             let mut deleted = false;
-            if is_alternate_quant {
+            if is_alternate_quant || model_info.is_custom {
                 // Only this quant's own file: the snapshot pointer and its
                 // blob. The default (and any other quants) survive in the
-                // cache — the entry never owned more than its one file.
+                // cache — the entry never owned more than its one file. The
+                // same holds for a discovered third-party repo: its siblings
+                // (other quants, files other tools keep there) were never ours.
                 deleted |= Self::delete_hf_cache_file(repo_id, revision, &model_info.filename);
             } else if let Some(file) = hf_cached_path(repo_id, revision, &model_info.filename) {
                 // Cached at <cache>/models--org--name/snapshots/<rev>/<file>; remove
                 // the whole repo dir (blobs + refs + snapshots). Per product decision,
-                // delete hard-removes from the shared HF cache.
+                // delete hard-removes from the shared HF cache for catalog defaults.
                 if let Some(repo_dir) = file.ancestors().nth(3) {
                     if repo_dir
                         .file_name()
@@ -2670,26 +2704,25 @@ impl ModelManager {
                     model_id
                 ));
             }
-            if partial_path.exists() {
-                return Err(anyhow::anyhow!(
-                    "Model directory is incomplete: {}",
-                    model_id
-                ));
-            }
-            Ok(model_path)
-        } else {
-            if !model_path.exists() {
-                self.mark_model_unavailable(model_id);
-                return Err(anyhow::anyhow!(
-                    "Complete model file not found: {}",
-                    model_id
-                ));
-            }
-            if partial_path.exists() {
-                return Err(anyhow::anyhow!("Model file is incomplete: {}", model_id));
-            }
-            Ok(model_path)
+        } else if !model_path.exists() {
+            self.mark_model_unavailable(model_id);
+            return Err(anyhow::anyhow!(
+                "Complete model file not found: {}",
+                model_id
+            ));
         }
+        // The final artifact only ever appears after verification, so a
+        // leftover `.partial` next to it (a failed delete, e.g. a Windows AV
+        // handle) is noise, not a veto. Same rule as the HF branch above.
+        if partial_path.exists() {
+            if let Err(e) = fs::remove_file(&partial_path) {
+                warn!(
+                    "Could not remove stale partial next to complete model {}: {}",
+                    model_id, e
+                );
+            }
+        }
+        Ok(model_path)
     }
 
     pub fn cancel_download(&self, model_id: &str) -> Result<()> {

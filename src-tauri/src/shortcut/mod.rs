@@ -1079,21 +1079,22 @@ pub fn change_post_process_enabled_setting(app: AppHandle, enabled: bool) -> Res
         .get("transcribe_with_post_process")
         .cloned()
     {
-        let result = if enabled {
-            register_shortcut(&app, binding)
-        } else {
-            unregister_shortcut(&app, binding)
-        };
-        if let Err(e) = result {
-            let mut settings = settings::get_settings(&app);
-            settings.post_process_enabled = previous;
-            settings::write_settings(&app, settings);
-            crate::secure_input::reconcile_fallback(&app);
-            return Err(format!(
-                "Failed to {} the post-processing shortcut: {}",
-                if enabled { "register" } else { "unregister" },
-                e
-            ));
+        if enabled {
+            if let Err(e) = register_shortcut(&app, binding) {
+                let mut settings = settings::get_settings(&app);
+                settings.post_process_enabled = previous;
+                settings::write_settings(&app, settings);
+                crate::secure_input::reconcile_fallback(&app);
+                return Err(format!(
+                    "Failed to register the post-processing shortcut: {}",
+                    e
+                ));
+            }
+        } else if let Err(e) = unregister_shortcut(&app, binding) {
+            // Some backends report "not registered" as an error (the chord
+            // may never have registered). Disabling must still succeed, or the
+            // toggle could never be turned off.
+            warn!("Failed to unregister the post-processing shortcut: {}", e);
         }
     }
 
