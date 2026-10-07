@@ -248,6 +248,11 @@ fn flush_pending(enigo: &mut enigo::Enigo) {
             Ok(st) => st,
             Err(_) => return,
         };
+        if st.cancelled {
+            // The old pump already took its Finish branch and is settling;
+            // settling here too would race it on the clipboard.
+            return;
+        }
         st.cancelled = true;
         st.any_receipt_after_injection()
     };

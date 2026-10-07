@@ -61,8 +61,18 @@ fn finish_clipboard_paste(
 fn clipboard_is_empty() -> Option<bool> {
     #[cfg(target_os = "windows")]
     {
-        // Safe to call without opening the clipboard; 0 means no formats.
-        Some(unsafe { windows::Win32::System::DataExchange::CountClipboardFormats() } == 0)
+        use windows::Win32::Foundation::{GetLastError, SetLastError, ERROR_SUCCESS};
+        // Safe to call without opening the clipboard. 0 means "no formats" but
+        // also "failed", so a failure (nonzero last error) answers "unknown"
+        // rather than "empty".
+        unsafe {
+            SetLastError(ERROR_SUCCESS);
+            let count = windows::Win32::System::DataExchange::CountClipboardFormats();
+            if count == 0 && GetLastError() != ERROR_SUCCESS {
+                return None;
+            }
+            Some(count == 0)
+        }
     }
     #[cfg(target_os = "macos")]
     {

@@ -935,7 +935,6 @@ impl AudioRecordingManager {
             self.stop_microphone_stream();
             self.start_microphone_stream()?;
         }
-        drop(state);
         Ok(())
     }
 

@@ -104,8 +104,8 @@ impl HistoryManager {
         Ok(manager)
     }
 
-    /// Deletes `.wav` files in the recordings directory that no history row
-    /// references. Runs at startup, when no recording can be in flight.
+    /// Deletes `handy-*.wav` files in the recordings directory that no history
+    /// row references. Runs at startup, when no recording can be in flight.
     fn sweep_orphaned_recordings(&self) -> Result<usize> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare("SELECT file_name FROM transcription_history")?;
@@ -131,7 +131,9 @@ impl HistoryManager {
             let Some(name) = path.file_name().and_then(|n| n.to_str()) else {
                 continue;
             };
-            if !is_wav || referenced.contains(name) {
+            // Only files this app wrote (`handy-<timestamp>.wav`): a user's own
+            // files in the folder are none of the sweep's business.
+            if !is_wav || !name.starts_with("handy-") || referenced.contains(name) {
                 continue;
             }
             match fs::remove_file(&path) {

@@ -477,9 +477,14 @@ impl TranscriptionManager {
     /// it. Only the worker's exit is left to wait for.
     fn begin_unload(&self) -> Unloading {
         let unloading = self.engine.unload();
-        // Dropping an ONNX engine frees its resources.
-        *self.lock_onnx() = None;
-        self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        // Dropping an ONNX engine frees its resources. The generation bump
+        // happens under the slot lock so `return_engine` cannot observe the
+        // old generation and then write a stale engine into the cleared slot.
+        {
+            let mut slot = self.lock_onnx();
+            *slot = None;
+            self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        }
         {
             let mut current_model = self.current_model_id.lock().unwrap();
             *current_model = None;
@@ -600,8 +605,11 @@ impl TranscriptionManager {
         // on large GGUFs). A transcribe-cpp load replaces its worker the same
         // way. Clear the id too: if the new load fails, status should read "no
         // loaded model", not the dropped engine.
-        *self.lock_onnx() = None;
-        self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        {
+            let mut slot = self.lock_onnx();
+            *slot = None;
+            self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        }
         if !matches!(model_info.engine_type, EngineType::TranscribeCpp) {
             self.engine.unload().wait();
         }
@@ -753,8 +761,11 @@ impl TranscriptionManager {
         };
 
         // Update the current engine and model ID
-        *self.lock_onnx() = loaded_onnx;
-        self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        {
+            let mut slot = self.lock_onnx();
+            *slot = loaded_onnx;
+            self.engine_generation.fetch_add(1, Ordering::AcqRel);
+        }
         {
             let mut current_model = self.current_model_id.lock().unwrap();
             *current_model = Some(model_id.to_string());
@@ -1065,11 +1076,16 @@ impl TranscriptionManager {
     /// the engine was taken; a same-id reload bumps it, so the id check alone is
     /// not enough.
     fn return_engine(&self, engine: OnnxEngine, expected_model_id: &str, taken_generation: u64) {
+        // Compare and restore under the slot lock: every writer bumps the
+        // generation while holding it, so an unload or load cannot slip in
+        // between the check and the write.
+        let mut slot = self.lock_onnx();
         let still_current = self.engine_generation.load(Ordering::Acquire) == taken_generation
             && self.current_model_id.lock().unwrap().as_deref() == Some(expected_model_id);
         if still_current {
-            *self.lock_onnx() = Some(engine);
+            *slot = Some(engine);
         } else {
+            drop(slot);
             info!(
                 "Model changed/unloaded during transcription; dropping stale engine (was '{}')",
                 expected_model_id
