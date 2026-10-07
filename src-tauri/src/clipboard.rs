@@ -14,6 +14,10 @@ use tauri_plugin_clipboard_manager::ClipboardExt;
 #[cfg(target_os = "linux")]
 use crate::utils::{is_gnome_wayland, is_kde_wayland, is_wayland};
 
+/// Modifier hold for the legacy clipboard paste, which cannot detect a mistimed
+/// chord and therefore keeps the conservative value.
+const LEGACY_CHORD_HOLD_MS: u64 = 100;
+
 fn with_enigo<T>(
     app_handle: &AppHandle,
     f: impl FnOnce(&mut Enigo) -> Result<T, String>,
@@ -51,6 +55,30 @@ fn finish_clipboard_paste(
     paste_result
 }
 
+/// Whether the system clipboard holds nothing at all, as opposed to content in
+/// a format the clipboard plugin cannot read back (files, cells, rich text).
+/// `None` when the platform offers no way to tell.
+fn clipboard_is_empty() -> Option<bool> {
+    #[cfg(target_os = "windows")]
+    {
+        // Safe to call without opening the clipboard; 0 means no formats.
+        Some(unsafe { windows::Win32::System::DataExchange::CountClipboardFormats() } == 0)
+    }
+    #[cfg(target_os = "macos")]
+    {
+        Some(
+            objc2_app_kit::NSPasteboard::generalPasteboard()
+                .types()
+                .map(|types| types.is_empty())
+                .unwrap_or(true),
+        )
+    }
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    {
+        None
+    }
+}
+
 /// Pastes text using the clipboard: saves current content, writes text, sends paste keystroke, restores clipboard.
 fn paste_via_clipboard(
     text: &str,
@@ -69,6 +97,12 @@ fn paste_via_clipboard(
     } else {
         None
     };
+    // Only when the clipboard was provably empty may the transcript be cleared
+    // afterwards. Content the plugin cannot read (a file copy, a spreadsheet
+    // range, HTML-only data) is not "nothing": clearing it destroyed the
+    // user's copy after every dictation.
+    let clipboard_was_empty =
+        saved_text.is_none() && saved_image.is_none() && clipboard_is_empty().unwrap_or(false);
 
     // Write text to clipboard first
     write_text_to_clipboard(app_handle, text)?;
@@ -87,13 +121,10 @@ fn paste_via_clipboard(
 
         // Fall back to enigo if no native tool handled it
         if !key_combo_sent {
-            with_enigo(app_handle, |enigo| match paste_method {
-                // The legacy path cannot detect a mistimed chord, so it keeps the
-                // conservative 100ms modifier hold.
-                PasteMethod::CtrlV => input::send_paste_ctrl_v(enigo, 100),
-                PasteMethod::CtrlShiftV => input::send_paste_ctrl_shift_v(enigo, 100),
-                PasteMethod::ShiftInsert => input::send_paste_shift_insert(enigo, 100),
-                _ => Err("Invalid paste method for clipboard paste".into()),
+            // The legacy path cannot detect a mistimed chord, so it keeps the
+            // conservative 100ms modifier hold.
+            with_enigo(app_handle, |enigo| {
+                input::send_paste_chord(enigo, paste_method, LEGACY_CHORD_HOLD_MS)
             })?;
         }
 
@@ -110,9 +141,13 @@ fn paste_via_clipboard(
         } else if let Some(image) = saved_image {
             info!("Restoring image to clipboard");
             let _ = clipboard.write_image(&image);
-        } else {
+        } else if clipboard_was_empty {
             // Nothing was there to begin with — don't leave the transcription behind.
             let _ = clipboard.clear();
+        } else {
+            info!(
+                "Previous clipboard content is in a format that cannot be restored; leaving the transcript in place"
+            );
         }
     })
 }
@@ -482,13 +517,25 @@ fn type_text_via_dotool(text: &str) -> Result<(), String> {
 
     let mut child = Command::new("dotool")
         .stdin(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("Failed to spawn dotool: {}", e))?;
 
     if let Some(mut stdin) = child.stdin.take() {
-        // dotool uses "type <text>" command
-        writeln!(stdin, "type {}", text)
-            .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+        // dotool reads one command per line, so a newline inside the text
+        // would end the `type` command and the next line would be parsed as a
+        // command of its own. Type each line separately and press Enter in
+        // between to reproduce the line breaks.
+        for (index, line) in text.split('\n').enumerate() {
+            if index > 0 {
+                writeln!(stdin, "key enter")
+                    .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+            }
+            if !line.is_empty() {
+                writeln!(stdin, "type {}", line)
+                    .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+            }
+        }
     }
 
     let output = child

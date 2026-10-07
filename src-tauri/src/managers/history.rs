@@ -93,7 +93,57 @@ impl HistoryManager {
         // Initialize database and run migrations synchronously
         manager.init_database()?;
 
+        // Reclaim recordings that lost their row (cancelled dictations wrote
+        // the WAV before the row, a failed row insert, a crash mid-save).
+        // Nothing else ever lists the directory, so without this they
+        // accumulated for the life of the install.
+        if let Err(e) = manager.sweep_orphaned_recordings() {
+            error!("Failed to sweep orphaned recordings: {}", e);
+        }
+
         Ok(manager)
+    }
+
+    /// Deletes `.wav` files in the recordings directory that no history row
+    /// references. Runs at startup, when no recording can be in flight.
+    fn sweep_orphaned_recordings(&self) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare("SELECT file_name FROM transcription_history")?;
+        let referenced: std::collections::HashSet<String> = stmt
+            .query_map([], |row| row.get::<_, String>(0))?
+            .filter_map(|r| r.ok())
+            .collect();
+
+        let mut removed = 0;
+        for entry in fs::read_dir(&self.recordings_dir)? {
+            let entry = match entry {
+                Ok(entry) => entry,
+                Err(e) => {
+                    debug!("Skipping unreadable recordings dir entry: {}", e);
+                    continue;
+                }
+            };
+            let path = entry.path();
+            let is_wav = path
+                .extension()
+                .and_then(|ext| ext.to_str())
+                .is_some_and(|ext| ext.eq_ignore_ascii_case("wav"));
+            let Some(name) = path.file_name().and_then(|n| n.to_str()) else {
+                continue;
+            };
+            if !is_wav || referenced.contains(name) {
+                continue;
+            }
+            match fs::remove_file(&path) {
+                Ok(()) => removed += 1,
+                Err(e) => error!("Failed to remove orphaned recording {}: {}", name, e),
+            }
+        }
+
+        if removed > 0 {
+            info!("Removed {} orphaned recording(s)", removed);
+        }
+        Ok(removed)
     }
 
     fn init_database(&self) -> Result<()> {
@@ -356,22 +406,24 @@ impl HistoryManager {
         let mut deleted_count = 0;
 
         for (id, file_name) in entries {
-            // Delete database entry
-            conn.execute(
-                "DELETE FROM transcription_history WHERE id = ?1",
-                params![id],
-            )?;
-
-            // Delete WAV file
+            // Delete the WAV first. A file that cannot be removed now is
+            // reclaimed by the startup sweep once its row is gone.
             let file_path = self.recordings_dir.join(file_name);
             if file_path.exists() {
                 if let Err(e) = fs::remove_file(&file_path) {
                     error!("Failed to delete WAV file {}: {}", file_name, e);
                 } else {
                     debug!("Deleted old WAV file: {}", file_name);
-                    deleted_count += 1;
                 }
             }
+
+            // Delete database entry. Counts rows, so the log reports the
+            // number of entries pruned rather than the files that happened
+            // to exist.
+            deleted_count += conn.execute(
+                "DELETE FROM transcription_history WHERE id = ?1",
+                params![id],
+            )?;
         }
 
         Ok(deleted_count)

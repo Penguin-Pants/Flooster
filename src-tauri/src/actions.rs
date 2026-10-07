@@ -611,7 +611,25 @@ impl ShortcutAction for TranscribeAction {
             );
 
             let stop_recording_time = Instant::now();
-            if let Some(samples) = rm.stop_recording(&binding_id, cancel_generation) {
+            // `stop_recording` sleeps (extra buffer) and blocks on the recorder
+            // stop handshake (up to the pause-ack timeout). Keep it off the
+            // tokio workers so other commands stay responsive meanwhile.
+            let samples = {
+                let rm = Arc::clone(&rm);
+                let binding_id = binding_id.clone();
+                match tauri::async_runtime::spawn_blocking(move || {
+                    rm.stop_recording(&binding_id, cancel_generation)
+                })
+                .await
+                {
+                    Ok(samples) => samples,
+                    Err(e) => {
+                        error!("stop_recording task panicked: {}", e);
+                        None
+                    }
+                }
+            };
+            if let Some(samples) = samples {
                 debug!(
                     "Recording stopped and samples retrieved in {:?}, sample count: {}",
                     stop_recording_time.elapsed(),
@@ -647,17 +665,28 @@ impl ShortcutAction for TranscribeAction {
                     // Transcribe concurrently with WAV save. If a live stream was
                     // running, finalize it and use its text (all audio was already
                     // fed to the stream); otherwise batch-transcribe the samples.
+                    // Both are synchronous engine work (seconds to minutes), so
+                    // they run on the blocking pool, not a tokio worker.
                     let transcription_time = Instant::now();
-                    let transcription_result = match tm.finalize_stream() {
-                        // A finalized stream with usable text wins. An empty result
-                        // (no active stream, produced nothing, or the stream failed
-                        // or its worker crashed) falls back to a full batch
-                        // transcription of the same audio. A cancelled finalize is
-                        // surfaced instead, so a cancel never starts a batch run.
-                        Ok(Some(text)) if !text.trim().is_empty() => Ok(text),
-                        Ok(_) => tm.transcribe(samples),
-                        Err(err) => Err(err),
-                    };
+                    let tm_run = Arc::clone(&tm);
+                    let transcription_result =
+                        match tauri::async_runtime::spawn_blocking(move || {
+                            match tm_run.finalize_stream() {
+                                // A finalized stream with usable text wins. An empty result
+                                // (no active stream, produced nothing, or the stream failed
+                                // or its worker crashed) falls back to a full batch
+                                // transcription of the same audio. A cancelled finalize is
+                                // surfaced instead, so a cancel never starts a batch run.
+                                Ok(Some(text)) if !text.trim().is_empty() => Ok(text),
+                                Ok(_) => tm_run.transcribe(samples),
+                                Err(err) => Err(err),
+                            }
+                        })
+                        .await
+                        {
+                            Ok(result) => result,
+                            Err(e) => Err(anyhow::anyhow!("transcription task panicked: {}", e)),
+                        };
 
                     // Await WAV save and verify
                     let wav_saved = match wav_handle.await {
@@ -683,8 +712,28 @@ impl ShortcutAction for TranscribeAction {
                         }
                     };
 
+                    // A cancel from here on exits before `save_entry`, so the WAV
+                    // written above would have no history row and nothing would
+                    // ever reclaim it. Remove it on those paths.
+                    let discard_wav = || {
+                        if wav_saved {
+                            if let Err(e) = std::fs::remove_file(&wav_path_for_verify) {
+                                error!(
+                                    "Failed to remove recording of cancelled transcription {}: {}",
+                                    file_name, e
+                                );
+                            } else {
+                                debug!(
+                                    "Removed recording of cancelled transcription {}",
+                                    file_name
+                                );
+                            }
+                        }
+                    };
+
                     if rm.was_cancelled_since(cancel_generation) {
                         debug!("Transcription operation cancelled before output handling");
+                        discard_wav();
                         utils::hide_recording_overlay(&ah);
                         set_tray_state(&ah, TrayIconState::Idle);
                         return;
@@ -719,6 +768,7 @@ impl ShortcutAction for TranscribeAction {
 
                             if rm.was_cancelled_since(cancel_generation) {
                                 debug!("Transcription operation cancelled before paste");
+                                discard_wav();
                                 utils::hide_recording_overlay(&ah);
                                 set_tray_state(&ah, TrayIconState::Idle);
                                 return;
@@ -778,6 +828,7 @@ impl ShortcutAction for TranscribeAction {
                                 debug!(
                                     "Transcription operation cancelled after transcription error"
                                 );
+                                discard_wav();
                                 utils::hide_recording_overlay(&ah);
                                 set_tray_state(&ah, TrayIconState::Idle);
                                 return;

@@ -173,16 +173,7 @@ pub(crate) fn send_chord(
     enigo: &mut enigo::Enigo,
     paste_method: &crate::settings::PasteMethod,
 ) -> Result<(), String> {
-    use crate::settings::PasteMethod;
-    match paste_method {
-        PasteMethod::CtrlV => crate::input::send_paste_ctrl_v(enigo, CHORD_HOLD_MS),
-        PasteMethod::CtrlShiftV => crate::input::send_paste_ctrl_shift_v(enigo, CHORD_HOLD_MS),
-        PasteMethod::ShiftInsert => crate::input::send_paste_shift_insert(enigo, CHORD_HOLD_MS),
-        other => Err(format!(
-            "Invalid paste method for clipboard paste: {:?}",
-            other
-        )),
-    }
+    crate::input::send_paste_chord(enigo, paste_method, CHORD_HOLD_MS)
 }
 
 /// Attempts the receipt-sequenced paste. Returns `Err` before anything has

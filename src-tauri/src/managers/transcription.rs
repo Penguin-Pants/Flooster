@@ -256,6 +256,12 @@ pub struct TranscriptionManager {
     is_loading: Arc<Mutex<bool>>,
     loading_condvar: Arc<Condvar>,
     reload_model_on_next_use: Arc<AtomicBool>,
+    /// Bumped whenever the ONNX engine slot is replaced or cleared (load,
+    /// unload). A transcription records it when it takes the engine out and
+    /// only puts the engine back if nothing changed meanwhile, so a reload of
+    /// the *same* model id that completes mid-transcription is never
+    /// overwritten by the stale engine.
+    engine_generation: Arc<AtomicU64>,
     /// Routes real-time audio frames to the active streaming worker; see
     /// [`StreamRouter`]. Shared with the audio recorder so per-frame feeds skip
     /// Tauri state and the manager lock.
@@ -289,6 +295,7 @@ impl TranscriptionManager {
             is_loading: Arc::new(Mutex::new(false)),
             loading_condvar: Arc::new(Condvar::new()),
             reload_model_on_next_use: Arc::new(AtomicBool::new(false)),
+            engine_generation: Arc::new(AtomicU64::new(0)),
             router: Arc::new(StreamRouter::new()),
             stream_active: Arc::new(AtomicBool::new(false)),
             next_stream_worker_id: Arc::new(AtomicU64::new(1)),
@@ -472,6 +479,7 @@ impl TranscriptionManager {
         let unloading = self.engine.unload();
         // Dropping an ONNX engine frees its resources.
         *self.lock_onnx() = None;
+        self.engine_generation.fetch_add(1, Ordering::AcqRel);
         {
             let mut current_model = self.current_model_id.lock().unwrap();
             *current_model = None;
@@ -593,6 +601,7 @@ impl TranscriptionManager {
         // way. Clear the id too: if the new load fails, status should read "no
         // loaded model", not the dropped engine.
         *self.lock_onnx() = None;
+        self.engine_generation.fetch_add(1, Ordering::AcqRel);
         if !matches!(model_info.engine_type, EngineType::TranscribeCpp) {
             self.engine.unload().wait();
         }
@@ -745,6 +754,7 @@ impl TranscriptionManager {
 
         // Update the current engine and model ID
         *self.lock_onnx() = loaded_onnx;
+        self.engine_generation.fetch_add(1, Ordering::AcqRel);
         {
             let mut current_model = self.current_model_id.lock().unwrap();
             *current_model = Some(model_id.to_string());
@@ -775,19 +785,23 @@ impl TranscriptionManager {
 
     /// Kicks off the model loading in a background thread if it's not already loaded
     pub fn initiate_model_load(&self) {
-        let mut is_loading = self.is_loading.lock().unwrap();
-        if *is_loading {
+        // The guard clears `is_loading` and wakes waiters on every exit of the
+        // spawned thread, a panic inside an engine loader included. Clearing
+        // the flag by hand left it stuck at `true` after a panic, which parked
+        // every later transcription on the condvar until restart.
+        let Some(guard) = self.try_start_loading() else {
             return;
-        }
+        };
 
         let reload_pending = self.reload_model_on_next_use.load(Ordering::Acquire);
         if !reload_pending && self.is_model_loaded() {
+            // Nothing to do; `guard` drops here and releases the slot.
             return;
         }
 
-        *is_loading = true;
         let self_clone = self.clone();
         thread::spawn(move || {
+            let _guard = guard;
             if reload_pending {
                 self_clone
                     .reload_model_on_next_use
@@ -797,9 +811,6 @@ impl TranscriptionManager {
             if let Err(e) = self_clone.load_model(&settings.selected_model) {
                 error!("Failed to load model: {}", e);
             }
-            let mut is_loading = self_clone.is_loading.lock().unwrap();
-            *is_loading = false;
-            self_clone.loading_condvar.notify_all();
         });
     }
 
@@ -1048,11 +1059,14 @@ impl TranscriptionManager {
         // this worker's flags.
     }
 
-    /// Return the taken ONNX engine to the mutex, unless the model was switched
-    /// or unloaded during transcription (in which case the stale engine is dropped).
-    fn return_engine(&self, engine: OnnxEngine, expected_model_id: &str) {
-        let still_current =
-            self.current_model_id.lock().unwrap().as_deref() == Some(expected_model_id);
+    /// Return the taken ONNX engine to the mutex, unless the model was switched,
+    /// reloaded or unloaded during transcription (in which case the stale engine
+    /// is dropped). `taken_generation` is the engine generation observed when
+    /// the engine was taken; a same-id reload bumps it, so the id check alone is
+    /// not enough.
+    fn return_engine(&self, engine: OnnxEngine, expected_model_id: &str, taken_generation: u64) {
+        let still_current = self.engine_generation.load(Ordering::Acquire) == taken_generation
+            && self.current_model_id.lock().unwrap().as_deref() == Some(expected_model_id);
         if still_current {
             *self.lock_onnx() = Some(engine);
         } else {
@@ -1095,6 +1109,14 @@ impl TranscriptionManager {
             &finalized.output_language,
             &finalized.supported_languages,
         );
+
+        // An empty result is not usable: the caller falls back to a batch
+        // `transcribe()` of the same audio, which needs the model and does its
+        // own immediate-unload afterwards. Unloading here first made that
+        // fallback fail with "Model is not loaded".
+        if filtered.trim().is_empty() {
+            return Ok(None);
+        }
 
         self.maybe_unload_immediately("streaming transcription");
         Ok(Some(filtered))
@@ -1361,13 +1383,17 @@ impl TranscriptionManager {
         // Take the engine out so we own it during transcription. If the
         // engine panics, we simply don't put it back (effectively unloading
         // it) instead of poisoning the mutex. No lock is held during the
-        // engine call.
-        let mut engine = match self.lock_onnx().take() {
-            Some(e) => e,
-            None => {
-                return Err(anyhow::anyhow!(
-                    "Model failed to load after auto-load attempt. Please check your model settings."
-                ));
+        // engine call. The generation is read under the same lock so a
+        // concurrent load cannot slip in between the two reads.
+        let (mut engine, taken_generation) = {
+            let mut slot = self.lock_onnx();
+            match slot.take() {
+                Some(e) => (e, self.engine_generation.load(Ordering::Acquire)),
+                None => {
+                    return Err(anyhow::anyhow!(
+                        "Model failed to load after auto-load attempt. Please check your model settings."
+                    ));
+                }
             }
         };
 
@@ -1460,7 +1486,7 @@ impl TranscriptionManager {
             Ok(inner_result) => {
                 // Success or normal error: return the engine unless a model
                 // switch/unload invalidated it while it was in use.
-                self.return_engine(engine, active_model);
+                self.return_engine(engine, active_model, taken_generation);
                 inner_result?
             }
             Err(panic_payload) => {
