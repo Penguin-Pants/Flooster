@@ -5,6 +5,7 @@ import { relaunch } from "@tauri-apps/plugin-process";
 import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { arch, platform } from "@tauri-apps/plugin-os";
+import { toast } from "sonner";
 import { ProgressBar } from "../shared";
 import { useSettings } from "../../hooks/useSettings";
 import { commands } from "../../bindings";
@@ -44,6 +45,10 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
   const upToDateTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const isManualCheckRef = useRef(false);
+  // The `check-for-updates` listener below captures `checkForUpdates` from the
+  // render it was registered in, so the `isChecking` state inside it would be
+  // frozen at `false`. The in-flight flag lives in a ref for that reason.
+  const isCheckingRef = useRef(false);
   const downloadedBytesRef = useRef(0);
   const contentLengthRef = useRef(0);
 
@@ -78,9 +83,10 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
   // Update checking functions
   const checkForUpdates = async () => {
-    if (!updateChecksEnabled || isChecking) return;
+    if (!updateChecksEnabled || isCheckingRef.current) return;
 
     try {
+      isCheckingRef.current = true;
       setIsChecking(true);
       const update = await check();
 
@@ -107,7 +113,14 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       }
     } catch (error) {
       console.error("Failed to check for updates:", error);
+      // Manual checks come from a click (footer or tray), so say it failed
+      // instead of flashing "Checking..." and going quiet. Automatic startup
+      // checks stay silent, as before.
+      if (isManualCheckRef.current) {
+        toast.error(t("errors.updateCheckFailed"));
+      }
     } finally {
+      isCheckingRef.current = false;
       setIsChecking(false);
       isManualCheckRef.current = false;
     }
@@ -162,6 +175,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       await relaunch();
     } catch (error) {
       console.error("Failed to install update:", error);
+      toast.error(t("errors.updateInstallFailed"));
     } finally {
       setIsInstalling(false);
       setDownloadProgress(0);
@@ -229,7 +243,10 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
               <button
                 className="px-3 py-1.5 text-sm rounded bg-logo-primary text-white hover:bg-logo-primary/80 transition-colors"
                 onClick={() => {
-                  openUrl(portableInstallerUrl);
+                  openUrl(portableInstallerUrl).catch((error) => {
+                    console.error("Failed to open installer URL:", error);
+                    toast.error(t("errors.openUrlFailed"));
+                  });
                   setShowPortableUpdateDialog(false);
                 }}
               >

@@ -176,6 +176,14 @@
       "rescan": {
         "label": "Neu scannen",
         "tooltip": "Erneut nach Modellen scannen, die außerhalb von Handy zum Modellordner oder Hugging-Face-Cache hinzugefügt wurden"
+      },
+      "errors": {
+        "load": "Failed to load models: {{error}}",
+        "rescan": "Failed to rescan models: {{error}}",
+        "select": "Failed to switch model: {{error}}",
+        "cancel": "Failed to cancel download: {{error}}",
+        "delete": "Failed to delete model: {{error}}",
+        "extract": "Failed to extract model: {{error}}"
       }
     },
     "general": {
@@ -460,7 +468,14 @@
         "createPrompt": "Prompt erstellen",
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
-        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
+        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
+        "deleteConfirmTitle": "Delete Prompt",
+        "errors": {
+          "create": "Failed to create prompt: {{error}}",
+          "update": "Failed to update prompt: {{error}}",
+          "delete": "Failed to delete prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +492,10 @@
       "retranscribe": "Erneut transkribieren",
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",
-      "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren."
+      "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren.",
+      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
+      "deleteConfirmTitle": "Delete Entry",
+      "deleteFailed": "Failed to delete entry: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -691,7 +709,11 @@
     "modelLoadFailedUnknown": "unbekanntes Modell",
     "pasteFailedTitle": "Text konnte nicht eingefügt werden",
     "pasteFailed": "Der Text konnte nicht in die aktive Anwendung eingefügt werden.",
-    "transcriptionFailedTitle": "Transkription fehlgeschlagen"
+    "transcriptionFailedTitle": "Transkription fehlgeschlagen",
+    "settingUpdateFailed": "Failed to save setting",
+    "updateCheckFailed": "Failed to check for updates",
+    "updateInstallFailed": "Failed to install update",
+    "openUrlFailed": "Failed to open the link"
   },
   "appLanguage": {
     "title": "Anwendungssprache",

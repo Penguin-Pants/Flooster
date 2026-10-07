@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import { ChevronDown } from "lucide-react";
 import type { ModelInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
@@ -89,11 +88,11 @@ const Onboarding: React.FC<OnboardingProps> = ({
       hasStartedSelection.current = true;
 
       // Model is ready — select it and transition
+      // The store reports a failed switch with a toast; only reset here.
       selectModel(selectedModelId).then((success) => {
         if (success) {
           onModelSelected();
         } else {
-          toast.error(t("onboarding.errors.selectModel"));
           hasStartedSelection.current = false;
           setSelectedModelId(null);
         }

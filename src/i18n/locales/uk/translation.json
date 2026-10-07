@@ -227,6 +227,14 @@
       "rescan": {
         "label": "Пересканувати",
         "tooltip": "Пересканувати моделі, додані до папки моделей або кешу Hugging Face поза межами Handy"
+      },
+      "errors": {
+        "load": "Failed to load models: {{error}}",
+        "rescan": "Failed to rescan models: {{error}}",
+        "select": "Failed to switch model: {{error}}",
+        "cancel": "Failed to cancel download: {{error}}",
+        "delete": "Failed to delete model: {{error}}",
+        "extract": "Failed to extract model: {{error}}"
       }
     },
     "sound": {
@@ -460,7 +468,14 @@
         "createPrompt": "Створити промпт",
         "cancel": "Скасувати",
         "selectToEdit": "Оберіть промпт вище для перегляду та редагування його деталей.",
-        "createFirst": "Натисніть «Створити новий промпт» вище, щоб створити ваш перший промпт постобробки."
+        "createFirst": "Натисніть «Створити новий промпт» вище, щоб створити ваш перший промпт постобробки.",
+        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
+        "deleteConfirmTitle": "Delete Prompt",
+        "errors": {
+          "create": "Failed to create prompt: {{error}}",
+          "update": "Failed to update prompt: {{error}}",
+          "delete": "Failed to delete prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +492,10 @@
       "retranscribe": "Перетранскрибувати",
       "retranscribeError": "Не вдалося перетранскрибувати. Будь ласка, спробуйте ще раз.",
       "transcribing": "Транскрибування...",
-      "transcriptionFailed": "Транскрипція не вдалася. Ви можете перетранскрибувати за допомогою іконки повтору."
+      "transcriptionFailed": "Транскрипція не вдалася. Ви можете перетранскрибувати за допомогою іконки повтору.",
+      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
+      "deleteConfirmTitle": "Delete Entry",
+      "deleteFailed": "Failed to delete entry: {{error}}"
     },
     "debug": {
       "title": "Дебаг",
@@ -691,7 +709,11 @@
     "modelLoadFailedUnknown": "невідома модель",
     "pasteFailedTitle": "Не вдалося вставити текст",
     "pasteFailed": "Не вдалося вставити текст до активної програми.",
-    "transcriptionFailedTitle": "Помилка транскрипції"
+    "transcriptionFailedTitle": "Помилка транскрипції",
+    "settingUpdateFailed": "Failed to save setting",
+    "updateCheckFailed": "Failed to check for updates",
+    "updateInstallFailed": "Failed to install update",
+    "openUrlFailed": "Failed to open the link"
   },
   "appLanguage": {
     "title": "Мова інтерфейсу",

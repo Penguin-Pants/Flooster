@@ -158,21 +158,15 @@ export const ModelsSettings: React.FC = () => {
       },
     );
 
+    // The store reports failures with a toast and resolves `false`; it never
+    // throws, so a try/catch here would be dead code.
     if (confirmed) {
-      try {
-        await deleteModel(modelId);
-      } catch (err) {
-        console.error(`Failed to delete model ${modelId}:`, err);
-      }
+      await deleteModel(modelId);
     }
   };
 
   const handleModelCancel = async (modelId: string) => {
-    try {
-      await cancelDownload(modelId);
-    } catch (err) {
-      console.error(`Failed to cancel download for ${modelId}:`, err);
-    }
+    await cancelDownload(modelId);
   };
 
   // Filter models by search query (name + description), language filter, and toggles

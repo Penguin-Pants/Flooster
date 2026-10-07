@@ -227,7 +227,15 @@
         "label": "फिर से स्कैन करें",
         "tooltip": "Handy के बाहर, मॉडल फ़ोल्डर या Hugging Face कैश में जोड़े गए मॉडल के लिए फिर से स्कैन करें"
       },
-      "noModelsMatch": "इस फ़िल्टर से मेल खाने वाला कोई मॉडल नहीं है."
+      "noModelsMatch": "इस फ़िल्टर से मेल खाने वाला कोई मॉडल नहीं है.",
+      "errors": {
+        "load": "Failed to load models: {{error}}",
+        "rescan": "Failed to rescan models: {{error}}",
+        "select": "Failed to switch model: {{error}}",
+        "cancel": "Failed to cancel download: {{error}}",
+        "delete": "Failed to delete model: {{error}}",
+        "extract": "Failed to extract model: {{error}}"
+      }
     },
     "sound": {
       "title": "आवाज़",
@@ -460,7 +468,14 @@
         "createPrompt": "प्रॉम्प्ट बनाएं",
         "cancel": "रद्द करें",
         "selectToEdit": "जानकारी देखने और बदलाव करने के लिए, ऊपर कोई प्रॉम्प्ट चुनें.",
-        "createFirst": "अपना पहला पोस्ट-प्रोसेसिंग प्रॉम्प्ट बनाने के लिए, ऊपर 'नया प्रॉम्प्ट बनाएं' पर क्लिक करें."
+        "createFirst": "अपना पहला पोस्ट-प्रोसेसिंग प्रॉम्प्ट बनाने के लिए, ऊपर 'नया प्रॉम्प्ट बनाएं' पर क्लिक करें.",
+        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
+        "deleteConfirmTitle": "Delete Prompt",
+        "errors": {
+          "create": "Failed to create prompt: {{error}}",
+          "update": "Failed to update prompt: {{error}}",
+          "delete": "Failed to delete prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +492,10 @@
       "retranscribe": "फिर से ट्रांसक्राइब करें",
       "retranscribeError": "फिर से ट्रांसक्राइब नहीं किया जा सका. कृपया फिर से कोशिश करें.",
       "transcribing": "ट्रांसक्राइब हो रहा है...",
-      "transcriptionFailed": "ट्रांसक्रिप्शन नहीं हो सका. आप रीट्राई आइकन से फिर से ट्रांसक्राइब कर सकते हैं."
+      "transcriptionFailed": "ट्रांसक्रिप्शन नहीं हो सका. आप रीट्राई आइकन से फिर से ट्रांसक्राइब कर सकते हैं.",
+      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
+      "deleteConfirmTitle": "Delete Entry",
+      "deleteFailed": "Failed to delete entry: {{error}}"
     },
     "debug": {
       "title": "डिबग",
@@ -694,7 +712,11 @@
     "modelLoadFailedUnknown": "अज्ञात मॉडल",
     "pasteFailedTitle": "टेक्स्ट पेस्ट नहीं हो सका",
     "pasteFailed": "खुले हुए ऐप्लिकेशन में टेक्स्ट पेस्ट नहीं किया जा सका.",
-    "transcriptionFailedTitle": "ट्रांसक्रिप्शन नहीं हो सका"
+    "transcriptionFailedTitle": "ट्रांसक्रिप्शन नहीं हो सका",
+    "settingUpdateFailed": "Failed to save setting",
+    "updateCheckFailed": "Failed to check for updates",
+    "updateInstallFailed": "Failed to install update",
+    "openUrlFailed": "Failed to open the link"
   },
   "appLanguage": {
     "title": "ऐप्लिकेशन की भाषा",

@@ -176,6 +176,14 @@
       "rescan": {
         "label": "Réanalyser",
         "tooltip": "Réanalyser pour détecter les modèles ajoutés au dossier des modèles ou au cache Hugging Face en dehors de Handy"
+      },
+      "errors": {
+        "load": "Failed to load models: {{error}}",
+        "rescan": "Failed to rescan models: {{error}}",
+        "select": "Failed to switch model: {{error}}",
+        "cancel": "Failed to cancel download: {{error}}",
+        "delete": "Failed to delete model: {{error}}",
+        "extract": "Failed to extract model: {{error}}"
       }
     },
     "general": {
@@ -460,7 +468,14 @@
         "createPrompt": "Créer le prompt",
         "cancel": "Annuler",
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
-        "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
+        "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement.",
+        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
+        "deleteConfirmTitle": "Delete Prompt",
+        "errors": {
+          "create": "Failed to create prompt: {{error}}",
+          "update": "Failed to update prompt: {{error}}",
+          "delete": "Failed to delete prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +492,10 @@
       "retranscribe": "Re-transcrire",
       "retranscribeError": "Impossible de re-transcrire. Veuillez réessayer.",
       "transcribing": "Transcription en cours...",
-      "transcriptionFailed": "La transcription a échoué. Vous pouvez re-transcrire en utilisant l'icône de réessai."
+      "transcriptionFailed": "La transcription a échoué. Vous pouvez re-transcrire en utilisant l'icône de réessai.",
+      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
+      "deleteConfirmTitle": "Delete Entry",
+      "deleteFailed": "Failed to delete entry: {{error}}"
     },
     "debug": {
       "title": "Débogage",
@@ -691,7 +709,11 @@
     "modelLoadFailedUnknown": "modèle inconnu",
     "pasteFailedTitle": "Échec du collage du texte",
     "pasteFailed": "Le texte n'a pas pu être collé dans l'application active.",
-    "transcriptionFailedTitle": "Échec de la transcription"
+    "transcriptionFailedTitle": "Échec de la transcription",
+    "settingUpdateFailed": "Failed to save setting",
+    "updateCheckFailed": "Failed to check for updates",
+    "updateInstallFailed": "Failed to install update",
+    "openUrlFailed": "Failed to open the link"
   },
   "appLanguage": {
     "title": "Langue de l'application",

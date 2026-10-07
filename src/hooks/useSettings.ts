@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useSettingsStore } from "../stores/settingsStore";
 import type { AppSettings as Settings, AudioDevice } from "@/bindings";
 
@@ -17,6 +18,7 @@ interface UseSettingsReturn {
   updateSetting: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
+    options?: { silent?: boolean },
   ) => Promise<void>;
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
@@ -45,9 +47,39 @@ interface UseSettingsReturn {
 }
 
 export const useSettings = (): UseSettingsReturn => {
-  const store = useSettingsStore();
+  // Select only what the hook returns. A bare `useSettingsStore()` subscribes
+  // every consumer to the whole store, so each `isUpdating` flip re-renders
+  // every mounted settings component.
+  const store = useSettingsStore(
+    useShallow((state) => ({
+      settings: state.settings,
+      isLoading: state.isLoading,
+      // `isUpdating` is selected for its identity only: it is what changes when
+      // a flag flips, so consumers re-render and `isUpdatingKey` reads fresh.
+      isUpdating: state.isUpdating,
+      isUpdatingKey: state.isUpdatingKey,
+      audioDevices: state.audioDevices,
+      outputDevices: state.outputDevices,
+      postProcessModelOptions: state.postProcessModelOptions,
+      updateChecksLocked: state.updateChecksLocked,
+      initialize: state.initialize,
+      updateSetting: state.updateSetting,
+      resetSetting: state.resetSetting,
+      refreshSettings: state.refreshSettings,
+      refreshAudioDevices: state.refreshAudioDevices,
+      refreshOutputDevices: state.refreshOutputDevices,
+      updateBinding: state.updateBinding,
+      resetBinding: state.resetBinding,
+      getSetting: state.getSetting,
+      setPostProcessProvider: state.setPostProcessProvider,
+      updatePostProcessBaseUrl: state.updatePostProcessBaseUrl,
+      updatePostProcessApiKey: state.updatePostProcessApiKey,
+      updatePostProcessModel: state.updatePostProcessModel,
+      fetchPostProcessModels: state.fetchPostProcessModels,
+    })),
+  );
 
-  // Initialize on first mount
+  // Initialize on first mount. The store guards against repeat calls.
   useEffect(() => {
     if (store.isLoading) {
       store.initialize();

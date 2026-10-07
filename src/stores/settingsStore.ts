@@ -9,9 +9,12 @@ import type {
   OrtAcceleratorSetting,
   ShortcutActivation,
   VadBackend,
+  LogLevel,
 } from "@/bindings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
+import i18n from "@/i18n";
+import { errorMessage, expectOk } from "@/lib/utils/result";
 
 interface SettingsStore {
   settings: Settings | null;
@@ -24,14 +27,21 @@ interface SettingsStore {
   postProcessModelOptions: Record<string, string[]>;
   // null until loadUpdateChecksLocked() resolves
   updateChecksLocked: boolean | null;
+  // Set synchronously on the first initialize() call so concurrent consumers
+  // (every useSettings() mount while loading) register the backend listeners
+  // exactly once.
+  initialized: boolean;
 
   // Actions
   initialize: () => Promise<void>;
   loadDefaultSettings: () => Promise<void>;
   loadUpdateChecksLocked: () => Promise<void>;
+  /// `silent` skips the failure toast for background writes the user did not
+  /// trigger (the rollback and log still happen).
   updateSetting: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
+    options?: { silent?: boolean },
   ) => Promise<void>;
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
@@ -109,14 +119,8 @@ const settingUpdaters: {
         ? "default"
         : (value as string),
     ),
-  selected_channel: async (value) => {
-    const result = await commands.setSelectedChannel(
-      (value as number | null | undefined) ?? null,
-    );
-    if (result.status === "error") {
-      throw new Error(result.error);
-    }
-  },
+  selected_channel: (value) =>
+    commands.setSelectedChannel((value as number | null | undefined) ?? null),
   clamshell_microphone: (value) =>
     commands.setClamshellMicrophone(
       (value as string) === "Default" ? "default" : (value as string),
@@ -163,7 +167,7 @@ const settingUpdaters: {
     commands.changeMuteWhileRecordingSetting(value as boolean),
   append_trailing_space: (value) =>
     commands.changeAppendTrailingSpaceSetting(value as boolean),
-  log_level: (value) => commands.setLogLevel(value as any),
+  log_level: (value) => commands.setLogLevel(value as LogLevel),
   app_language: (value) => commands.changeAppLanguageSetting(value as string),
   theme: (value) => commands.changeThemeSetting(value as string),
   experimental_enabled: (value) =>
@@ -172,15 +176,7 @@ const settingUpdaters: {
     commands.changeLazyStreamCloseSetting(value as boolean),
   overlay_style: (value) => commands.changeOverlayStyleSetting(value as string),
   vad_enabled: (value) => commands.changeVadEnabledSetting(value as boolean),
-  vad_backend: async (value) => {
-    const result = await commands.changeVadBackendSetting(value as VadBackend);
-    if (result.status === "error") {
-      // Rejected switches (e.g. mid-recording) roll the dropdown back via the
-      // throw below; the toast tells the user why.
-      toast.error(result.error);
-      throw new Error(result.error);
-    }
-  },
+  vad_backend: (value) => commands.changeVadBackendSetting(value as VadBackend),
   filler_word_removal_enabled: (value) =>
     commands.changeFillerWordRemovalEnabledSetting(value as boolean),
   chinese_script: (value) =>
@@ -210,6 +206,7 @@ export const useSettingsStore = create<SettingsStore>()(
     customSounds: { start: false, stop: false },
     postProcessModelOptions: {},
     updateChecksLocked: null,
+    initialized: false,
 
     // Internal setters
     setSettings: (settings) => set({ settings }),
@@ -316,6 +313,7 @@ export const useSettingsStore = create<SettingsStore>()(
     updateSetting: async <K extends keyof Settings>(
       key: K,
       value: Settings[K],
+      options?: { silent?: boolean },
     ) => {
       const { settings, setUpdating } = get();
       const updateKey = String(key);
@@ -330,14 +328,27 @@ export const useSettingsStore = create<SettingsStore>()(
 
         const updater = settingUpdaters[key];
         if (updater) {
-          await updater(value);
+          expectOk(await updater(value));
         } else if (key !== "bindings" && key !== "selected_model") {
           console.warn(`No handler for setting: ${String(key)}`);
         }
       } catch (error) {
         console.error(`Failed to update setting ${String(key)}:`, error);
+        // Rejected changes (e.g. a VAD switch mid-recording, a failed autostart
+        // registration) roll the control back; the toast says why.
+        if (!options?.silent) {
+          toast.error(i18n.t("errors.settingUpdateFailed"), {
+            description: errorMessage(error),
+          });
+        }
+        // Roll back only this key. Replacing the whole object with the
+        // pre-await snapshot would wipe concurrent changes to other keys.
         if (settings) {
-          set({ settings: { ...settings, [key]: originalValue } });
+          set((state) => ({
+            settings: state.settings
+              ? { ...state.settings, [key]: originalValue }
+              : null,
+          }));
         }
       } finally {
         setUpdating(updateKey, false);
@@ -350,7 +361,7 @@ export const useSettingsStore = create<SettingsStore>()(
       if (defaultSettings) {
         const defaultValue = defaultSettings[key];
         if (defaultValue !== undefined) {
-          await get().updateSetting(key, defaultValue as any);
+          await get().updateSetting(key, defaultValue);
         }
       }
     },
@@ -427,10 +438,13 @@ export const useSettingsStore = create<SettingsStore>()(
       setUpdating(updateKey, true);
 
       try {
-        await commands.resetBinding(id);
+        expectOk(await commands.resetBinding(id));
         await refreshSettings();
       } catch (error) {
         console.error(`Failed to reset binding ${id}:`, error);
+        toast.error(i18n.t("errors.settingUpdateFailed"), {
+          description: errorMessage(error),
+        });
       } finally {
         setUpdating(updateKey, false);
       }
@@ -461,10 +475,13 @@ export const useSettingsStore = create<SettingsStore>()(
       setPostProcessModelOptions(providerId, []);
 
       try {
-        await commands.setPostProcessProvider(providerId);
+        expectOk(await commands.setPostProcessProvider(providerId));
         await refreshSettings();
       } catch (error) {
         console.error("Failed to set post-process provider:", error);
+        toast.error(i18n.t("errors.settingUpdateFailed"), {
+          description: errorMessage(error),
+        });
         if (previousId !== null) {
           set((state) => ({
             settings: state.settings
@@ -490,11 +507,17 @@ export const useSettingsStore = create<SettingsStore>()(
 
       try {
         if (settingType === "base_url") {
-          await commands.changePostProcessBaseUrlSetting(providerId, value);
+          expectOk(
+            await commands.changePostProcessBaseUrlSetting(providerId, value),
+          );
         } else if (settingType === "api_key") {
-          await commands.changePostProcessApiKeySetting(providerId, value);
+          expectOk(
+            await commands.changePostProcessApiKeySetting(providerId, value),
+          );
         } else if (settingType === "model") {
-          await commands.changePostProcessModelSetting(providerId, value);
+          expectOk(
+            await commands.changePostProcessModelSetting(providerId, value),
+          );
         }
         await refreshSettings();
       } catch (error) {
@@ -502,6 +525,9 @@ export const useSettingsStore = create<SettingsStore>()(
           `Failed to update post-process ${settingType.replace("_", " ")}:`,
           error,
         );
+        toast.error(i18n.t("errors.settingUpdateFailed"), {
+          description: errorMessage(error),
+        });
       } finally {
         setUpdating(updateKey, false);
       }
@@ -631,6 +657,11 @@ export const useSettingsStore = create<SettingsStore>()(
 
     // Initialize everything
     initialize: async () => {
+      // Checked and set synchronously, before the first await, so a second
+      // caller during the initial fetch cannot register the listeners again.
+      if (get().initialized) return;
+      set({ initialized: true });
+
       const {
         refreshSettings,
         checkCustomSounds,

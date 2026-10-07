@@ -63,7 +63,10 @@ export const WhatsNewGate: React.FC = () => {
 
     dismissedVersionRef.current = note.version;
     setIsOpen(false);
-    void updateSetting("whats_new_last_seen_version", note.version);
+    // Background bookkeeping write: a failure is logged, not toasted.
+    void updateSetting("whats_new_last_seen_version", note.version, {
+      silent: true,
+    });
   };
 
   if (!note) return null;

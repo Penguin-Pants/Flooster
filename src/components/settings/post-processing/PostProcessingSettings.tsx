@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { RefreshCcw } from "lucide-react";
+import { ask } from "@tauri-apps/plugin-dialog";
+import { toast } from "sonner";
 import { commands } from "@/bindings";
+import { errorMessage } from "@/lib/utils/result";
 
 import { Alert } from "../../ui/Alert";
 import {
@@ -191,36 +194,72 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         await refreshSettings();
         updateSetting("post_process_selected_prompt_id", result.data.id);
         setIsCreating(false);
+      } else {
+        throw new Error(result.error);
       }
     } catch (error) {
       console.error("Failed to create prompt:", error);
+      toast.error(
+        t("settings.postProcessing.prompts.errors.create", {
+          error: errorMessage(error),
+        }),
+      );
     }
   };
 
+  // The generated command wrappers resolve with `{ status: "error" }` instead
+  // of throwing, so each result is checked; otherwise `refreshSettings()`
+  // silently overwrites the user's edits with the stored prompt.
   const handleUpdatePrompt = async () => {
     if (!selectedPromptId || !draftName.trim() || !draftText.trim()) return;
 
     try {
-      await commands.updatePostProcessPrompt(
+      const result = await commands.updatePostProcessPrompt(
         selectedPromptId,
         draftName.trim(),
         draftText.trim(),
       );
+      if (result.status !== "ok") {
+        throw new Error(result.error);
+      }
       await refreshSettings();
     } catch (error) {
       console.error("Failed to update prompt:", error);
+      toast.error(
+        t("settings.postProcessing.prompts.errors.update", {
+          error: errorMessage(error),
+        }),
+      );
     }
   };
 
   const handleDeletePrompt = async (promptId: string) => {
     if (!promptId) return;
 
+    const promptName = prompts.find((p) => p.id === promptId)?.name ?? promptId;
+    const confirmed = await ask(
+      t("settings.postProcessing.prompts.deleteConfirm", { name: promptName }),
+      {
+        title: t("settings.postProcessing.prompts.deleteConfirmTitle"),
+        kind: "warning",
+      },
+    );
+    if (!confirmed) return;
+
     try {
-      await commands.deletePostProcessPrompt(promptId);
+      const result = await commands.deletePostProcessPrompt(promptId);
+      if (result.status !== "ok") {
+        throw new Error(result.error);
+      }
       await refreshSettings();
       setIsCreating(false);
     } catch (error) {
       console.error("Failed to delete prompt:", error);
+      toast.error(
+        t("settings.postProcessing.prompts.errors.delete", {
+          error: errorMessage(error),
+        }),
+      );
     }
   };
 

@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useState,
@@ -281,16 +282,18 @@ function App() {
     }
   };
 
-  const handleAccessibilityComplete = () => {
+  // Stable callbacks: the onboarding steps receive these as props and must not
+  // see a new function on every App render.
+  const handleAccessibilityComplete = useCallback(() => {
     // Returning users already have models, skip to main app
     // New users need to select a model
     setOnboardingStep(isReturningUser ? "done" : "model");
-  };
+  }, [isReturningUser]);
 
-  const handleModelSelected = () => {
+  const handleModelSelected = useCallback(() => {
     // Transition to main app - user has started a download
     setOnboardingStep("done");
-  };
+  }, []);
 
   // Rendered once around every step below (including onboarding) so
   // toast.error() calls surface to the user. sonner renders via a portal, so
