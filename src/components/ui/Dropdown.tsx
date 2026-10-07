@@ -34,8 +34,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const [highlighted, setHighlighted] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // Space selects on keydown, but the focused trigger still fires a click on
+  // keyup in some engines; that click must not reopen the list.
+  const skipNextClickRef = useRef(false);
   const listId = useId();
   const placeholderText = placeholder ?? t("common.selectOption");
+
+  // Keep the highlighted option visible when arrowing past the fold.
+  useEffect(() => {
+    if (!isOpen) return;
+    document
+      .getElementById(`${listId}-${highlighted}`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [highlighted, isOpen, listId]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,6 +84,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const handleToggle = () => {
     if (disabled) return;
+    if (skipNextClickRef.current) {
+      skipNextClickRef.current = false;
+      return;
+    }
     if (isOpen) setIsOpen(false);
     else open();
   };
@@ -106,6 +121,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       case " ":
         if (isOpen) {
           event.preventDefault();
+          if (event.key === " ") skipNextClickRef.current = true;
           const option = options[highlighted];
           if (option && !option.disabled) handleSelect(option.value);
         }
@@ -142,6 +158,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-controls={isOpen ? listId : undefined}
+        aria-activedescendant={
+          isOpen && options[highlighted]
+            ? `${listId}-${highlighted}`
+            : undefined
+        }
       >
         <span className="truncate">
           {selectedOption?.label || placeholderText}
@@ -176,6 +197,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             options.map((option, index) => (
               <button
                 key={option.value}
+                id={`${listId}-${index}`}
                 type="button"
                 role="option"
                 aria-selected={selectedValue === option.value}

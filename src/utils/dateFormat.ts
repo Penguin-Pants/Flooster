@@ -27,10 +27,3 @@ export const formatDateTime = (timestamp: string, locale: string): string => {
     return timestamp; // Fallback to original timestamp
   }
 };
-
-/**
- * Format a date string or timestamp to a localized date string (no time)
- * @param timestamp - Unix timestamp in seconds (as string)
- * @param locale - BCP 47 language tag (e.g., 'en', 'es', 'fr')
- * @returns Formatted date string
- */

@@ -48,7 +48,6 @@ const InfoTooltipButton: React.FC<InfoTooltipButtonProps> = ({
         className="text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
         aria-label={t("common.moreInformation")}
         aria-describedby={showTooltip ? tooltipId : undefined}
-        aria-expanded={showTooltip}
         onClick={() => setShowTooltip((open) => !open)}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}

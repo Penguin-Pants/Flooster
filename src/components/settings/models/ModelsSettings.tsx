@@ -290,7 +290,7 @@ export const ModelsSettings: React.FC = () => {
                   "settings.general.language.searchPlaceholder",
                 )}
                 noResultsText={t("settings.general.language.noResults")}
-                triggerAriaLabel={t("settings.models.filters.language")}
+                triggerAriaLabel={`${t("settings.models.filters.language")}: ${selectedLanguageLabel}`}
                 triggerClassName={`flex items-center gap-1.5 h-8 px-3 text-sm font-medium rounded-lg transition-colors ${
                   languageFilter !== "all"
                     ? "bg-logo-primary/20 text-logo-primary"

@@ -55,7 +55,6 @@ const ModelStatusButton: React.FC<ModelStatusButtonProps> = ({
       onClick={onClick}
       className={`flex items-center gap-2 hover:text-text/80 transition-colors ${className}`}
       title={t("modelSelector.statusTitle", { status: displayText })}
-      aria-haspopup="listbox"
       aria-expanded={isDropdownOpen}
     >
       <div className={`w-2 h-2 rounded-full ${getStatusColor(status)}`} />

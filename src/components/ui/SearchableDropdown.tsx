@@ -65,6 +65,10 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       : options;
     return leadingOption ? [leadingOption, ...matches] : matches;
   }, [options, query, leadingOption]);
+  // While a query is typed, the first *match* is the natural Enter target,
+  // not the always-present leading option ("All ...") at index 0.
+  const firstMatchIndex = (q: string) => (leadingOption && q.trim() ? 1 : 0);
+  const hasRealMatch = filtered.length > (leadingOption ? 1 : 0);
 
   const close = (returnFocus: boolean) => {
     setIsOpen(false);
@@ -110,6 +114,14 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     if (highlighted >= filtered.length) setHighlighted(0);
   }, [filtered.length, highlighted]);
 
+  // Keep the highlighted option visible when arrowing past the fold.
+  useEffect(() => {
+    if (!isOpen) return;
+    document
+      .getElementById(`${listId}-${highlighted}`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [highlighted, isOpen, listId]);
+
   const pick = (value: string) => {
     onSelect(value);
     close(true);
@@ -131,10 +143,14 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
           filtered.length ? (i - 1 + filtered.length) % filtered.length : 0,
         );
         break;
-      case "Enter":
+      case "Enter": {
         event.preventDefault();
-        if (filtered[highlighted]) pick(filtered[highlighted].value);
+        const option = filtered[highlighted];
+        // With a query and no real match, Enter is a no-op (as before), rather
+        // than silently picking the leading option.
+        if (option && (hasRealMatch || !query.trim())) pick(option.value);
         break;
+      }
       case "Escape":
         event.preventDefault();
         close(true);
@@ -172,7 +188,7 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                setHighlighted(0);
+                setHighlighted(firstMatchIndex(e.target.value));
               }}
               onKeyDown={handleSearchKeyDown}
               placeholder={searchPlaceholder}

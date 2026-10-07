@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingContainer } from "../ui/SettingContainer";
 import { ResetButton } from "../ui/ResetButton";
@@ -78,6 +78,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   };
 
   const updating = isUpdating("selected_language");
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <SettingContainer
@@ -94,7 +95,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           disabled={updating}
           searchPlaceholder={t("settings.general.language.searchPlaceholder")}
           noResultsText={t("settings.general.language.noResults")}
-          triggerAriaLabel={t("settings.general.language.title")}
+          onOpenChange={setIsOpen}
+          triggerAriaLabel={`${t("settings.general.language.title")}: ${selectedLanguageName}`}
           triggerClassName={`px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 rounded min-w-[200px] text-start flex items-center justify-between transition-all duration-150 ${
             updating
               ? "opacity-50 cursor-not-allowed"
@@ -104,7 +106,9 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             <>
               <span className="truncate">{selectedLanguageName}</span>
               <svg
-                className="w-4 h-4 ms-2"
+                className={`w-4 h-4 ms-2 transition-transform duration-200 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
