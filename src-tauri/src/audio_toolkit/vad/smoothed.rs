@@ -2,8 +2,9 @@ use super::{VadFrame, VadTailReport, VoiceActivityDetector};
 use anyhow::Result;
 use std::collections::VecDeque;
 
-/// One pre-roll buffer slot. `emitted` and `voiced` exist only to power the
-/// end-of-recording `tail_report()` diagnostic; they never affect emission.
+/// One pre-roll buffer slot. `emitted` keeps a speech re-onset from replaying
+/// frames that already went downstream during the previous hangover tail;
+/// `voiced` only powers the end-of-recording `tail_report()` diagnostic.
 struct BufferedFrame {
     samples: Vec<f32>,
     emitted: bool,
@@ -79,11 +80,17 @@ impl VoiceActivityDetector for SmoothedVad {
                     self.hangover_counter = self.hangover_frames;
                     self.onset_counter = 0; // Reset for next time
 
-                    // Collect prefill + current frame
+                    // Collect prefill + current frame. Frames already emitted
+                    // through the previous hangover tail are skipped: a pause
+                    // shorter than prefill + hangover otherwise duplicated up
+                    // to `prefill_frames` of audio in the recording and the
+                    // live stream feed.
                     self.temp_out.clear();
                     for buffered in self.frame_buffer.iter_mut() {
-                        self.temp_out.extend(buffered.samples.iter());
-                        buffered.emitted = true;
+                        if !buffered.emitted {
+                            self.temp_out.extend(buffered.samples.iter());
+                            buffered.emitted = true;
+                        }
                     }
                     Ok(VadFrame::Speech(&self.temp_out))
                 } else {
@@ -216,6 +223,29 @@ mod tests {
         assert_eq!(report.withheld_voiced_frames, 1);
         assert_eq!(report.onset_counter, 1);
         assert!(!report.in_speech);
+    }
+
+    #[test]
+    fn reonset_does_not_replay_frames_emitted_during_hangover() {
+        // prefill 3, hangover 2, onset 1. Speech at t0 emits [t0]; t1 and t2
+        // are non-voice but emitted as hangover; t3 ends speech (Noise); speech
+        // again at t4. The re-onset must emit only the frames that never went
+        // downstream: t3 and t4 (8 samples), not the already-emitted t1 and t2
+        // as well (16 samples).
+        let mut vad = smoothed(&[true, false, false, false, true], 1);
+        assert!(vad.push_frame(&frame(0.0)).unwrap().is_speech());
+        assert!(vad.push_frame(&frame(0.1)).unwrap().is_speech()); // hangover
+        assert!(vad.push_frame(&frame(0.2)).unwrap().is_speech()); // hangover
+        assert!(!vad.push_frame(&frame(0.3)).unwrap().is_speech()); // speech ends
+
+        match vad.push_frame(&frame(0.4)).unwrap() {
+            VadFrame::Speech(samples) => {
+                assert_eq!(samples.len(), 8);
+                assert_eq!(&samples[..4], &[0.3; 4]);
+                assert_eq!(&samples[4..], &[0.4; 4]);
+            }
+            VadFrame::Noise => panic!("re-onset must emit speech"),
+        }
     }
 
     #[test]

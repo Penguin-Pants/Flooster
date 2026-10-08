@@ -916,6 +916,17 @@ impl AudioRecordingManager {
     }
 
     pub fn update_selected_device(&self) -> Result<(), anyhow::Error> {
+        // Serialize against recording start/stop, as the VAD and channel
+        // changes do. Restarting the stream mid-recording silently dropped the
+        // captured samples while the manager stayed in `Recording`, so the
+        // user's dictation was lost with no error.
+        let state = self.state.lock().unwrap();
+        if !matches!(*state, RecordingState::Idle) {
+            return Err(anyhow::anyhow!(
+                "Cannot change the microphone while recording"
+            ));
+        }
+
         // Device settings changed; re-enumerate the device and restart capture.
         self.invalidate_device_cache();
         let was_open = *self.is_open.lock().unwrap();

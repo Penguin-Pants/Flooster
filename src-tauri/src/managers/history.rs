@@ -93,7 +93,65 @@ impl HistoryManager {
         // Initialize database and run migrations synchronously
         manager.init_database()?;
 
+        // Reclaim recordings that lost their row (cancelled dictations wrote
+        // the WAV before the row, a failed row insert, a crash mid-save).
+        // Nothing else ever lists the directory, so without this they
+        // accumulated for the life of the install.
+        if let Err(e) = manager.sweep_orphaned_recordings() {
+            error!("Failed to sweep orphaned recordings: {}", e);
+        }
+
         Ok(manager)
+    }
+
+    /// Whether `name` has the exact shape this app gives recordings
+    /// (`handy-<unix timestamp>.wav`, see `save_recording`). A user's own files
+    /// in the folder, `handy-notes.wav` or `handy-123 - Copy.wav` included,
+    /// do not match and are never swept.
+    fn is_generated_recording_name(name: &str) -> bool {
+        name.strip_prefix("handy-")
+            .and_then(|rest| rest.strip_suffix(".wav"))
+            .is_some_and(|stamp| !stamp.is_empty() && stamp.bytes().all(|b| b.is_ascii_digit()))
+    }
+
+    /// Deletes app-generated recordings (`handy-<timestamp>.wav`) that no
+    /// history row references. Runs at startup, when no recording can be in
+    /// flight, and reclaims files whose row was deleted but whose removal
+    /// failed.
+    fn sweep_orphaned_recordings(&self) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let mut stmt = conn.prepare("SELECT file_name FROM transcription_history")?;
+        let referenced: std::collections::HashSet<String> = stmt
+            .query_map([], |row| row.get::<_, String>(0))?
+            .filter_map(|r| r.ok())
+            .collect();
+
+        let mut removed = 0;
+        for entry in fs::read_dir(&self.recordings_dir)? {
+            let entry = match entry {
+                Ok(entry) => entry,
+                Err(e) => {
+                    debug!("Skipping unreadable recordings dir entry: {}", e);
+                    continue;
+                }
+            };
+            let path = entry.path();
+            let Some(name) = path.file_name().and_then(|n| n.to_str()) else {
+                continue;
+            };
+            if !Self::is_generated_recording_name(name) || referenced.contains(name) {
+                continue;
+            }
+            match fs::remove_file(&path) {
+                Ok(()) => removed += 1,
+                Err(e) => error!("Failed to remove orphaned recording {}: {}", name, e),
+            }
+        }
+
+        if removed > 0 {
+            info!("Removed {} orphaned recording(s)", removed);
+        }
+        Ok(removed)
     }
 
     fn init_database(&self) -> Result<()> {
@@ -356,20 +414,21 @@ impl HistoryManager {
         let mut deleted_count = 0;
 
         for (id, file_name) in entries {
-            // Delete database entry
-            conn.execute(
+            // Row first, then file. A row that outlives its WAV breaks playback
+            // and retry for good; a WAV that outlives its row is reclaimed by
+            // the startup sweep. Counts rows, so the log reports the number of
+            // entries pruned rather than the files that happened to exist.
+            deleted_count += conn.execute(
                 "DELETE FROM transcription_history WHERE id = ?1",
                 params![id],
             )?;
 
-            // Delete WAV file
             let file_path = self.recordings_dir.join(file_name);
             if file_path.exists() {
                 if let Err(e) = fs::remove_file(&file_path) {
                     error!("Failed to delete WAV file {}: {}", file_name, e);
                 } else {
                     debug!("Deleted old WAV file: {}", file_name);
-                    deleted_count += 1;
                 }
             }
         }
@@ -610,23 +669,23 @@ impl HistoryManager {
     pub async fn delete_entry(&self, id: i64) -> Result<()> {
         let conn = self.get_connection()?;
 
-        // Get the entry to find the file name
-        if let Some(entry) = self.get_entry_by_id(id).await? {
-            // Delete the audio file first
-            let file_path = self.get_audio_file_path(&entry.file_name);
-            if file_path.exists() {
-                if let Err(e) = fs::remove_file(&file_path) {
-                    error!("Failed to delete audio file {}: {}", entry.file_name, e);
-                    // Continue with database deletion even if file deletion fails
-                }
-            }
-        }
+        let entry = self.get_entry_by_id(id).await?;
 
-        // Delete from database
+        // Row first, then file (see `delete_entries_and_files`): an orphaned
+        // WAV is swept at the next start, an orphaned row is broken for good.
         conn.execute(
             "DELETE FROM transcription_history WHERE id = ?1",
             params![id],
         )?;
+
+        if let Some(entry) = entry {
+            let file_path = self.get_audio_file_path(&entry.file_name);
+            if file_path.exists() {
+                if let Err(e) = fs::remove_file(&file_path) {
+                    error!("Failed to delete audio file {}: {}", entry.file_name, e);
+                }
+            }
+        }
 
         debug!("Deleted history entry with id: {}", id);
 
@@ -697,6 +756,29 @@ mod tests {
             ],
         )
         .expect("insert history entry");
+    }
+
+    #[test]
+    fn only_generated_recording_names_are_swept() {
+        assert!(HistoryManager::is_generated_recording_name(
+            "handy-1700000000.wav"
+        ));
+        assert!(HistoryManager::is_generated_recording_name("handy-0.wav"));
+
+        for name in [
+            "handy-notes.wav",
+            "handy-123 - Copy.wav",
+            "handy-.wav",
+            "handy-123.WAV",
+            "handy-123.wav.bak",
+            "other-123.wav",
+            "handy123.wav",
+        ] {
+            assert!(
+                !HistoryManager::is_generated_recording_name(name),
+                "{name} must not be treated as app-generated"
+            );
+        }
     }
 
     #[test]

@@ -14,9 +14,9 @@
 //! signals the transcript is published, then returns; the wait, guarded
 //! restore and auto-submit all finish on the worker.
 
-use std::sync::{mpsc::Sender, Arc, Mutex, Once};
+use std::sync::{mpsc::Sender, Arc, Condvar, Mutex, Once};
 use std::thread;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use log::{error, info, warn};
 use tauri::Manager;
@@ -30,6 +30,7 @@ use crate::clipboard::send_return_key;
 use crate::input::EnigoState;
 use crate::settings::{AutoSubmitKey, ClipboardHandling, PasteMethod};
 use windows::Win32::Foundation::GlobalFree;
+use windows::Win32::Graphics::Gdi::{DeleteObject, HGDIOBJ};
 use windows::Win32::System::DataExchange::{
     CloseClipboard, EmptyClipboard, EnumClipboardFormats, GetClipboardData, GetClipboardOwner,
     GetClipboardSequenceNumber, OpenClipboard, RegisterClipboardFormatW, SetClipboardData,
@@ -52,6 +53,8 @@ use windows::Win32::UI::WindowsAndMessaging::{
 const CLASS_NAME: PCWSTR = w!("HandyPasteTxWindow");
 const TIMER_ID: usize = 1;
 const TIMER_INTERVAL_MS: u32 = 25;
+/// How long a new transaction waits for the previous one to finish settling.
+const SETTLE_WAIT: Duration = Duration::from_millis(1000);
 /// Skip clipboard formats larger than this when snapshotting.
 const MAX_FORMAT_BYTES: usize = 64 * 1024 * 1024;
 
@@ -65,6 +68,11 @@ struct SavedFormat {
 
 pub(super) struct WinTxShared {
     state: Mutex<TxState>,
+    /// Set once this transaction has finished settling the clipboard (restore
+    /// or leave-transcript), by whichever thread did it. `flush_pending` waits
+    /// on it so a new transaction never snapshots mid-restore and the old
+    /// restore cannot land on top of the new transcript.
+    settled: (Mutex<bool>, Condvar),
     text: String,
     snapshot: Mutex<Vec<SavedFormat>>,
     /// Copied HBITMAP (as raw usize), restored via SetClipboardData.
@@ -76,6 +84,21 @@ pub(super) struct WinTxShared {
     /// ClipboardHandling::CopyToClipboard — settle by leaving the transcript
     /// on the clipboard as plain text instead of restoring the snapshot.
     preserve_transcript: bool,
+}
+
+impl Drop for WinTxShared {
+    /// Frees the `CopyImage` duplicate when no restore consumed it: the
+    /// `preserve_transcript`, ownership-lost and flushed paths all skip
+    /// `restore_snapshot`, and each leaked one DIB section per dictation.
+    fn drop(&mut self) {
+        if let Ok(mut bitmap) = self.saved_bitmap.lock() {
+            if let Some(raw) = bitmap.take() {
+                unsafe {
+                    let _ = DeleteObject(HGDIOBJ(raw as *mut _));
+                }
+            }
+        }
+    }
 }
 
 /// The transaction currently holding the clipboard, if any. A new
@@ -90,9 +113,11 @@ unsafe fn shared_ptr(hwnd: HWND) -> *const WinTxShared {
     GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *const WinTxShared
 }
 
-/// Sends the auto-submit Enter. Uses `try_lock` because the paste caller may
-/// currently hold the enigo lock while waiting for this worker.
-fn send_auto_submit(shared: &WinTxShared) {
+/// Sends the auto-submit Enter. The paste caller passes its own `Enigo` when
+/// it has one (it holds the enigo lock for the whole paste, so a `try_lock`
+/// from here would always fail and the Enter would be dropped); the pump
+/// thread, which has none, uses `try_lock`.
+fn send_auto_submit(shared: &WinTxShared, enigo: Option<&mut enigo::Enigo>) {
     {
         let mut st = match shared.state.lock() {
             Ok(st) => st,
@@ -102,6 +127,10 @@ fn send_auto_submit(shared: &WinTxShared) {
             return;
         }
         st.auto_submit_sent = true;
+    }
+    if let Some(enigo) = enigo {
+        let _ = send_return_key(enigo, shared.auto_submit_key);
+        return;
     }
     if let Some(enigo_state) = shared.app_handle.try_state::<EnigoState>() {
         match enigo_state.0.try_lock() {
@@ -212,8 +241,8 @@ fn ensure_window_class(hinstance: HINSTANCE) {
 /// If a previous transaction is still holding the clipboard, settle it now so
 /// the snapshot below captures the user's original clipboard content. The
 /// previous worker observes `cancelled` on its next timer tick and tears down
-/// without restoring.
-fn flush_pending() {
+/// without restoring (the settle happened here, once, on this thread).
+fn flush_pending(enigo: &mut enigo::Enigo) {
     let previous = match PENDING.lock() {
         Ok(mut slot) => slot.take(),
         Err(_) => None,
@@ -226,16 +255,51 @@ fn flush_pending() {
             Ok(st) => st,
             Err(_) => return,
         };
+        if st.cancelled {
+            // The old pump already took its Finish branch and is settling on
+            // its own thread; settling here too would race it on the
+            // clipboard. `cancelled` alone does not mean that settle is done,
+            // so wait for it (bounded) before the caller snapshots.
+            drop(st);
+            wait_settled(&previous);
+            return;
+        }
         st.cancelled = true;
         st.any_receipt_after_injection()
     };
     if previous.auto_submit && receipt {
-        send_auto_submit(&previous);
+        send_auto_submit(&previous, Some(enigo));
     }
     let sequence = *previous.sequence.lock().unwrap();
     let still_ours = unsafe { GetClipboardSequenceNumber() } == sequence;
     if still_ours {
         unsafe { settle_clipboard(&previous) };
+    }
+    mark_settled(&previous);
+}
+
+/// Records that the clipboard side of this transaction is finished and wakes
+/// a `flush_pending` caller waiting for it.
+fn mark_settled(shared: &WinTxShared) {
+    let (done, cv) = &shared.settled;
+    if let Ok(mut done) = done.lock() {
+        *done = true;
+    }
+    cv.notify_all();
+}
+
+/// Blocks until `mark_settled` ran for `shared`, or `SETTLE_WAIT` elapsed.
+fn wait_settled(shared: &WinTxShared) {
+    let (done, cv) = &shared.settled;
+    let Ok(guard) = done.lock() else {
+        return;
+    };
+    match cv.wait_timeout_while(guard, SETTLE_WAIT, |done| !*done) {
+        Ok((done, result)) if result.timed_out() && !*done => warn!(
+            "[reliable-paste] previous transaction did not settle within {:?}",
+            SETTLE_WAIT
+        ),
+        _ => {}
     }
 }
 
@@ -288,7 +352,11 @@ unsafe fn restore_snapshot(shared: &WinTxShared) {
     }
     if let Ok(mut bitmap) = shared.saved_bitmap.lock() {
         if let Some(raw) = bitmap.take() {
-            let _ = SetClipboardData(CF_BITMAP.0 as u32, Some(HANDLE(raw as *mut _)));
+            // SetClipboardData takes ownership on success; on failure the
+            // duplicate is still ours to free.
+            if SetClipboardData(CF_BITMAP.0 as u32, Some(HANDLE(raw as *mut _))).is_err() {
+                let _ = DeleteObject(HGDIOBJ(raw as *mut _));
+            }
         }
     }
     let _ = CloseClipboard();
@@ -412,24 +480,34 @@ unsafe fn publish_formats() -> Result<(), String> {
 
 fn on_timer(_hwnd: HWND, shared: &WinTxShared) {
     let now = Instant::now();
-    let finish = {
+    // `cancelled` already set at entry means a newer transaction flushed this
+    // one from the paste caller's thread (`flush_pending`), which settled the
+    // clipboard and auto-submit there. Settling again here raced it on the
+    // clipboard; just tear the window down.
+    let (finish, flushed_externally) = {
         let mut st = match shared.state.lock() {
             Ok(st) => st,
             Err(_) => return,
         };
         if st.cancelled {
-            true
+            (true, true)
         } else {
             match evaluate(&st, now) {
-                WaitDecision::KeepWaiting => false,
+                WaitDecision::KeepWaiting => (false, false),
                 WaitDecision::Finish => {
                     st.cancelled = true;
-                    true
+                    (true, false)
                 }
             }
         }
     };
     if !finish {
+        return;
+    }
+    if flushed_externally {
+        unsafe {
+            PostQuitMessage(0);
+        }
         return;
     }
 
@@ -457,7 +535,7 @@ fn on_timer(_hwnd: HWND, shared: &WinTxShared) {
     // Auto-submit only once the target demonstrably read the transcript;
     // pressing Enter after an unconfirmed paste could submit stale content.
     if shared.auto_submit && receipt {
-        send_auto_submit(shared);
+        send_auto_submit(shared, None);
     }
 
     let sequence = *shared.sequence.lock().unwrap();
@@ -467,6 +545,7 @@ fn on_timer(_hwnd: HWND, shared: &WinTxShared) {
     } else {
         info!("[reliable-paste] clipboard changed externally; leaving it untouched");
     }
+    mark_settled(shared);
 
     if let Ok(mut slot) = PENDING.lock() {
         let is_us = slot
@@ -493,10 +572,6 @@ unsafe fn destroy_window_and_shared(hwnd: HWND) {
 
 fn pump_thread(shared: Arc<WinTxShared>, ready: Sender<Result<(), String>>) {
     unsafe {
-        // Settle any previous transaction first so the snapshot captures the
-        // user's original clipboard, not the previous transcript.
-        flush_pending();
-
         let hinstance = match GetModuleHandleW(PCWSTR::null()) {
             Ok(hmodule) => HINSTANCE(hmodule.0),
             Err(e) => {
@@ -582,6 +657,7 @@ pub(super) fn run(
 ) -> Result<(), String> {
     let shared = Arc::new(WinTxShared {
         state: Mutex::new(TxState::new()),
+        settled: (Mutex::new(false), Condvar::new()),
         text: text.to_string(),
         snapshot: Mutex::new(Vec::new()),
         saved_bitmap: Mutex::new(None),
@@ -591,6 +667,11 @@ pub(super) fn run(
         auto_submit_key,
         preserve_transcript: clipboard_handling == ClipboardHandling::CopyToClipboard,
     });
+
+    // Settle any previous transaction first so the snapshot captures the
+    // user's original clipboard, not the previous transcript. Done here, with
+    // the caller's enigo, so a pending auto-submit can actually be sent.
+    flush_pending(enigo);
 
     let (ready_tx, ready_rx) = std::sync::mpsc::channel();
     let shared_for_pump = shared.clone();
