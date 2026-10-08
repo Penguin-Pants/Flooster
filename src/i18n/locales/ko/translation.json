@@ -17,7 +17,7 @@
     "history": "히스토리",
     "debug": "디버그",
     "about": "정보",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "설정 섹션"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -154,11 +154,11 @@
       "streaming": "말하는 동안 실시간으로 음성 인식 결과를 표시"
     },
     "legacy": "레거시",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "모델 상태: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "모델 상태를 확인하지 못했습니다",
+      "load": "모델을 불러오지 못했습니다",
+      "switch": "모델을 전환하지 못했습니다"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "단축키 설정 실패: {{error}}",
           "reset": "단축키를 원래 값으로 재설정하는데 실패했습니다"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "{{name}} 단축키 변경"
       },
       "language": {
         "title": "언어",
@@ -245,7 +245,7 @@
         "title": "볼륨",
         "description": "오디오 피드백 사운드의 볼륨 조절"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "사운드 테마 미리 듣기 (시작 소리 후 종료 소리 재생)"
     },
     "models": {
       "title": "음성 인식 모델",
@@ -259,7 +259,7 @@
         "allLanguages": "모든 언어",
         "streaming": "실시간 음성 인식을 지원하는 모델 필터링",
         "translation": "영어 번역을 지원하는 모델 필터링",
-        "language": "Filter by language"
+        "language": "언어로 필터링"
       },
       "noModelsMatch": "이 필터에 맞는 모델이 없습니다.",
       "searchPlaceholder": "이름으로 모델 검색…",
@@ -268,14 +268,13 @@
         "tooltip": "Handy 외부에서 모델 폴더 또는 Hugging Face 캐시에 추가된 모델을 다시 스캔합니다"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "모델을 불러오지 못했습니다: {{error}}",
+        "rescan": "모델을 다시 검색하지 못했습니다: {{error}}",
+        "select": "모델을 전환하지 못했습니다: {{error}}",
+        "cancel": "다운로드를 취소하지 못했습니다: {{error}}",
+        "delete": "모델을 삭제하지 못했습니다: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "알 수 없는 크기"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API 키",
           "description": "선택한 제공자의 API 키입니다.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API 키 표시",
+          "hide": "API 키 숨기기"
         },
         "model": {
           "title": "모델",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "모델 검색 또는 선택",
           "placeholderNoOptions": "모델 이름 입력",
           "refreshModels": "모델 새로고침",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "\"{{input}}\" 사용"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "취소",
         "selectToEdit": "세부 정보를 보고 편집하려면 위에서 프롬프트를 선택하세요.",
         "createFirst": "첫 번째 후처리 프롬프트를 만들려면 위의 '새 프롬프트 만들기'를 클릭하세요.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "프롬프트 \"{{name}}\"을(를) 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
+        "deleteConfirmTitle": "프롬프트 삭제",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "프롬프트를 만들지 못했습니다: {{error}}",
+          "update": "프롬프트를 업데이트하지 못했습니다: {{error}}",
+          "delete": "프롬프트를 삭제하지 못했습니다: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "다시 전사에 실패했습니다. 다시 시도해주세요.",
       "transcribing": "전사 중...",
       "transcriptionFailed": "전사에 실패했습니다. 재시도 아이콘을 사용하여 다시 전사할 수 있습니다.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "이 음성 인식 결과와 녹음을 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
+      "deleteConfirmTitle": "항목 삭제",
+      "deleteFailed": "항목을 삭제하지 못했습니다: {{error}}"
     },
     "debug": {
       "title": "디버그",
@@ -629,8 +628,8 @@
         "appData": "앱 데이터:",
         "models": "모델:",
         "settings": "설정:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "디버그 경로",
+        "description": "디버깅을 위해 내부 파일 경로와 디렉터리를 표시합니다"
       },
       "whatsNewPreview": {
         "title": "새 소식 미리보기",
@@ -704,14 +703,14 @@
     "copy": "복사",
     "clear": "지우기",
     "noOptionsFound": "옵션을 찾을 수 없습니다",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "취소",
+    "options": "옵션",
+    "selectOption": "옵션 선택...",
+    "moreInformation": "자세한 정보",
+    "notAvailable": "사용할 수 없음",
+    "copyToClipboard": "클립보드에 복사",
+    "play": "재생",
+    "pause": "일시 정지"
   },
   "accessibility": {
     "permissionsDescription": "Handy는 녹음된 텍스트를 입력하기 위해 접근성 권한이 필요합니다.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "텍스트 붙여넣기 실패",
     "pasteFailed": "활성 애플리케이션에 텍스트를 붙여넣을 수 없습니다.",
     "transcriptionFailedTitle": "음성 인식 실패",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "설정을 저장하지 못했습니다",
+    "updateCheckFailed": "업데이트를 확인하지 못했습니다",
+    "updateInstallFailed": "업데이트를 설치하지 못했습니다",
+    "openUrlFailed": "링크를 열지 못했습니다",
+    "unknown": "알 수 없는 오류"
   },
   "appLanguage": {
     "title": "애플리케이션 언어",
@@ -773,7 +772,7 @@
     "dismiss": "닫기"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "다운로드 중...",
+    "downloadingCount": "{{count}}개 다운로드 중..."
   }
 }

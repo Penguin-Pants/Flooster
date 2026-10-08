@@ -14,9 +14,9 @@
 //! signals the transcript is published, then returns; the wait, guarded
 //! restore and auto-submit all finish on the worker.
 
-use std::sync::{mpsc::Sender, Arc, Mutex, Once};
+use std::sync::{mpsc::Sender, Arc, Condvar, Mutex, Once};
 use std::thread;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use log::{error, info, warn};
 use tauri::Manager;
@@ -53,6 +53,8 @@ use windows::Win32::UI::WindowsAndMessaging::{
 const CLASS_NAME: PCWSTR = w!("HandyPasteTxWindow");
 const TIMER_ID: usize = 1;
 const TIMER_INTERVAL_MS: u32 = 25;
+/// How long a new transaction waits for the previous one to finish settling.
+const SETTLE_WAIT: Duration = Duration::from_millis(1000);
 /// Skip clipboard formats larger than this when snapshotting.
 const MAX_FORMAT_BYTES: usize = 64 * 1024 * 1024;
 
@@ -66,6 +68,11 @@ struct SavedFormat {
 
 pub(super) struct WinTxShared {
     state: Mutex<TxState>,
+    /// Set once this transaction has finished settling the clipboard (restore
+    /// or leave-transcript), by whichever thread did it. `flush_pending` waits
+    /// on it so a new transaction never snapshots mid-restore and the old
+    /// restore cannot land on top of the new transcript.
+    settled: (Mutex<bool>, Condvar),
     text: String,
     snapshot: Mutex<Vec<SavedFormat>>,
     /// Copied HBITMAP (as raw usize), restored via SetClipboardData.
@@ -249,8 +256,12 @@ fn flush_pending(enigo: &mut enigo::Enigo) {
             Err(_) => return,
         };
         if st.cancelled {
-            // The old pump already took its Finish branch and is settling;
-            // settling here too would race it on the clipboard.
+            // The old pump already took its Finish branch and is settling on
+            // its own thread; settling here too would race it on the
+            // clipboard. `cancelled` alone does not mean that settle is done,
+            // so wait for it (bounded) before the caller snapshots.
+            drop(st);
+            wait_settled(&previous);
             return;
         }
         st.cancelled = true;
@@ -263,6 +274,32 @@ fn flush_pending(enigo: &mut enigo::Enigo) {
     let still_ours = unsafe { GetClipboardSequenceNumber() } == sequence;
     if still_ours {
         unsafe { settle_clipboard(&previous) };
+    }
+    mark_settled(&previous);
+}
+
+/// Records that the clipboard side of this transaction is finished and wakes
+/// a `flush_pending` caller waiting for it.
+fn mark_settled(shared: &WinTxShared) {
+    let (done, cv) = &shared.settled;
+    if let Ok(mut done) = done.lock() {
+        *done = true;
+    }
+    cv.notify_all();
+}
+
+/// Blocks until `mark_settled` ran for `shared`, or `SETTLE_WAIT` elapsed.
+fn wait_settled(shared: &WinTxShared) {
+    let (done, cv) = &shared.settled;
+    let Ok(guard) = done.lock() else {
+        return;
+    };
+    match cv.wait_timeout_while(guard, SETTLE_WAIT, |done| !*done) {
+        Ok((done, result)) if result.timed_out() && !*done => warn!(
+            "[reliable-paste] previous transaction did not settle within {:?}",
+            SETTLE_WAIT
+        ),
+        _ => {}
     }
 }
 
@@ -508,6 +545,7 @@ fn on_timer(_hwnd: HWND, shared: &WinTxShared) {
     } else {
         info!("[reliable-paste] clipboard changed externally; leaving it untouched");
     }
+    mark_settled(shared);
 
     if let Ok(mut slot) = PENDING.lock() {
         let is_us = slot
@@ -619,6 +657,7 @@ pub(super) fn run(
 ) -> Result<(), String> {
     let shared = Arc::new(WinTxShared {
         state: Mutex::new(TxState::new()),
+        settled: (Mutex::new(false), Condvar::new()),
         text: text.to_string(),
         snapshot: Mutex::new(Vec::new()),
         saved_bitmap: Mutex::new(None),

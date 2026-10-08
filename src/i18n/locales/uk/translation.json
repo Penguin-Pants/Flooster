@@ -17,7 +17,7 @@
     "history": "Історія",
     "debug": "Дебаг",
     "about": "Інфо",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Розділи налаштувань"
   },
   "onboarding": {
     "subtitle": "Для початку оберіть модель транскрипції",
@@ -154,11 +154,11 @@
     "cancel": "Скасувати",
     "cancelDownload": "Скасувати завантаження",
     "legacy": "Застаріле",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Стан моделі: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Не вдалося перевірити стан моделі",
+      "load": "Не вдалося завантажити модель",
+      "switch": "Не вдалося змінити модель"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Не вдалося встановити скорочення: {{error}}",
           "reset": "Не вдалося скинути скорочення до початкового значення"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Змінити комбінацію клавіш для {{name}}"
       },
       "language": {
         "title": "Мова",
@@ -227,7 +227,7 @@
         "allLanguages": "Усі мови",
         "streaming": "Фільтрувати моделі з підтримкою транскрипції в реальному часі",
         "translation": "Фільтрувати моделі з підтримкою перекладу англійською",
-        "language": "Filter by language"
+        "language": "Фільтр за мовою"
       },
       "noModelsMatch": "Жодна модель не відповідає цьому фільтру.",
       "yourModels": "Завантажені моделі",
@@ -238,14 +238,13 @@
         "tooltip": "Пересканувати моделі, додані до папки моделей або кешу Hugging Face поза межами Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Не вдалося завантажити моделі: {{error}}",
+        "rescan": "Не вдалося повторно просканувати моделі: {{error}}",
+        "select": "Не вдалося змінити модель: {{error}}",
+        "cancel": "Не вдалося скасувати завантаження: {{error}}",
+        "delete": "Не вдалося видалити модель: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Невідомий розмір"
     },
     "sound": {
       "title": "Звук",
@@ -275,7 +274,7 @@
         "title": "Гучність",
         "description": "Налаштуйте гучність звукових сповіщень"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Прослухати звукову тему (спочатку старт, потім стоп)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API-ключ",
           "description": "API-ключ для обраного провайдера",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Показати ключ API",
+          "hide": "Сховати ключ API"
         },
         "model": {
           "title": "Модель",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Шукайте або оберіть модель",
           "placeholderNoOptions": "Введіть назву моделі",
           "refreshModels": "Оновити моделі",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Використати «{{input}}»"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Скасувати",
         "selectToEdit": "Оберіть промпт вище для перегляду та редагування його деталей.",
         "createFirst": "Натисніть «Створити новий промпт» вище, щоб створити ваш перший промпт постобробки.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Видалити промпт «{{name}}»? Цю дію не можна скасувати.",
+        "deleteConfirmTitle": "Видалити промпт",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Не вдалося створити промпт: {{error}}",
+          "update": "Не вдалося оновити промпт: {{error}}",
+          "delete": "Не вдалося видалити промпт: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Не вдалося перетранскрибувати. Будь ласка, спробуйте ще раз.",
       "transcribing": "Транскрибування...",
       "transcriptionFailed": "Транскрипція не вдалася. Ви можете перетранскрибувати за допомогою іконки повтору.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Видалити цю транскрипцію та її запис? Цю дію не можна скасувати.",
+      "deleteConfirmTitle": "Видалити запис",
+      "deleteFailed": "Не вдалося видалити запис: {{error}}"
     },
     "debug": {
       "title": "Дебаг",
@@ -589,8 +588,8 @@
         "appData": "Дані програми:",
         "models": "Моделі:",
         "settings": "Налаштування:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Шляхи для налагодження",
+        "description": "Показати внутрішні шляхи до файлів і каталогів для налагодження"
       },
       "pasteDelay": {
         "title": "Затримка вставки (до)",
@@ -704,14 +703,14 @@
     "copy": "Копіювати",
     "clear": "Очистити",
     "noOptionsFound": "Опцій не знайдено",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Скасувати",
+    "options": "Параметри",
+    "selectOption": "Виберіть варіант...",
+    "moreInformation": "Докладніше",
+    "notAvailable": "Недоступно",
+    "copyToClipboard": "Копіювати в буфер обміну",
+    "play": "Відтворити",
+    "pause": "Пауза"
   },
   "accessibility": {
     "permissionsDescription": "Handy потребує дозволи доступності для введення транскрибованого тексту.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Не вдалося вставити текст",
     "pasteFailed": "Не вдалося вставити текст до активної програми.",
     "transcriptionFailedTitle": "Помилка транскрипції",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Не вдалося зберегти налаштування",
+    "updateCheckFailed": "Не вдалося перевірити наявність оновлень",
+    "updateInstallFailed": "Не вдалося встановити оновлення",
+    "openUrlFailed": "Не вдалося відкрити посилання",
+    "unknown": "Невідома помилка"
   },
   "appLanguage": {
     "title": "Мова інтерфейсу",
@@ -773,7 +772,7 @@
     "dismiss": "Приховати"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Завантаження...",
+    "downloadingCount": "Завантажується: {{count}}..."
   }
 }
