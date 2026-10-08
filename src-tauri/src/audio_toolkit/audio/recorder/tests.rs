@@ -1,6 +1,7 @@
 use super::{
-    is_microphone_access_denied, is_no_input_device_error, run_consumer, AudioRecorder,
-    CaptureProcessor, CaptureTransportState, ChunkDisposition, Cmd, VadConfig, VadPolicy,
+    handle_frame, is_microphone_access_denied, is_no_input_device_error, run_consumer,
+    AudioRecorder, CaptureProcessor, CaptureTransportState, ChunkDisposition, Cmd, VadConfig,
+    VadPolicy,
 };
 use crate::audio_toolkit::vad::{VadFrame, VoiceActivityDetector};
 use rtrb::RingBuffer;
@@ -415,4 +416,31 @@ fn detects_coreaudio_config_error() {
 fn does_not_match_other_errors_for_no_device() {
     assert!(!is_no_input_device_error("permission denied"));
     assert!(!is_no_input_device_error("device not found"));
+}
+
+#[test]
+fn poisoned_vad_mutex_is_cleared_after_one_recovery() {
+    let frame_samples = 480;
+    let vad = Some(VadConfig {
+        detector: Arc::new(Mutex::new(Box::new(FixedFrameVad(frame_samples)))),
+        frame_samples,
+        offline_hangover_frames: 0,
+        streaming_hangover_frames: 0,
+    });
+    let detector = Arc::clone(&vad.as_ref().unwrap().detector);
+    let _ = thread::spawn(move || {
+        let _guard = detector.lock().unwrap();
+        panic!("simulated capture worker panic");
+    })
+    .join();
+    assert!(vad.as_ref().unwrap().detector.is_poisoned());
+
+    let mut out = Vec::new();
+    handle_frame(&[0.5; 480], VadPolicy::Offline, &vad, &None, &mut out);
+
+    assert_eq!(out.len(), 480, "recovery must still pass the frame through");
+    assert!(
+        !vad.as_ref().unwrap().detector.is_poisoned(),
+        "poison must be cleared so later frames skip the recovery path"
+    );
 }

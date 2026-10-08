@@ -155,7 +155,6 @@ pub(crate) fn default_quant_file<'a>(
 #[derive(Debug, Clone, Default)]
 pub struct DiskStatus {
     pub is_downloaded: bool,
-    pub is_downloading: bool,
     pub partial_size: u64,
 }
 
@@ -239,7 +238,9 @@ impl ModelDescriptor {
             source: self.source.clone(),
             size_mb: file.map(|f| f.size_bytes / (1024 * 1024)).unwrap_or(0),
             is_downloaded: status.is_downloaded,
-            is_downloading: status.is_downloading,
+            // Owned by the download path and `update_download_status`, which
+            // read it from the live cancel-token table, never from disk.
+            is_downloading: false,
             partial_size: status.partial_size,
             is_directory: false,
             engine_type: self.engine_type.clone(),
@@ -1305,9 +1306,9 @@ impl ModelManager {
     /// The merge is additive: only new ids are inserted, so existing entries keep
     /// their values — including runtime-probed capabilities from
     /// [`Self::set_runtime_capabilities`]. It then runs [`Self::update_download_status`],
-    /// which recomputes disk-derived flags for *every* entry; a rescan racing an
-    /// in-flight download can briefly clear its `is_downloading`, but the download
-    /// continues and the event-driven UI self-corrects.
+    /// which recomputes disk-derived flags for *every* entry; `is_downloading`
+    /// is read from the live cancel-token table at apply time, so a rescan racing
+    /// an in-flight download leaves that flag correct.
     ///
     /// The disk walk and 64 KiB header probes run against a cloned snapshot
     /// *off-lock* so readers never block on I/O; only the brief merge takes the
@@ -1466,11 +1467,6 @@ impl ModelManager {
     }
 
     fn update_download_status(&self) -> Result<()> {
-        // Snapshot in-flight download ids before taking the registry lock (the
-        // two locks are never nested) so a mid-download entry is never dropped.
-        let downloading_ids: HashSet<String> =
-            self.cancel_flags.lock().unwrap().keys().cloned().collect();
-
         // Probe the filesystem off the registry lock: `get_available_models`
         // and every download-progress update wait on it, and the probes
         // (HF cache refs, metadata, a leftover-extraction cleanup) can be slow.
@@ -1530,21 +1526,27 @@ impl ModelManager {
                 probe.id.clone(),
                 DiskStatus {
                     is_downloaded,
-                    is_downloading: downloading_ids.contains(&probe.id),
                     partial_size,
                 },
             ));
         }
 
-        // Apply under the lock, briefly.
+        // Apply under the lock, briefly. The in-flight set is read here, not
+        // before the probes: a download that finished while they ran has
+        // already removed its token, and a pre-probe snapshot would mark it
+        // downloading again until the next refresh. Lock order (registry, then
+        // cancel flags) matches `DownloadCleanup::drop`; no path holds the
+        // flags while waiting on the registry.
         let mut models = self.available_models.lock().unwrap();
+        let downloading_ids: HashSet<String> =
+            self.cancel_flags.lock().unwrap().keys().cloned().collect();
         let mut vanished_models: Vec<String> = Vec::new();
         for (id, status) in statuses {
             let Some(model) = models.get_mut(&id) else {
                 continue;
             };
             model.is_downloaded = status.is_downloaded;
-            model.is_downloading = status.is_downloading;
+            model.is_downloading = downloading_ids.contains(&id);
             model.partial_size = status.partial_size;
             // Entries that exist only because their file was discovered on disk
             // (alternate quants, custom models) go when the file is gone;
