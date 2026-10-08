@@ -1534,9 +1534,9 @@ impl ModelManager {
         // Apply under the lock, briefly. The in-flight set is read here, not
         // before the probes: a download that finished while they ran has
         // already removed its token, and a pre-probe snapshot would mark it
-        // downloading again until the next refresh. Lock order (registry, then
-        // cancel flags) matches `DownloadCleanup::drop`; no path holds the
-        // flags while waiting on the registry.
+        // downloading again until the next refresh. `DownloadCleanup::drop`
+        // takes the two locks in the same order (never nested); no path holds
+        // the flags while waiting on the registry.
         let mut models = self.available_models.lock().unwrap();
         let downloading_ids: HashSet<String> =
             self.cancel_flags.lock().unwrap().keys().cloned().collect();
