@@ -20,6 +20,10 @@ const InfoTooltipButton: React.FC<InfoTooltipButtonProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const tooltipId = useId();
+  // Whether the tooltip was already open when a pointer went down on the
+  // button. A first tap or click focuses the button, which opens the tooltip,
+  // and the click that follows must not toggle it shut again.
+  const openAtPointerDownRef = useRef(false);
 
   // Close on click outside while open (click toggles it on for touch/mouse).
   useEffect(() => {
@@ -48,7 +52,14 @@ const InfoTooltipButton: React.FC<InfoTooltipButtonProps> = ({
         className="text-mid-gray cursor-help hover:text-logo-primary transition-colors duration-200 select-none"
         aria-label={t("common.moreInformation")}
         aria-describedby={showTooltip ? tooltipId : undefined}
-        onClick={() => setShowTooltip((open) => !open)}
+        onPointerDown={() => {
+          openAtPointerDownRef.current = showTooltip;
+        }}
+        onClick={(e) => {
+          // detail is 0 for keyboard activation (Enter/Space): plain toggle.
+          if (e.detail === 0) setShowTooltip((open) => !open);
+          else setShowTooltip(!openAtPointerDownRef.current);
+        }}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
         onKeyDown={(e) => {

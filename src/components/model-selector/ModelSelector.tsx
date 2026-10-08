@@ -10,6 +10,17 @@ import DownloadProgressDisplay from "./DownloadProgressDisplay";
 
 import { ModelStateEvent } from "@/lib/types/events";
 
+/** Backend error text, or a message key resolved at render time so a language
+ *  change (the status listener is long-lived) does not leave a stale string. */
+type ModelError =
+  | { message: string }
+  | {
+      key:
+        | "modelSelector.errors.checkStatus"
+        | "modelSelector.errors.load"
+        | "modelSelector.errors.switch";
+    };
+
 type ModelStatus =
   | "ready"
   | "loading"
@@ -37,7 +48,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   } = useModelStore();
 
   const [modelStatus, setModelStatus] = useState<ModelStatus>("unloaded");
-  const [modelError, setModelError] = useState<string | null>(null);
+  const [modelError, setModelError] = useState<ModelError | null>(null);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   // Track pending model switch for optimistic display
   const [pendingModelId, setPendingModelId] = useState<string | null>(null);
@@ -59,14 +70,14 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
           }
         } catch {
           setModelStatus("error");
-          setModelError(t("modelSelector.errors.checkStatus"));
+          setModelError({ key: "modelSelector.errors.checkStatus" });
         }
       } else {
         setModelStatus("none");
       }
     };
     checkStatus();
-  }, [currentModel, t]);
+  }, [currentModel]);
 
   useEffect(() => {
     // Listen for model loading lifecycle events
@@ -86,7 +97,9 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
             break;
           case "loading_failed":
             setModelStatus("error");
-            setModelError(error || t("modelSelector.errors.load"));
+            setModelError(
+              error ? { message: error } : { key: "modelSelector.errors.load" },
+            );
             setPendingModelId(null);
             break;
           case "unloaded":
@@ -149,7 +162,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
     if (!success) {
       setPendingModelId(null);
       setModelStatus("error");
-      setModelError(t("modelSelector.errors.switch"));
+      setModelError({ key: "modelSelector.errors.switch" });
       onError?.(t("modelSelector.errors.switch"));
     }
   };
@@ -221,7 +234,8 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
             })
           : t("modelSelector.extractingGeneric");
       case "error":
-        return modelError || t("modelSelector.modelError");
+        if (!modelError) return t("modelSelector.modelError");
+        return "message" in modelError ? modelError.message : t(modelError.key);
       case "unloaded":
         return currentModelInfo
           ? getTranslatedModelName(currentModelInfo, t)
