@@ -61,7 +61,14 @@ export const AccelerationSelector: FC<AccelerationSelectorProps> = ({
   const [ortOptions, setOrtOptions] = useState<DropdownOption[]>([]);
 
   useEffect(() => {
-    commands.getAvailableAccelerators().then((available) => {
+    let cancelled = false;
+    commands.getAvailableAccelerators().then((result) => {
+      if (cancelled) return;
+      if (result.status !== "ok") {
+        console.error("Failed to enumerate accelerators:", result.error);
+        return;
+      }
+      const available = result.data;
       // Build combined transcribe.cpp options: Auto, [GPU devices...], CPU
       const opts: DropdownOption[] = [];
       if (available.transcribe.includes("auto")) {
@@ -100,6 +107,9 @@ export const AccelerationSelector: FC<AccelerationSelectorProps> = ({
         })),
       );
     });
+    return () => {
+      cancelled = true;
+    };
   }, [t]);
 
   const currentAccelerator = getSetting("transcribe_accelerator") ?? "auto";

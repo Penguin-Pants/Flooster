@@ -10,6 +10,7 @@ import type {
   ShortcutActivation,
   VadBackend,
   LogLevel,
+  RecordingRetentionPeriod,
 } from "@/bindings";
 import { commands } from "@/bindings";
 import { toast } from "sonner";
@@ -132,7 +133,7 @@ const settingUpdaters: {
         : (value as string),
     ),
   recording_retention_period: (value) =>
-    commands.updateRecordingRetentionPeriod(value as string),
+    commands.updateRecordingRetentionPeriod(value as RecordingRetentionPeriod),
   translate_to_english: (value) =>
     commands.changeTranslateToEnglishSetting(value as boolean),
   selected_language: (value) =>

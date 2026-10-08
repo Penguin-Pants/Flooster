@@ -398,10 +398,10 @@ impl HistoryManager {
                 let limit = crate::settings::get_history_limit(&self.app_handle);
                 self.cleanup_by_count(limit)
             }
-            _ => {
-                // Use time-based logic
-                self.cleanup_by_time(retention_period)
-            }
+            period => match period.max_age_secs() {
+                Some(max_age_secs) => self.cleanup_by_time(max_age_secs),
+                None => Ok(()),
+            },
         }
     }
 
@@ -465,20 +465,11 @@ impl HistoryManager {
         Ok(())
     }
 
-    fn cleanup_by_time(
-        &self,
-        retention_period: crate::settings::RecordingRetentionPeriod,
-    ) -> Result<()> {
+    fn cleanup_by_time(&self, max_age_secs: i64) -> Result<()> {
         let conn = self.get_connection()?;
 
         // Calculate cutoff timestamp (current time minus retention period)
-        let now = Utc::now().timestamp();
-        let cutoff_timestamp = match retention_period {
-            crate::settings::RecordingRetentionPeriod::Days3 => now - (3 * 24 * 60 * 60), // 3 days in seconds
-            crate::settings::RecordingRetentionPeriod::Weeks2 => now - (2 * 7 * 24 * 60 * 60), // 2 weeks in seconds
-            crate::settings::RecordingRetentionPeriod::Months3 => now - (3 * 30 * 24 * 60 * 60), // 3 months in seconds (approximate)
-            _ => unreachable!("Should not reach here"),
-        };
+        let cutoff_timestamp = Utc::now().timestamp() - max_age_secs;
 
         // Get all unsaved entries older than the cutoff timestamp
         let mut stmt = conn.prepare(
@@ -644,6 +635,17 @@ impl HistoryManager {
         self.recordings_dir.join(file_name)
     }
 
+    /// Whether a recording name supplied by the webview may be resolved inside
+    /// the recordings directory: a bare file name only. Separators or `..`
+    /// would resolve (and be served via the asset protocol) anywhere on disk.
+    pub fn is_safe_recording_file_name(file_name: &str) -> bool {
+        !file_name.is_empty()
+            && file_name != "."
+            && file_name != ".."
+            && !file_name.contains(['/', '\\'])
+            && !file_name.contains('\0')
+    }
+
     pub async fn get_entry_by_id(&self, id: i64) -> Result<Option<HistoryEntry>> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare(
@@ -711,6 +713,29 @@ impl HistoryManager {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn recording_file_names_must_be_bare() {
+        assert!(HistoryManager::is_safe_recording_file_name(
+            "handy-1700000000.wav"
+        ));
+        assert!(HistoryManager::is_safe_recording_file_name("notes.wav"));
+        for bad in [
+            "",
+            ".",
+            "..",
+            "../x.wav",
+            "a/b.wav",
+            "a\\b.wav",
+            "/etc/hosts",
+            "x\0.wav",
+        ] {
+            assert!(
+                !HistoryManager::is_safe_recording_file_name(bad),
+                "accepted {bad:?}"
+            );
+        }
+    }
     use rusqlite::{params, Connection};
 
     fn setup_conn() -> Connection {

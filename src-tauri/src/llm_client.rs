@@ -6,6 +6,7 @@ use serde_json::Value;
 use std::collections::HashSet;
 use std::error::Error as StdError;
 use std::sync::{Mutex, OnceLock};
+use std::time::Duration;
 
 #[derive(Debug, Serialize)]
 struct ChatMessage {
@@ -172,13 +173,71 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     Ok(headers)
 }
 
-/// Create an HTTP client with provider-specific headers
-fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
-    let headers = build_headers(provider, api_key)?;
-    reqwest::Client::builder()
-        .default_headers(headers)
-        .build()
-        .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
+/// Time allowed to establish a TCP/TLS connection to the endpoint.
+const HTTP_CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
+/// Whole-request deadline. A local server (Ollama, LM Studio) that accepts
+/// the connection and never answers otherwise kept the dictation in
+/// "polishing" forever; a slow CPU-only local model on a long transcript
+/// still fits.
+const HTTP_REQUEST_TIMEOUT: Duration = Duration::from_secs(300);
+/// Error bodies are logged at most this long; many OpenAI-compatible servers
+/// echo the offending `messages[].content`, i.e. the user's transcript.
+const MAX_ERROR_BODY_LOG_BYTES: usize = 2048;
+/// Portion of an error body carried into the user-facing error string.
+const MAX_ERROR_BODY_MESSAGE_CHARS: usize = 200;
+
+/// One process-wide client (connection pool, TLS config, timeouts). Headers are
+/// per request because they carry the provider's API key.
+fn http_client() -> Result<&'static reqwest::Client, String> {
+    static CLIENT: OnceLock<Result<reqwest::Client, String>> = OnceLock::new();
+    CLIENT
+        .get_or_init(|| {
+            reqwest::Client::builder()
+                .connect_timeout(HTTP_CONNECT_TIMEOUT)
+                .timeout(HTTP_REQUEST_TIMEOUT)
+                .build()
+                .map_err(|e| report_reqwest_error("Failed to build HTTP client", &e))
+        })
+        .as_ref()
+        .map_err(|e| e.clone())
+}
+
+/// Reads an error response body with a size cap, logs it at debug level and
+/// returns a short, truncated excerpt for the error message. The full body is
+/// never logged at info or above because it may contain transcript text.
+async fn error_body_excerpt(mut response: reqwest::Response, context: &str) -> String {
+    let status = response.status();
+    let body = match read_body_capped(&mut response, MAX_ERROR_BODY_LOG_BYTES).await {
+        Ok(bytes) => String::from_utf8_lossy(&bytes).into_owned(),
+        Err(e) => report_reqwest_error(context, &e),
+    };
+    debug!("{} (status {}): {}", context, status, body);
+    let excerpt: String = body.chars().take(MAX_ERROR_BODY_MESSAGE_CHARS).collect();
+    if excerpt.len() < body.len() {
+        format!("{}…", excerpt)
+    } else {
+        excerpt
+    }
+}
+
+/// Reads at most `cap` bytes of a body and leaves the rest unread, so a huge or
+/// unending error response from a misconfigured or hostile endpoint cannot grow
+/// memory until the request timeout. Dropping the response closes the stream.
+async fn read_body_capped(
+    response: &mut reqwest::Response,
+    cap: usize,
+) -> reqwest::Result<Vec<u8>> {
+    let mut buf = Vec::with_capacity(cap.min(4096));
+    while buf.len() < cap {
+        match response.chunk().await? {
+            Some(chunk) => {
+                let room = cap - buf.len();
+                buf.extend_from_slice(&chunk[..chunk.len().min(room)]);
+            }
+            None => break,
+        }
+    }
+    Ok(buf)
 }
 
 /// Format a bounded error source chain.
@@ -343,7 +402,8 @@ pub async fn send_chat_completion_with_schema(
         sanitized_url_for_log(&url)
     );
 
-    let client = create_client(provider, &api_key)?;
+    let client = http_client()?;
+    let headers = build_headers(provider, &api_key)?;
 
     // Build messages vector
     let mut messages = Vec::new();
@@ -389,6 +449,7 @@ pub async fn send_chat_completion_with_schema(
 
     let mut response = client
         .post(&url)
+        .headers(headers.clone())
         .json(&request_body)
         .send()
         .await
@@ -407,17 +468,17 @@ pub async fn send_chat_completion_with_schema(
         && matches!(status.as_u16(), 400 | 422)
         && !request_body.reasoning.is_empty()
     {
-        let error_text = response.text().await.unwrap_or_else(|e| {
-            report_reqwest_error("Failed to read reasoning rejection response", &e)
-        });
+        // Body goes to the debug log only; see `error_body_excerpt`.
+        let _ = error_body_excerpt(response, "Reasoning-disable rejection").await;
         info!(
-            "Endpoint rejected request with reasoning disabled (status {}): {}. Retrying without reasoning fields",
-            status, error_text
+            "Endpoint rejected request with reasoning disabled (status {}). Retrying without reasoning fields",
+            status
         );
 
         request_body.reasoning = ReasoningParams::default();
         response = client
             .post(&url)
+            .headers(headers.clone())
             .json(&request_body)
             .send()
             .await
@@ -440,13 +501,10 @@ pub async fn send_chat_completion_with_schema(
     }
 
     if !status.is_success() {
-        let error_text = response
-            .text()
-            .await
-            .unwrap_or_else(|e| report_reqwest_error("Failed to read API error response", &e));
+        let excerpt = error_body_excerpt(response, "API error response").await;
         return Err(format!(
             "API request failed with status {}: {}",
-            status, error_text
+            status, excerpt
         ));
     }
 
@@ -472,10 +530,12 @@ pub async fn fetch_models(
 
     debug!("Fetching models from: {}", sanitized_url_for_log(&url));
 
-    let client = create_client(provider, &api_key)?;
+    let client = http_client()?;
+    let headers = build_headers(provider, &api_key)?;
 
     let response = client
         .get(&url)
+        .headers(headers)
         .send()
         .await
         .map_err(|e| report_reqwest_error("Failed to fetch models", &e))?;
@@ -488,13 +548,10 @@ pub async fn fetch_models(
         sanitized_url(response.url())
     );
     if !status.is_success() {
-        let error_text = response
-            .text()
-            .await
-            .unwrap_or_else(|e| report_reqwest_error("Failed to read model list error", &e));
+        let excerpt = error_body_excerpt(response, "Model list error response").await;
         return Err(format!(
             "Model list request failed ({}): {}",
-            status, error_text
+            status, excerpt
         ));
     }
 
@@ -590,7 +647,8 @@ mod tests {
             let (mut stream, _) = listener.accept().await.unwrap();
             let mut request = [0_u8; 2048];
             let _ = stream.read(&mut request).await.unwrap();
-            stream.write_all(response.as_bytes()).await.unwrap();
+            // The client may stop reading early (capped body reads).
+            let _ = stream.write_all(response.as_bytes()).await;
         });
 
         format!("http://{address}")
@@ -627,6 +685,31 @@ mod tests {
             sanitized_url_for_log("not a URL containing secret"),
             "<invalid URL>"
         );
+    }
+
+    #[tokio::test]
+    async fn error_body_read_stops_at_the_cap() {
+        let body = "x".repeat(1 << 20);
+        let base_url = serve_one_response("500 Internal Server Error", &body).await;
+        let mut response = reqwest::get(&base_url).await.unwrap();
+
+        let bytes = read_body_capped(&mut response, MAX_ERROR_BODY_LOG_BYTES)
+            .await
+            .unwrap();
+
+        assert_eq!(bytes.len(), MAX_ERROR_BODY_LOG_BYTES);
+    }
+
+    #[tokio::test]
+    async fn error_body_excerpt_is_truncated_for_the_message() {
+        let body = "y".repeat(1 << 20);
+        let base_url = serve_one_response("500 Internal Server Error", &body).await;
+        let response = reqwest::get(&base_url).await.unwrap();
+
+        let excerpt = error_body_excerpt(response, "test").await;
+
+        assert_eq!(excerpt.chars().count(), MAX_ERROR_BODY_MESSAGE_CHARS + 1);
+        assert!(excerpt.ends_with('…'));
     }
 
     #[tokio::test]

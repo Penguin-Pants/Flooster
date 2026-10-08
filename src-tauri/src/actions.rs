@@ -593,12 +593,6 @@ impl ShortcutAction for TranscribeAction {
             show_transcribing_overlay(app);
         }
 
-        // Unmute before playing audio feedback so the stop sound is audible
-        rm.remove_mute();
-
-        // Play audio feedback for recording stop
-        play_feedback_sound(app, SoundType::Stop);
-
         let binding_id = binding_id.to_string(); // Clone binding_id for the async task
         let post_process = self.post_process;
         let cancel_generation = rm.cancel_generation();
@@ -616,8 +610,15 @@ impl ShortcutAction for TranscribeAction {
             // tokio workers so other commands stay responsive meanwhile.
             let samples = {
                 let rm = Arc::clone(&rm);
+                let ah = ah.clone();
                 let binding_id = binding_id.clone();
                 match tauri::async_runtime::spawn_blocking(move || {
+                    // Unmute before playing audio feedback so the stop sound is
+                    // audible. `remove_mute` spawns system mixer processes, so
+                    // it runs here rather than on the coordinator thread, where
+                    // it delayed every following hotkey.
+                    rm.remove_mute();
+                    play_feedback_sound(&ah, SoundType::Stop);
                     rm.stop_recording(&binding_id, cancel_generation)
                 })
                 .await
@@ -796,7 +797,7 @@ impl ShortcutAction for TranscribeAction {
                                 let paste_time = Instant::now();
                                 let final_text = processed.final_text;
                                 let rm_for_paste = Arc::clone(&rm);
-                                ah.run_on_main_thread(move || {
+                                let paste_job = move || {
                                     if rm_for_paste.was_cancelled_since(cancel_generation) {
                                         debug!("Transcription operation cancelled before paste");
                                         utils::hide_recording_overlay(&ah_clone);
@@ -816,12 +817,26 @@ impl ShortcutAction for TranscribeAction {
                                     }
                                     utils::hide_recording_overlay(&ah_clone);
                                     set_tray_state(&ah_clone, TrayIconState::Idle);
-                                })
-                                .unwrap_or_else(|e| {
+                                };
+                                // macOS needs the main thread for the TIS keyboard
+                                // lookup and the pasteboard-owner paste. Elsewhere
+                                // the legacy paste only sleeps and runs helper
+                                // processes (xdotool types ~12 ms per character),
+                                // which froze the UI and overlay for the duration.
+                                #[cfg(target_os = "macos")]
+                                ah.run_on_main_thread(paste_job).unwrap_or_else(|e| {
                                     error!("Failed to run paste on main thread: {:?}", e);
                                     utils::hide_recording_overlay(&ah);
                                     set_tray_state(&ah, TrayIconState::Idle);
                                 });
+                                #[cfg(not(target_os = "macos"))]
+                                if let Err(e) =
+                                    tauri::async_runtime::spawn_blocking(paste_job).await
+                                {
+                                    error!("Paste task panicked: {}", e);
+                                    utils::hide_recording_overlay(&ah);
+                                    set_tray_state(&ah, TrayIconState::Idle);
+                                }
                             }
                         }
                         Err(err) => {

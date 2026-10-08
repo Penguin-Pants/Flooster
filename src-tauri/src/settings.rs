@@ -210,6 +210,22 @@ pub enum RecordingRetentionPeriod {
     Months3,
 }
 
+impl RecordingRetentionPeriod {
+    /// Maximum age of an unsaved recording in seconds, or `None` for the
+    /// variants that do not prune by time. The single source of truth for the
+    /// time-based variants, so adding one cannot miss a match elsewhere.
+    pub fn max_age_secs(self) -> Option<i64> {
+        const DAY: i64 = 24 * 60 * 60;
+        match self {
+            Self::Never | Self::PreserveLimit => None,
+            Self::Days3 => Some(3 * DAY),
+            Self::Weeks2 => Some(2 * 7 * DAY),
+            // Approximate month of 30 days, as before.
+            Self::Months3 => Some(3 * 30 * DAY),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum KeyboardImplementation {
@@ -1070,9 +1086,14 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
 
         settings
     } else {
-        let default_settings = get_default_settings();
-        store.set("settings", serde_json::to_value(&default_settings).unwrap());
-        default_settings
+        // The store loaded nothing. If a settings file exists on disk, it is
+        // corrupt or truncated (tauri-plugin-store ignores load errors and
+        // its save is not atomic): keep a copy and salvage what parses rather
+        // than silently replacing the user's configuration with defaults.
+        let salvaged = salvage_settings_file_on_disk(app);
+        let settings = salvaged.unwrap_or_else(get_default_settings);
+        store.set("settings", serde_json::to_value(&settings).unwrap());
+        settings
     };
 
     if ensure_post_process_defaults(&mut settings) {
@@ -1080,6 +1101,34 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
     }
 
     settings
+}
+
+/// Attempts to recover settings from a store file the plugin could not load.
+/// Returns `None` when there is no file, it is empty, or nothing in it can be
+/// read. The original is kept as `<file>.bak` for the user.
+fn salvage_settings_file_on_disk(app: &AppHandle) -> Option<AppSettings> {
+    let path = crate::portable::app_data_dir(app)
+        .ok()?
+        .join(SETTINGS_STORE_PATH);
+    let raw = std::fs::read_to_string(&path).ok()?;
+    if raw.trim().is_empty() {
+        return None;
+    }
+    let backup = path.with_extension("json.bak");
+    match std::fs::copy(&path, &backup) {
+        Ok(_) => warn!(
+            "Settings store could not be loaded; copy kept at {}",
+            backup.display()
+        ),
+        Err(e) => warn!("Settings store could not be loaded and no backup could be written: {e}"),
+    }
+    // Only a file that still parses as JSON and carries the settings object
+    // can be salvaged; a write cut mid-object is unrecoverable and falls back
+    // to defaults (the backup above keeps the bytes for the user).
+    let value = serde_json::from_str::<serde_json::Value>(&raw).ok()?;
+    let settings_value = value.get("settings")?.clone();
+    warn!("Salvaging settings from the on-disk store file");
+    Some(salvage_settings(&settings_value))
 }
 
 /// Rebuilds settings from a store value that failed to deserialize as a whole.
@@ -1515,6 +1564,25 @@ mod tests {
         assert_eq!(
             salvaged.bindings["transcribe"].current_binding,
             defaults.bindings["transcribe"].current_binding
+        );
+    }
+
+    #[test]
+    fn retention_period_ages_cover_every_time_based_variant() {
+        const DAY: i64 = 24 * 60 * 60;
+        assert_eq!(RecordingRetentionPeriod::Never.max_age_secs(), None);
+        assert_eq!(RecordingRetentionPeriod::PreserveLimit.max_age_secs(), None);
+        assert_eq!(
+            RecordingRetentionPeriod::Days3.max_age_secs(),
+            Some(3 * DAY)
+        );
+        assert_eq!(
+            RecordingRetentionPeriod::Weeks2.max_age_secs(),
+            Some(14 * DAY)
+        );
+        assert_eq!(
+            RecordingRetentionPeriod::Months3.max_age_secs(),
+            Some(90 * DAY)
         );
     }
 

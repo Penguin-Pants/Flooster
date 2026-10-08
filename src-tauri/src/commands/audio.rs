@@ -157,8 +157,11 @@ pub fn open_microphone_privacy_settings() -> Result<(), String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn update_microphone_mode(app: AppHandle, always_on: bool) -> Result<(), String> {
-    // Update settings (fast, stays inline)
+    // Update settings (fast, stays inline). The runtime change below reads
+    // them, so they are written first and reverted if that change fails;
+    // otherwise the toggle stayed saved as on while the mic was off.
     let mut settings = get_settings(&app);
+    let previous = settings.always_on_microphone;
     settings.always_on_microphone = always_on;
     write_settings(&app, settings);
 
@@ -173,10 +176,16 @@ pub async fn update_microphone_mode(app: AppHandle, always_on: bool) -> Result<(
         MicrophoneMode::OnDemand
     };
 
-    tokio::task::spawn_blocking(move || rm.update_mode(new_mode))
+    let result = tokio::task::spawn_blocking(move || rm.update_mode(new_mode))
         .await
-        .map_err(|e| format!("audio task join failed: {}", e))?
-        .map_err(|e| format!("Failed to update microphone mode: {}", e))
+        .map_err(|e| format!("audio task join failed: {}", e))
+        .and_then(|r| r.map_err(|e| format!("Failed to update microphone mode: {}", e)));
+    if result.is_err() {
+        let mut settings = get_settings(&app);
+        settings.always_on_microphone = previous;
+        write_settings(&app, settings);
+    }
+    result
 }
 
 #[tauri::command]
@@ -215,7 +224,10 @@ pub async fn get_available_microphones() -> Result<Vec<AudioDevice>, String> {
 #[tauri::command]
 #[specta::specta]
 pub async fn set_selected_microphone(app: AppHandle, device_name: String) -> Result<(), String> {
+    // The device switch below resolves the device from settings, so they are
+    // written first and reverted if the switch is refused or fails.
     let mut settings = get_settings(&app);
+    let previous = settings.selected_microphone.clone();
     settings.selected_microphone = if device_name == "default" {
         None
     } else {
@@ -227,10 +239,16 @@ pub async fn set_selected_microphone(app: AppHandle, device_name: String) -> Res
     // can restart the cpal stream (blocking CoreAudio) — run it on a blocking
     // thread, not inline on the webview/main run loop.
     let rm = app.state::<Arc<AudioRecordingManager>>().inner().clone();
-    tokio::task::spawn_blocking(move || rm.update_selected_device())
+    let result = tokio::task::spawn_blocking(move || rm.update_selected_device())
         .await
-        .map_err(|e| format!("audio task join failed: {}", e))?
-        .map_err(|e| format!("Failed to update selected device: {}", e))
+        .map_err(|e| format!("audio task join failed: {}", e))
+        .and_then(|r| r.map_err(|e| format!("Failed to update selected device: {}", e)));
+    if result.is_err() {
+        let mut settings = get_settings(&app);
+        settings.selected_microphone = previous;
+        write_settings(&app, settings);
+    }
+    result
 }
 
 #[tauri::command]

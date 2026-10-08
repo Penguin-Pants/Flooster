@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use tar::Archive;
@@ -155,7 +155,6 @@ pub(crate) fn default_quant_file<'a>(
 #[derive(Debug, Clone, Default)]
 pub struct DiskStatus {
     pub is_downloaded: bool,
-    pub is_downloading: bool,
     pub partial_size: u64,
 }
 
@@ -239,7 +238,9 @@ impl ModelDescriptor {
             source: self.source.clone(),
             size_mb: file.map(|f| f.size_bytes / (1024 * 1024)).unwrap_or(0),
             is_downloaded: status.is_downloaded,
-            is_downloading: status.is_downloading,
+            // Owned by the download path and `update_download_status`, which
+            // read it from the live cancel-token table, never from disk.
+            is_downloading: false,
             partial_size: status.partial_size,
             is_directory: false,
             engine_type: self.engine_type.clone(),
@@ -539,6 +540,69 @@ impl<'a> Drop for DownloadCleanup<'a> {
     }
 }
 
+/// Removes a model id from the in-progress extraction set on drop, on every
+/// exit path of the extraction (success, error, panic).
+struct ExtractingGuard<'a> {
+    extracting: &'a Arc<Mutex<HashSet<String>>>,
+    model_id: String,
+}
+
+impl<'a> ExtractingGuard<'a> {
+    fn new(extracting: &'a Arc<Mutex<HashSet<String>>>, model_id: &str) -> Self {
+        extracting
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .insert(model_id.to_string());
+        Self {
+            extracting,
+            model_id: model_id.to_string(),
+        }
+    }
+}
+
+impl Drop for ExtractingGuard<'_> {
+    fn drop(&mut self) {
+        self.extracting
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .remove(&self.model_id);
+    }
+}
+
+/// Unpacks a downloaded `.tar.gz` into `temp_dir` and moves the result to
+/// `final_dir`. Blocking; run it on the blocking pool.
+fn extract_model_archive(archive_path: &Path, temp_dir: &Path, final_dir: &Path) -> Result<()> {
+    // Clean up any previous incomplete extraction
+    if temp_dir.exists() {
+        let _ = fs::remove_dir_all(temp_dir);
+    }
+    fs::create_dir_all(temp_dir)?;
+
+    let tar_gz = File::open(archive_path)?;
+    let tar = GzDecoder::new(tar_gz);
+    let mut archive = Archive::new(tar);
+    archive.unpack(temp_dir)?;
+
+    // Find the actual extracted directory (archive might have a nested structure)
+    let extracted_dirs: Vec<_> = fs::read_dir(temp_dir)?
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
+        .collect();
+
+    if final_dir.exists() {
+        fs::remove_dir_all(final_dir)?;
+    }
+    if extracted_dirs.len() == 1 {
+        // Single directory extracted, move it to the final location
+        fs::rename(extracted_dirs[0].path(), final_dir)?;
+        let _ = fs::remove_dir_all(temp_dir);
+    } else {
+        // Multiple items or no directories, rename the temp directory itself
+        fs::rename(temp_dir, final_dir)?;
+    }
+    Ok(())
+}
+
 pub struct ModelManager {
     app_handle: AppHandle,
     models_dir: PathBuf,
@@ -548,6 +612,11 @@ pub struct ModelManager {
     /// Single-flight guard for [`Self::rescan_local_models`] so concurrent
     /// refresh requests coalesce instead of scanning the disk in parallel.
     is_rescanning: Arc<AtomicBool>,
+    /// Bumped whenever the files behind a model change (a download lands, a
+    /// model is deleted). [`Self::update_download_status`] probes the disk
+    /// off-lock and re-probes when the epoch moved meanwhile, so a scan that
+    /// started before the change cannot apply stale results over it.
+    disk_epoch: AtomicU64,
 }
 
 impl ModelManager {
@@ -1164,13 +1233,18 @@ impl ModelManager {
             cancel_flags: Arc::new(Mutex::new(HashMap::new())),
             extracting_models: Arc::new(Mutex::new(HashSet::new())),
             is_rescanning: Arc::new(AtomicBool::new(false)),
+            disk_epoch: AtomicU64::new(0),
         };
 
-        // Migrate any bundled models to user directory
-        manager.migrate_bundled_models()?;
-
-        // Migrate GigaAM from single-file to directory format
-        manager.migrate_gigaam_to_directory()?;
+        // Migrations are optional conveniences. A full disk during the
+        // bundled copy or a missing resource used to propagate into a panic in
+        // `setup` (`expect` on `ModelManager::new`) on every launch.
+        if let Err(e) = manager.migrate_bundled_models() {
+            warn!("Bundled model migration skipped: {}", e);
+        }
+        if let Err(e) = manager.migrate_gigaam_to_directory() {
+            warn!("GigaAM directory migration skipped: {}", e);
+        }
 
         // Check which models are already downloaded
         manager.update_download_status()?;
@@ -1238,9 +1312,9 @@ impl ModelManager {
     /// The merge is additive: only new ids are inserted, so existing entries keep
     /// their values — including runtime-probed capabilities from
     /// [`Self::set_runtime_capabilities`]. It then runs [`Self::update_download_status`],
-    /// which recomputes disk-derived flags for *every* entry; a rescan racing an
-    /// in-flight download can briefly clear its `is_downloading`, but the download
-    /// continues and the event-driven UI self-corrects.
+    /// which recomputes disk-derived flags for *every* entry; `is_downloading`
+    /// is read from the live cancel-token table at apply time, so a rescan racing
+    /// an in-flight download leaves that flag correct.
     ///
     /// The disk walk and 64 KiB header probes run against a cloned snapshot
     /// *off-lock* so readers never block on I/O; only the brief merge takes the
@@ -1398,96 +1472,140 @@ impl ModelManager {
         Ok(())
     }
 
-    fn update_download_status(&self) -> Result<()> {
-        // Snapshot in-flight download ids before taking the registry lock (the
-        // two locks are never nested) so a mid-download entry is never dropped.
-        let downloading_ids: HashSet<String> =
-            self.cancel_flags.lock().unwrap().keys().cloned().collect();
-        let mut models = self.available_models.lock().unwrap();
-        let mut vanished_models: Vec<String> = Vec::new();
+    /// Bumps the disk epoch. Call after the files behind a model changed
+    /// (download landed, model deleted) so a status scan that probed before
+    /// the change does not apply its stale results.
+    fn note_disk_change(&self) {
+        self.disk_epoch.fetch_add(1, Ordering::AcqRel);
+    }
 
-        for model in models.values_mut() {
-            if let ModelSource::HuggingFace { repo_id, revision } = &model.source {
-                // A models-dir copy counts too: mirror-fallback downloads land
-                // there, and it makes manual drop-ins of catalog files work.
-                let local_path = self.models_dir.join(&model.filename);
-                let partial_path = self.models_dir.join(format!("{}.partial", &model.filename));
-                model.is_downloaded = hf_cached_path(repo_id, revision, &model.filename).is_some()
-                    || local_path.exists();
-                model.is_downloading = false;
-                model.partial_size = partial_path.metadata().map(|m| m.len()).unwrap_or(0);
-                // Alternate-quant entries exist only because their file was
-                // discovered on disk — the catalog offers just the default
-                // quant, so they are never presented for download. When the
-                // file is gone, the entry goes with it.
+    fn update_download_status(&self) -> Result<()> {
+        // Probes run with the registry lock released (see
+        // `probe_disk_statuses`). A download that lands or a delete that
+        // completes meanwhile bumps `disk_epoch`; applying that pass would
+        // overwrite the fresher registry state with stale probe results, so
+        // the pass is redone (bounded).
+        for attempt in 0..3 {
+            let epoch = self.disk_epoch.load(Ordering::Acquire);
+            let statuses = self.probe_disk_statuses();
+
+            // Apply under the lock, briefly.
+            let mut models = self.available_models.lock().unwrap();
+            if attempt < 2 && self.disk_epoch.load(Ordering::Acquire) != epoch {
+                debug!("Disk state changed during the status scan; probing again");
+                continue;
+            }
+            // The in-flight set is read here, not before the probes: a
+            // download that finished while they ran has already removed its
+            // token, and a pre-probe snapshot would mark it downloading again
+            // until the next refresh. Cancelled tokens stay in the table until
+            // their task unwinds and must not count either: `cancel_download`
+            // refreshes the status right after triggering them.
+            // `DownloadCleanup::drop` takes the two locks in the same order
+            // (never nested); no path holds the flags while waiting on the
+            // registry.
+            let downloading_ids: HashSet<String> = self
+                .cancel_flags
+                .lock()
+                .unwrap()
+                .iter()
+                .filter(|(_, token)| !token.is_cancelled())
+                .map(|(id, _)| id.clone())
+                .collect();
+            let mut vanished_models: Vec<String> = Vec::new();
+            for (id, status) in statuses {
+                let Some(model) = models.get_mut(&id) else {
+                    continue;
+                };
+                model.is_downloaded = status.is_downloaded;
+                model.is_downloading = downloading_ids.contains(&id);
+                model.partial_size = status.partial_size;
+                // Entries that exist only because their file was discovered on disk
+                // (alternate quants, custom models) go when the file is gone;
+                // keeping them would offer a Download that can never succeed.
                 if !model.is_downloaded
                     && !downloading_ids.contains(&model.id)
                     && Self::disappears_when_missing(model)
                 {
                     vanished_models.push(model.id.clone());
                 }
-                continue;
-            }
-            if model.is_directory {
-                // For directory-based models, check if the directory exists
-                let model_path = self.models_dir.join(&model.filename);
-                let partial_path = self.models_dir.join(format!("{}.partial", &model.filename));
-                let extracting_path = self
-                    .models_dir
-                    .join(format!("{}.extracting", &model.filename));
-
-                // Clean up any leftover .extracting directories from interrupted extractions
-                // But only if this model is NOT currently being extracted
-                let is_currently_extracting = {
-                    let extracting = self.extracting_models.lock().unwrap();
-                    extracting.contains(&model.id)
-                };
-                if extracting_path.exists() && !is_currently_extracting {
-                    warn!("Cleaning up interrupted extraction for model: {}", model.id);
-                    let _ = fs::remove_dir_all(&extracting_path);
-                }
-
-                model.is_downloaded = model_path.exists() && model_path.is_dir();
-                model.is_downloading = false;
-
-                // Get partial file size if it exists (for the .tar.gz being downloaded)
-                if partial_path.exists() {
-                    model.partial_size = partial_path.metadata().map(|m| m.len()).unwrap_or(0);
-                } else {
-                    model.partial_size = 0;
-                }
-            } else {
-                // For file-based models (existing logic)
-                let model_path = self.models_dir.join(&model.filename);
-                let partial_path = self.models_dir.join(format!("{}.partial", &model.filename));
-
-                model.is_downloaded = model_path.exists();
-                model.is_downloading = false;
-
-                // Get partial file size if it exists
-                if partial_path.exists() {
-                    model.partial_size = partial_path.metadata().map(|m| m.len()).unwrap_or(0);
-                } else {
-                    model.partial_size = 0;
-                }
             }
 
-            // Custom entries are discovered from files and have no download
-            // source. Once their file is gone, keeping the entry would offer a
-            // Download action that can never succeed.
-            if !model.is_downloaded
-                && !downloading_ids.contains(&model.id)
-                && Self::disappears_when_missing(model)
-            {
-                vanished_models.push(model.id.clone());
+            for id in vanished_models {
+                models.remove(&id);
             }
+
+            return Ok(());
         }
-
-        for id in vanished_models {
-            models.remove(&id);
-        }
-
         Ok(())
+    }
+
+    /// Probes the filesystem for every registered model: downloaded artifact,
+    /// resumable partial, leftover extraction directory. Runs with the registry
+    /// lock released: `get_available_models` and every download-progress
+    /// update wait on it, and the probes (HF cache refs, metadata) can be slow.
+    fn probe_disk_statuses(&self) -> Vec<(String, DiskStatus)> {
+        struct Probe {
+            id: String,
+            source: ModelSource,
+            filename: String,
+            is_directory: bool,
+        }
+        let probes: Vec<Probe> = {
+            let models = self.available_models.lock().unwrap();
+            models
+                .values()
+                .map(|m| Probe {
+                    id: m.id.clone(),
+                    source: m.source.clone(),
+                    filename: m.filename.clone(),
+                    is_directory: m.is_directory,
+                })
+                .collect()
+        };
+
+        let mut statuses: Vec<(String, DiskStatus)> = Vec::with_capacity(probes.len());
+        for probe in probes {
+            let partial_path = self.models_dir.join(format!("{}.partial", probe.filename));
+            let partial_size = partial_path.metadata().map(|m| m.len()).unwrap_or(0);
+            let is_downloaded = match &probe.source {
+                ModelSource::HuggingFace { repo_id, revision } => {
+                    // A models-dir copy counts too: mirror-fallback downloads land
+                    // there, and it makes manual drop-ins of catalog files work.
+                    hf_cached_path(repo_id, revision, &probe.filename).is_some()
+                        || self.models_dir.join(&probe.filename).exists()
+                }
+                _ if probe.is_directory => {
+                    let model_path = self.models_dir.join(&probe.filename);
+                    let extracting_path = self
+                        .models_dir
+                        .join(format!("{}.extracting", probe.filename));
+
+                    // Clean up any leftover .extracting directories from interrupted extractions
+                    // But only if this model is NOT currently being extracted
+                    let is_currently_extracting = self
+                        .extracting_models
+                        .lock()
+                        .unwrap_or_else(|e| e.into_inner())
+                        .contains(&probe.id);
+                    if extracting_path.exists() && !is_currently_extracting {
+                        warn!("Cleaning up interrupted extraction for model: {}", probe.id);
+                        let _ = fs::remove_dir_all(&extracting_path);
+                    }
+
+                    model_path.exists() && model_path.is_dir()
+                }
+                _ => self.models_dir.join(&probe.filename).exists(),
+            };
+            statuses.push((
+                probe.id.clone(),
+                DiskStatus {
+                    is_downloaded,
+                    partial_size,
+                },
+            ));
+        }
+        statuses
     }
 
     /// Whether `filename` is a catalog-listed quant of `repo_id` other than
@@ -1892,7 +2010,10 @@ impl ModelManager {
                         is_recommended: false,
                         supported_languages: caps.supported_languages,
                         supports_language_selection: caps.supports_language_selection,
-                        is_custom: false,
+                        // Not a catalog entry: user-provided, so deleting it
+                        // removes only its own file (see `delete_model`) and
+                        // the entry disappears with the file.
+                        is_custom: true,
                         supports_streaming: caps.supports_streaming,
                         supports_language_detection: caps.supports_language_detection,
                     },
@@ -1938,20 +2059,30 @@ impl ModelManager {
             return Ok(());
         }
 
+        // Register a cancellation token so `cancel_download` can abort this
+        // transfer promptly. The guard removes it on every exit path. Done
+        // under the lock together with the in-flight check: a second request
+        // for the same id used to replace the first token and open the same
+        // partial file twice, which corrupted it.
+        let cancel_token = CancellationToken::new();
+        {
+            let mut flags = self.cancel_flags.lock().unwrap();
+            if flags.contains_key(&model_id) {
+                info!(
+                    "Download of {} already in progress; ignoring request",
+                    model_id
+                );
+                return Ok(());
+            }
+            flags.insert(model_id.clone(), cancel_token.clone());
+        }
+
         // Mark downloading; the guard resets the flag on any error path.
         {
             let mut models = self.available_models.lock().unwrap();
             if let Some(model) = models.get_mut(&model_id) {
                 model.is_downloading = true;
             }
-        }
-
-        // Register a cancellation token so `cancel_download` can abort this
-        // transfer promptly. The guard removes it on every exit path.
-        let cancel_token = CancellationToken::new();
-        {
-            let mut flags = self.cancel_flags.lock().unwrap();
-            flags.insert(model_id.clone(), cancel_token.clone());
         }
 
         let mut cleanup = DownloadCleanup {
@@ -2171,8 +2302,12 @@ impl ModelManager {
         }
 
         cleanup.disarmed = true;
-        self.update_download_status()?;
+        self.note_disk_change();
+        // Remove the in-flight token first: the status refresh derives
+        // `is_downloading` from it and would otherwise report the finished
+        // model as still downloading.
         self.cancel_flags.lock().unwrap().remove(&model_id);
+        self.update_download_status()?;
         let _ = self.app_handle.emit("model-download-complete", &model_id);
         info!("HF model {} downloaded", model_id);
         Ok(())
@@ -2251,7 +2386,25 @@ impl ModelManager {
                 let _ = fs::remove_file(&partial_path);
             }
             self.update_download_status()?;
+            // Same event as a real completion (the HF path emits it too), so
+            // the frontend clears its progress state instead of spinning.
+            let _ = self.app_handle.emit("model-download-complete", model_id);
             return Ok(());
+        }
+
+        // Create cancellation token for this download, refusing a second
+        // concurrent download of the same id (see `download_hf_model`).
+        let cancel_token = CancellationToken::new();
+        {
+            let mut flags = self.cancel_flags.lock().unwrap();
+            if flags.contains_key(model_id) {
+                info!(
+                    "Download of {} already in progress; ignoring request",
+                    model_id
+                );
+                return Ok(());
+            }
+            flags.insert(model_id.to_string(), cancel_token.clone());
         }
 
         // Mark as downloading
@@ -2260,13 +2413,6 @@ impl ModelManager {
             if let Some(model) = models.get_mut(model_id) {
                 model.is_downloading = true;
             }
-        }
-
-        // Create cancellation token for this download
-        let cancel_token = CancellationToken::new();
-        {
-            let mut flags = self.cancel_flags.lock().unwrap();
-            flags.insert(model_id.to_string(), cancel_token.clone());
         }
 
         // Guard ensures is_downloading and cancel_flags are cleaned up on every
@@ -2302,11 +2448,10 @@ impl ModelManager {
 
         // Handle directory-based models (extract tar.gz) vs file-based models
         if model_info.is_directory {
-            // Track that this model is being extracted
-            {
-                let mut extracting = self.extracting_models.lock().unwrap();
-                extracting.insert(model_id.to_string());
-            }
+            // Track that this model is being extracted. The guard removes the
+            // entry on every exit, so `update_download_status` can never be
+            // left believing an extraction is still running.
+            let _extracting = ExtractingGuard::new(&self.extracting_models, model_id);
 
             // Emit extraction started event
             let _ = self.app_handle.emit("model-extraction-started", model_id);
@@ -2318,32 +2463,27 @@ impl ModelManager {
                 .join(format!("{}.extracting", &model_info.filename));
             let final_model_dir = self.models_dir.join(&model_info.filename);
 
-            // Clean up any previous incomplete extraction
-            if temp_extract_dir.exists() {
-                let _ = fs::remove_dir_all(&temp_extract_dir);
-            }
+            // Gunzip + untar of up to ~1.7 GB is blocking work; keep it off
+            // the async runtime.
+            let (archive_path, temp_dir, final_dir) = (
+                partial_path.clone(),
+                temp_extract_dir.clone(),
+                final_model_dir.clone(),
+            );
+            let extracted = tauri::async_runtime::spawn_blocking(move || {
+                extract_model_archive(&archive_path, &temp_dir, &final_dir)
+            })
+            .await
+            .map_err(|e| anyhow::anyhow!("extraction task panicked: {}", e))
+            .and_then(|r| r);
 
-            // Create temporary extraction directory
-            fs::create_dir_all(&temp_extract_dir)?;
-
-            // Open the downloaded tar.gz file
-            let tar_gz = File::open(&partial_path)?;
-            let tar = GzDecoder::new(tar_gz);
-            let mut archive = Archive::new(tar);
-
-            // Extract to the temporary directory first
-            archive.unpack(&temp_extract_dir).map_err(|e| {
+            if let Err(e) = extracted {
                 let error_msg = format!("Failed to extract archive: {}", e);
                 // Clean up failed extraction
                 let _ = fs::remove_dir_all(&temp_extract_dir);
                 // Delete the corrupt partial file so the next download attempt starts fresh
                 // instead of resuming from a broken archive (issue #858).
                 let _ = fs::remove_file(&partial_path);
-                // Remove from extracting set
-                {
-                    let mut extracting = self.extracting_models.lock().unwrap();
-                    extracting.remove(model_id);
-                }
                 let _ = self.app_handle.emit(
                     "model-extraction-failed",
                     &serde_json::json!({
@@ -2351,38 +2491,10 @@ impl ModelManager {
                         "error": error_msg
                     }),
                 );
-                anyhow::anyhow!(error_msg)
-            })?;
-
-            // Find the actual extracted directory (archive might have a nested structure)
-            let extracted_dirs: Vec<_> = fs::read_dir(&temp_extract_dir)?
-                .filter_map(|entry| entry.ok())
-                .filter(|entry| entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
-                .collect();
-
-            if extracted_dirs.len() == 1 {
-                // Single directory extracted, move it to the final location
-                let source_dir = extracted_dirs[0].path();
-                if final_model_dir.exists() {
-                    fs::remove_dir_all(&final_model_dir)?;
-                }
-                fs::rename(&source_dir, &final_model_dir)?;
-                // Clean up temp directory
-                let _ = fs::remove_dir_all(&temp_extract_dir);
-            } else {
-                // Multiple items or no directories, rename the temp directory itself
-                if final_model_dir.exists() {
-                    fs::remove_dir_all(&final_model_dir)?;
-                }
-                fs::rename(&temp_extract_dir, &final_model_dir)?;
+                return Err(anyhow::anyhow!(error_msg));
             }
 
             info!("Successfully extracted archive for model: {}", model_id);
-            // Remove from extracting set
-            {
-                let mut extracting = self.extracting_models.lock().unwrap();
-                extracting.remove(model_id);
-            }
             // Emit extraction completed event
             let _ = self.app_handle.emit("model-extraction-completed", model_id);
 
@@ -2396,6 +2508,7 @@ impl ModelManager {
         // Disarm the guard — success path does its own cleanup because it
         // additionally sets is_downloaded = true.
         cleanup.disarmed = true;
+        self.note_disk_change();
         {
             let mut models = self.available_models.lock().unwrap();
             if let Some(model) = models.get_mut(model_id) {
@@ -2434,15 +2547,18 @@ impl ModelManager {
             let is_alternate_quant =
                 Self::is_catalog_alternate_quant(repo_id, &model_info.filename);
             let mut deleted = false;
-            if is_alternate_quant {
+            if is_alternate_quant || model_info.is_custom {
                 // Only this quant's own file: the snapshot pointer and its
                 // blob. The default (and any other quants) survive in the
-                // cache — the entry never owned more than its one file.
+                // cache — the entry never owned more than its one file. The
+                // same holds for a discovered third-party repo (`is_custom`):
+                // its siblings (other quants, files other tools keep there)
+                // were never ours.
                 deleted |= Self::delete_hf_cache_file(repo_id, revision, &model_info.filename);
             } else if let Some(file) = hf_cached_path(repo_id, revision, &model_info.filename) {
                 // Cached at <cache>/models--org--name/snapshots/<rev>/<file>; remove
                 // the whole repo dir (blobs + refs + snapshots). Per product decision,
-                // delete hard-removes from the shared HF cache.
+                // delete hard-removes from the shared HF cache for catalog defaults.
                 if let Some(repo_dir) = file.ancestors().nth(3) {
                     if repo_dir
                         .file_name()
@@ -2483,6 +2599,7 @@ impl ModelManager {
             if is_alternate_quant {
                 self.available_models.lock().unwrap().remove(model_id);
             }
+            self.note_disk_change();
             self.update_download_status()?;
             let _ = self.app_handle.emit("model-deleted", model_id);
             return Ok(());
@@ -2541,6 +2658,7 @@ impl ModelManager {
             debug!("ModelManager: removed custom model from available models");
         } else {
             // Update download status (marks predefined models as not downloaded)
+            self.note_disk_change();
             self.update_download_status()?;
             debug!("ModelManager: download status updated");
         }
@@ -2638,26 +2756,25 @@ impl ModelManager {
                     model_id
                 ));
             }
-            if partial_path.exists() {
-                return Err(anyhow::anyhow!(
-                    "Model directory is incomplete: {}",
-                    model_id
-                ));
-            }
-            Ok(model_path)
-        } else {
-            if !model_path.exists() {
-                self.mark_model_unavailable(model_id);
-                return Err(anyhow::anyhow!(
-                    "Complete model file not found: {}",
-                    model_id
-                ));
-            }
-            if partial_path.exists() {
-                return Err(anyhow::anyhow!("Model file is incomplete: {}", model_id));
-            }
-            Ok(model_path)
+        } else if !model_path.exists() {
+            self.mark_model_unavailable(model_id);
+            return Err(anyhow::anyhow!(
+                "Complete model file not found: {}",
+                model_id
+            ));
         }
+        // The final artifact only ever appears after verification, so a
+        // leftover `.partial` next to it (a failed delete, e.g. a Windows AV
+        // handle) is noise, not a veto. Same rule as the HF branch above.
+        if partial_path.exists() {
+            if let Err(e) = fs::remove_file(&partial_path) {
+                warn!(
+                    "Could not remove stale partial next to complete model {}: {}",
+                    model_id, e
+                );
+            }
+        }
+        Ok(model_path)
     }
 
     pub fn cancel_download(&self, model_id: &str) -> Result<()> {

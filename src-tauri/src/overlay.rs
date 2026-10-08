@@ -2,7 +2,6 @@ use crate::input;
 use crate::settings;
 use crate::settings::{OverlayPosition, OverlayStyle};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize};
 
 #[cfg(not(target_os = "macos"))]
@@ -744,9 +743,12 @@ pub fn emit_levels(app_handle: &AppHandle, levels: &[f32]) {
     // callback fires far faster than the UI needs; capping emission rate
     // cuts the per-frame `eval_script`/IPC volume that drives the wry
     // memory growth in issue #1279 (upstream tauri-apps/wry#1489).
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
+    // Monotonic: a wall-clock step backwards (NTP) would otherwise suppress
+    // level events for the length of the step.
+    static THROTTLE_ORIGIN: std::sync::OnceLock<std::time::Instant> = std::sync::OnceLock::new();
+    let now = THROTTLE_ORIGIN
+        .get_or_init(std::time::Instant::now)
+        .elapsed()
         .as_millis() as u64;
     let last = LAST_MIC_LEVEL_EMIT.load(Ordering::Relaxed);
     if now.saturating_sub(last) < EMIT_THROTTLE_MS {
