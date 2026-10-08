@@ -13,7 +13,7 @@ use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use tar::Archive;
@@ -612,6 +612,11 @@ pub struct ModelManager {
     /// Single-flight guard for [`Self::rescan_local_models`] so concurrent
     /// refresh requests coalesce instead of scanning the disk in parallel.
     is_rescanning: Arc<AtomicBool>,
+    /// Bumped whenever the files behind a model change (a download lands, a
+    /// model is deleted). [`Self::update_download_status`] probes the disk
+    /// off-lock and re-probes when the epoch moved meanwhile, so a scan that
+    /// started before the change cannot apply stale results over it.
+    disk_epoch: AtomicU64,
 }
 
 impl ModelManager {
@@ -1228,6 +1233,7 @@ impl ModelManager {
             cancel_flags: Arc::new(Mutex::new(HashMap::new())),
             extracting_models: Arc::new(Mutex::new(HashSet::new())),
             is_rescanning: Arc::new(AtomicBool::new(false)),
+            disk_epoch: AtomicU64::new(0),
         };
 
         // Migrations are optional conveniences. A full disk during the
@@ -1466,10 +1472,79 @@ impl ModelManager {
         Ok(())
     }
 
+    /// Bumps the disk epoch. Call after the files behind a model changed
+    /// (download landed, model deleted) so a status scan that probed before
+    /// the change does not apply its stale results.
+    fn note_disk_change(&self) {
+        self.disk_epoch.fetch_add(1, Ordering::AcqRel);
+    }
+
     fn update_download_status(&self) -> Result<()> {
-        // Probe the filesystem off the registry lock: `get_available_models`
-        // and every download-progress update wait on it, and the probes
-        // (HF cache refs, metadata, a leftover-extraction cleanup) can be slow.
+        // Probes run with the registry lock released (see
+        // `probe_disk_statuses`). A download that lands or a delete that
+        // completes meanwhile bumps `disk_epoch`; applying that pass would
+        // overwrite the fresher registry state with stale probe results, so
+        // the pass is redone (bounded).
+        for attempt in 0..3 {
+            let epoch = self.disk_epoch.load(Ordering::Acquire);
+            let statuses = self.probe_disk_statuses();
+
+            // Apply under the lock, briefly.
+            let mut models = self.available_models.lock().unwrap();
+            if attempt < 2 && self.disk_epoch.load(Ordering::Acquire) != epoch {
+                debug!("Disk state changed during the status scan; probing again");
+                continue;
+            }
+            // The in-flight set is read here, not before the probes: a
+            // download that finished while they ran has already removed its
+            // token, and a pre-probe snapshot would mark it downloading again
+            // until the next refresh. Cancelled tokens stay in the table until
+            // their task unwinds and must not count either: `cancel_download`
+            // refreshes the status right after triggering them.
+            // `DownloadCleanup::drop` takes the two locks in the same order
+            // (never nested); no path holds the flags while waiting on the
+            // registry.
+            let downloading_ids: HashSet<String> = self
+                .cancel_flags
+                .lock()
+                .unwrap()
+                .iter()
+                .filter(|(_, token)| !token.is_cancelled())
+                .map(|(id, _)| id.clone())
+                .collect();
+            let mut vanished_models: Vec<String> = Vec::new();
+            for (id, status) in statuses {
+                let Some(model) = models.get_mut(&id) else {
+                    continue;
+                };
+                model.is_downloaded = status.is_downloaded;
+                model.is_downloading = downloading_ids.contains(&id);
+                model.partial_size = status.partial_size;
+                // Entries that exist only because their file was discovered on disk
+                // (alternate quants, custom models) go when the file is gone;
+                // keeping them would offer a Download that can never succeed.
+                if !model.is_downloaded
+                    && !downloading_ids.contains(&model.id)
+                    && Self::disappears_when_missing(model)
+                {
+                    vanished_models.push(model.id.clone());
+                }
+            }
+
+            for id in vanished_models {
+                models.remove(&id);
+            }
+
+            return Ok(());
+        }
+        Ok(())
+    }
+
+    /// Probes the filesystem for every registered model: downloaded artifact,
+    /// resumable partial, leftover extraction directory. Runs with the registry
+    /// lock released: `get_available_models` and every download-progress
+    /// update wait on it, and the probes (HF cache refs, metadata) can be slow.
+    fn probe_disk_statuses(&self) -> Vec<(String, DiskStatus)> {
         struct Probe {
             id: String,
             source: ModelSource,
@@ -1530,40 +1605,7 @@ impl ModelManager {
                 },
             ));
         }
-
-        // Apply under the lock, briefly. The in-flight set is read here, not
-        // before the probes: a download that finished while they ran has
-        // already removed its token, and a pre-probe snapshot would mark it
-        // downloading again until the next refresh. `DownloadCleanup::drop`
-        // takes the two locks in the same order (never nested); no path holds
-        // the flags while waiting on the registry.
-        let mut models = self.available_models.lock().unwrap();
-        let downloading_ids: HashSet<String> =
-            self.cancel_flags.lock().unwrap().keys().cloned().collect();
-        let mut vanished_models: Vec<String> = Vec::new();
-        for (id, status) in statuses {
-            let Some(model) = models.get_mut(&id) else {
-                continue;
-            };
-            model.is_downloaded = status.is_downloaded;
-            model.is_downloading = downloading_ids.contains(&id);
-            model.partial_size = status.partial_size;
-            // Entries that exist only because their file was discovered on disk
-            // (alternate quants, custom models) go when the file is gone;
-            // keeping them would offer a Download that can never succeed.
-            if !model.is_downloaded
-                && !downloading_ids.contains(&model.id)
-                && Self::disappears_when_missing(model)
-            {
-                vanished_models.push(model.id.clone());
-            }
-        }
-
-        for id in vanished_models {
-            models.remove(&id);
-        }
-
-        Ok(())
+        statuses
     }
 
     /// Whether `filename` is a catalog-listed quant of `repo_id` other than
@@ -1968,7 +2010,10 @@ impl ModelManager {
                         is_recommended: false,
                         supported_languages: caps.supported_languages,
                         supports_language_selection: caps.supports_language_selection,
-                        is_custom: false,
+                        // Not a catalog entry: user-provided, so deleting it
+                        // removes only its own file (see `delete_model`) and
+                        // the entry disappears with the file.
+                        is_custom: true,
                         supports_streaming: caps.supports_streaming,
                         supports_language_detection: caps.supports_language_detection,
                     },
@@ -2257,6 +2302,7 @@ impl ModelManager {
         }
 
         cleanup.disarmed = true;
+        self.note_disk_change();
         // Remove the in-flight token first: the status refresh derives
         // `is_downloading` from it and would otherwise report the finished
         // model as still downloading.
@@ -2462,6 +2508,7 @@ impl ModelManager {
         // Disarm the guard — success path does its own cleanup because it
         // additionally sets is_downloaded = true.
         cleanup.disarmed = true;
+        self.note_disk_change();
         {
             let mut models = self.available_models.lock().unwrap();
             if let Some(model) = models.get_mut(model_id) {
@@ -2504,8 +2551,9 @@ impl ModelManager {
                 // Only this quant's own file: the snapshot pointer and its
                 // blob. The default (and any other quants) survive in the
                 // cache — the entry never owned more than its one file. The
-                // same holds for a discovered third-party repo: its siblings
-                // (other quants, files other tools keep there) were never ours.
+                // same holds for a discovered third-party repo (`is_custom`):
+                // its siblings (other quants, files other tools keep there)
+                // were never ours.
                 deleted |= Self::delete_hf_cache_file(repo_id, revision, &model_info.filename);
             } else if let Some(file) = hf_cached_path(repo_id, revision, &model_info.filename) {
                 // Cached at <cache>/models--org--name/snapshots/<rev>/<file>; remove
@@ -2551,6 +2599,7 @@ impl ModelManager {
             if is_alternate_quant {
                 self.available_models.lock().unwrap().remove(model_id);
             }
+            self.note_disk_change();
             self.update_download_status()?;
             let _ = self.app_handle.emit("model-deleted", model_id);
             return Ok(());
@@ -2609,6 +2658,7 @@ impl ModelManager {
             debug!("ModelManager: removed custom model from available models");
         } else {
             // Update download status (marks predefined models as not downloaded)
+            self.note_disk_change();
             self.update_download_status()?;
             debug!("ModelManager: download status updated");
         }

@@ -209,36 +209,37 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
             aria-label={t("common.options")}
             className="max-h-48 overflow-y-auto"
           >
-            {filtered.length === 0 ? (
+            {filtered.map((option, index) => {
+              const selected = option.value === selectedValue;
+              const active = index === highlighted;
+              return (
+                <button
+                  key={option.value}
+                  id={`${listId}-${index}`}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  tabIndex={-1}
+                  onMouseEnter={() => setHighlighted(index)}
+                  onClick={() => pick(option.value)}
+                  className={`w-full px-3 py-1.5 text-sm text-start transition-colors duration-150 ${
+                    selected
+                      ? "bg-logo-primary/20 text-logo-primary font-semibold"
+                      : active
+                        ? "bg-logo-primary/10"
+                        : "hover:bg-logo-primary/10"
+                  }`}
+                >
+                  <span className="block truncate">{option.label}</span>
+                </button>
+              );
+            })}
+            {!hasRealMatch && (
+              // The leading option ("All ...") is never filtered out, so the
+              // list is never empty; say so when nothing else matched.
               <div className="px-2 py-2 text-sm text-mid-gray text-center">
                 {noResultsText}
               </div>
-            ) : (
-              filtered.map((option, index) => {
-                const selected = option.value === selectedValue;
-                const active = index === highlighted;
-                return (
-                  <button
-                    key={option.value}
-                    id={`${listId}-${index}`}
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    tabIndex={-1}
-                    onMouseEnter={() => setHighlighted(index)}
-                    onClick={() => pick(option.value)}
-                    className={`w-full px-3 py-1.5 text-sm text-start transition-colors duration-150 ${
-                      selected
-                        ? "bg-logo-primary/20 text-logo-primary font-semibold"
-                        : active
-                          ? "bg-logo-primary/10"
-                          : "hover:bg-logo-primary/10"
-                    }`}
-                  >
-                    <span className="block truncate">{option.label}</span>
-                  </button>
-                );
-              })
             )}
           </div>
         </div>
