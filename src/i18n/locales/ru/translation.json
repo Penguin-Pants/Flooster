@@ -186,12 +186,11 @@
         "tooltip": "Пересканировать модели, добавленные в папку моделей или кэш Hugging Face вне Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Не удалось загрузить модели: {{error}}",
+        "rescan": "Не удалось повторно просканировать модели: {{error}}",
+        "select": "Не удалось переключить модель: {{error}}",
+        "cancel": "Не удалось отменить загрузку: {{error}}",
+        "delete": "Не удалось удалить модель: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "Отмена",
         "selectToEdit": "Выберите запрос выше, чтобы просмотреть и изменить его сведения.",
         "createFirst": "Нажмите «Создать новый запрос» выше, чтобы создать первый запрос для постобработки.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Удалить запрос «{{name}}»? Это действие нельзя отменить.",
+        "deleteConfirmTitle": "Удалить запрос",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Не удалось создать запрос: {{error}}",
+          "update": "Не удалось обновить запрос: {{error}}",
+          "delete": "Не удалось удалить запрос: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Не удалось перетранскрибировать. Пожалуйста, попробуйте снова.",
       "transcribing": "Транскрибирование...",
       "transcriptionFailed": "Транскрипция не удалась. Вы можете перетранскрибировать, используя значок повтора.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Удалить эту транскрипцию и её запись? Это действие нельзя отменить.",
+      "deleteConfirmTitle": "Удалить запись",
+      "deleteFailed": "Не удалось удалить запись: {{error}}"
     },
     "debug": {
       "title": "Отлаживать",
@@ -734,10 +733,10 @@
     "pasteFailedTitle": "Не удалось вставить текст",
     "pasteFailed": "Не удалось вставить текст в активное приложение.",
     "transcriptionFailedTitle": "Ошибка транскрипции",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "Не удалось сохранить настройку",
+    "updateCheckFailed": "Не удалось проверить наличие обновлений",
+    "updateInstallFailed": "Не удалось установить обновление",
+    "openUrlFailed": "Не удалось открыть ссылку",
     "unknown": "Unknown error"
   },
   "appLanguage": {

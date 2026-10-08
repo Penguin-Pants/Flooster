@@ -238,12 +238,11 @@
         "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "טעינת המודלים נכשלה: {{error}}",
+        "rescan": "סריקת המודלים מחדש נכשלה: {{error}}",
+        "select": "החלפת המודל נכשלה: {{error}}",
+        "cancel": "ביטול ההורדה נכשל: {{error}}",
+        "delete": "מחיקת המודל נכשלה: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "ביטול",
         "selectToEdit": "בחר פרומפט למעלה כדי לצפות בפרטים שלו ולערוך אותם.",
         "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "למחוק את הפרומפט \"{{name}}\"? לא ניתן לבטל פעולה זו.",
+        "deleteConfirmTitle": "מחיקת פרומפט",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "יצירת הפרומפט נכשלה: {{error}}",
+          "update": "עדכון הפרומפט נכשל: {{error}}",
+          "delete": "מחיקת הפרומפט נכשלה: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "תמלול מחדש נכשל. נסה שוב.",
       "transcribing": "מתמלל...",
       "transcriptionFailed": "התמלול נכשל. אפשר לתמלל מחדש באמצעות אייקון הניסיון החוזר.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "למחוק את התמלול הזה ואת ההקלטה שלו? לא ניתן לבטל פעולה זו.",
+      "deleteConfirmTitle": "מחיקת רשומה",
+      "deleteFailed": "מחיקת הרשומה נכשלה: {{error}}"
     },
     "debug": {
       "title": "ניפוי שגיאות",
@@ -734,10 +733,10 @@
     "pasteFailedTitle": "ההדבקה נכשלה",
     "pasteFailed": "לא ניתן היה להדביק את הטקסט ביישום הפעיל.",
     "transcriptionFailedTitle": "התמלול נכשל",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "שמירת ההגדרה נכשלה",
+    "updateCheckFailed": "בדיקת העדכונים נכשלה",
+    "updateInstallFailed": "התקנת העדכון נכשלה",
+    "openUrlFailed": "פתיחת הקישור נכשלה",
     "unknown": "Unknown error"
   },
   "appLanguage": {

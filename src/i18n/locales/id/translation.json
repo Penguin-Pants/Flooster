@@ -238,12 +238,11 @@
       },
       "noModelsMatch": "Tidak ada model yang cocok dengan kriteria ini.",
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Gagal memuat model: {{error}}",
+        "rescan": "Gagal memindai ulang model: {{error}}",
+        "select": "Gagal mengganti model: {{error}}",
+        "cancel": "Gagal membatalkan unduhan: {{error}}",
+        "delete": "Gagal menghapus model: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "Batal",
         "selectToEdit": "Pilih prompt di atas untuk melihat dan mengedit detailnya.",
         "createFirst": "Klik 'Buat Prompt Baru' di atas untuk membuat prompt pascaproses pertama Anda.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Hapus prompt \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+        "deleteConfirmTitle": "Hapus Prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Gagal membuat prompt: {{error}}",
+          "update": "Gagal memperbarui prompt: {{error}}",
+          "delete": "Gagal menghapus prompt: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Gagal mentranskripsikan ulang. Silakan coba lagi.",
       "transcribing": "Mentranskripsikan...",
       "transcriptionFailed": "Transkripsi gagal. Anda dapat mentranskripsikan ulang menggunakan ikon coba lagi.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Hapus transkripsi ini beserta rekamannya? Tindakan ini tidak dapat dibatalkan.",
+      "deleteConfirmTitle": "Hapus Entri",
+      "deleteFailed": "Gagal menghapus entri: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -737,10 +736,10 @@
     "pasteFailedTitle": "Gagal Menempelkan Teks",
     "pasteFailed": "Teks tidak dapat ditempelkan ke aplikasi aktif.",
     "transcriptionFailedTitle": "Transkripsi Gagal",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "Gagal menyimpan pengaturan",
+    "updateCheckFailed": "Gagal memeriksa pembaruan",
+    "updateInstallFailed": "Gagal memasang pembaruan",
+    "openUrlFailed": "Gagal membuka tautan",
     "unknown": "Unknown error"
   },
   "appLanguage": {

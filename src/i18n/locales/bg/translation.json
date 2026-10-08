@@ -238,12 +238,11 @@
         "tooltip": "Сканиране отново за модели, добавени в папката с модели или кеша на Hugging Face извън Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Зареждането на моделите не бе успешно: {{error}}",
+        "rescan": "Повторното сканиране на моделите не бе успешно: {{error}}",
+        "select": "Смяната на модела не бе успешна: {{error}}",
+        "cancel": "Отказът на изтеглянето не бе успешен: {{error}}",
+        "delete": "Изтриването на модела не бе успешно: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "Отказ",
         "selectToEdit": "Изберете подкана по-горе, за да видите и редактирате подробностите ѝ.",
         "createFirst": "Натиснете „Нова подкана“ по-горе, за да създадете първата си подкана за постобработка.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Да се изтрие ли подканата „{{name}}“? Това действие не може да бъде отменено.",
+        "deleteConfirmTitle": "Изтриване на подкана",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Създаването на подканата не бе успешно: {{error}}",
+          "update": "Обновяването на подканата не бе успешно: {{error}}",
+          "delete": "Изтриването на подканата не бе успешно: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Повторната транскрипция не бе успешна. Опитайте отново.",
       "transcribing": "Транскрибиране...",
       "transcriptionFailed": "Транскрипцията не бе успешна. Можете да опитате отново с иконата за повторен опит.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Да се изтрие ли тази транскрипция и нейният запис? Това действие не може да бъде отменено.",
+      "deleteConfirmTitle": "Изтриване на запис",
+      "deleteFailed": "Изтриването на записа не бе успешно: {{error}}"
     },
     "debug": {
       "title": "Отстраняване",
@@ -734,10 +733,10 @@
     "pasteFailedTitle": "Неуспешно поставяне на текст",
     "pasteFailed": "Текстът не можа да бъде поставен в активното приложение.",
     "transcriptionFailedTitle": "Неуспешна транскрипция",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "Запазването на настройката не бе успешно",
+    "updateCheckFailed": "Проверката за актуализации не бе успешна",
+    "updateInstallFailed": "Инсталирането на актуализацията не бе успешно",
+    "openUrlFailed": "Отварянето на връзката не бе успешно",
     "unknown": "Unknown error"
   },
   "appLanguage": {

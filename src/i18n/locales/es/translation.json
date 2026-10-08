@@ -186,12 +186,11 @@
         "tooltip": "Vuelve a escanear en busca de modelos añadidos a la carpeta de modelos o a la caché de Hugging Face fuera de Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Error al cargar los modelos: {{error}}",
+        "rescan": "Error al volver a escanear los modelos: {{error}}",
+        "select": "Error al cambiar de modelo: {{error}}",
+        "cancel": "Error al cancelar la descarga: {{error}}",
+        "delete": "Error al eliminar el modelo: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "Cancelar",
         "selectToEdit": "Selecciona un prompt arriba para ver y editar sus detalles.",
         "createFirst": "Haz clic en 'Crear nuevo prompt' arriba para crear tu primer prompt de post procesamiento.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "¿Eliminar el prompt \"{{name}}\"? Esta acción no se puede deshacer.",
+        "deleteConfirmTitle": "Eliminar prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Error al crear el prompt: {{error}}",
+          "update": "Error al actualizar el prompt: {{error}}",
+          "delete": "Error al eliminar el prompt: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "No se pudo re-transcribir. Por favor, inténtalo de nuevo.",
       "transcribing": "Transcribiendo...",
       "transcriptionFailed": "La transcripción falló. Puedes re-transcribir usando el icono de reintentar.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "¿Eliminar esta transcripción y su grabación? Esta acción no se puede deshacer.",
+      "deleteConfirmTitle": "Eliminar entrada",
+      "deleteFailed": "Error al eliminar la entrada: {{error}}"
     },
     "debug": {
       "title": "Depuración",
@@ -734,10 +733,10 @@
     "pasteFailedTitle": "Error al pegar el texto",
     "pasteFailed": "No se pudo pegar el texto en la aplicación activa.",
     "transcriptionFailedTitle": "Error de transcripción",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "Error al guardar la configuración",
+    "updateCheckFailed": "Error al buscar actualizaciones",
+    "updateInstallFailed": "Error al instalar la actualización",
+    "openUrlFailed": "Error al abrir el enlace",
     "unknown": "Unknown error"
   },
   "appLanguage": {

@@ -238,12 +238,11 @@
         "tooltip": "重新掃描在 Handy 之外新增到模型資料夾或 Hugging Face 快取中的模型"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "載入模型失敗: {{error}}",
+        "rescan": "重新掃描模型失敗: {{error}}",
+        "select": "切換模型失敗: {{error}}",
+        "cancel": "取消下載失敗: {{error}}",
+        "delete": "刪除模型失敗: {{error}}"
       },
       "unknownSize": "Unknown size"
     },
@@ -483,12 +482,12 @@
         "cancel": "取消",
         "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "刪除提示詞「{{name}}」？此操作無法復原。",
+        "deleteConfirmTitle": "刪除提示詞",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "建立提示詞失敗: {{error}}",
+          "update": "更新提示詞失敗: {{error}}",
+          "delete": "刪除提示詞失敗: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "重新轉錄失敗，請重試。",
       "transcribing": "轉錄中...",
       "transcriptionFailed": "轉錄失敗。您可以使用重試圖示重新轉錄。",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "刪除此轉錄及其錄音？此操作無法復原。",
+      "deleteConfirmTitle": "刪除紀錄",
+      "deleteFailed": "刪除紀錄失敗: {{error}}"
     },
     "debug": {
       "title": "偵錯",
@@ -734,10 +733,10 @@
     "pasteFailedTitle": "貼上文字失敗",
     "pasteFailed": "無法將文字貼上至目前作用中的應用程式。",
     "transcriptionFailedTitle": "轉錄失敗",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
+    "settingUpdateFailed": "儲存設定失敗",
+    "updateCheckFailed": "檢查更新失敗",
+    "updateInstallFailed": "安裝更新失敗",
+    "openUrlFailed": "開啟連結失敗",
     "unknown": "Unknown error"
   },
   "appLanguage": {

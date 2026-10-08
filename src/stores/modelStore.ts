@@ -62,11 +62,11 @@ interface ModelsStore {
 
 // Model actions report failures with a toast. A stored `error` field was never
 // read by any component, so failures were silent.
-const reportError = (key: string, error: unknown) => {
+const reportError = (key: string, error: unknown, id: string = key) => {
   console.error(`${key}:`, error);
   // Keyed by message so a failure that repeats on every backend refresh event
   // updates one toast instead of stacking.
-  toast.error(i18n.t(key, { error: errorMessage(error) }), { id: key });
+  toast.error(i18n.t(key, { error: errorMessage(error) }), { id });
 };
 
 export const useModelStore = create<ModelsStore>()(
@@ -159,7 +159,14 @@ export const useModelStore = create<ModelsStore>()(
         if (options?.silent) {
           console.error("settings.models.errors.select:", error);
         } else {
-          reportError("settings.models.errors.select", error);
+          // Same id as App.tsx's `model-state-changed` loading_failed toast:
+          // a switch that fails inside the engine load fires both, and the
+          // shared id collapses them into one toast.
+          reportError(
+            "settings.models.errors.select",
+            error,
+            "model-load-failed",
+          );
         }
       };
       try {
@@ -409,7 +416,10 @@ export const useModelStore = create<ModelsStore>()(
               delete state.extractingModels[modelId];
             }),
           );
-          reportError("settings.models.errors.extract", event.payload.error);
+          // State only. The backend returns the same error from the download
+          // command, which emits `model-download-failed`; that handler owns
+          // the toast.
+          console.error("Model extraction failed:", event.payload.error);
         },
       );
 
