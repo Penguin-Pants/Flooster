@@ -17,7 +17,7 @@
     "history": "История",
     "debug": "Отстраняване",
     "about": "За приложението",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Раздели с настройки"
   },
   "onboarding": {
     "subtitle": "За да започнете, изберете модел за транскрипция",
@@ -154,11 +154,11 @@
       "streaming": "Показва транскрипция на живо, докато говорите"
     },
     "legacy": "Наследен",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Състояние на модела: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Проверката на състоянието на модела не бе успешна",
+      "load": "Зареждането на модела не бе успешно",
+      "switch": "Смяната на модела не бе успешна"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Неуспешно задаване на бързия клавиш: {{error}}",
           "reset": "Неуспешно нулиране на бързия клавиш към първоначалната стойност"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Промяна на клавишната комбинация за {{name}}"
       },
       "language": {
         "title": "Език",
@@ -229,7 +229,7 @@
         "allLanguages": "Всички езици",
         "streaming": "Филтриране на моделите, които поддържат транскрипция на живо",
         "translation": "Филтриране на моделите, които поддържат превод на английски",
-        "language": "Filter by language"
+        "language": "Филтриране по език"
       },
       "noModelsMatch": "Няма модели, отговарящи на този филтър.",
       "searchPlaceholder": "Търсене на модели по име…",
@@ -238,14 +238,13 @@
         "tooltip": "Сканиране отново за модели, добавени в папката с модели или кеша на Hugging Face извън Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Зареждането на моделите не бе успешно: {{error}}",
+        "rescan": "Повторното сканиране на моделите не бе успешно: {{error}}",
+        "select": "Смяната на модела не бе успешна: {{error}}",
+        "cancel": "Отказът на изтеглянето не бе успешен: {{error}}",
+        "delete": "Изтриването на модела не бе успешно: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Неизвестен размер"
     },
     "sound": {
       "title": "Звук",
@@ -275,7 +274,7 @@
         "title": "Сила на звука",
         "description": "Регулирайте силата на звуците за обратна връзка"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Прослушване на звуковата тема (първо старт, после стоп)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API ключ",
           "description": "API ключ за избрания доставчик.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Показване на API ключа",
+          "hide": "Скриване на API ключа"
         },
         "model": {
           "title": "Модел",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Търсене или избор на модел",
           "placeholderNoOptions": "Въведете име на модел",
           "refreshModels": "Опресняване на моделите",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Използване на „{{input}}“"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Отказ",
         "selectToEdit": "Изберете подкана по-горе, за да видите и редактирате подробностите ѝ.",
         "createFirst": "Натиснете „Нова подкана“ по-горе, за да създадете първата си подкана за постобработка.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Да се изтрие ли подканата „{{name}}“? Това действие не може да бъде отменено.",
+        "deleteConfirmTitle": "Изтриване на подкана",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Създаването на подканата не бе успешно: {{error}}",
+          "update": "Обновяването на подканата не бе успешно: {{error}}",
+          "delete": "Изтриването на подканата не бе успешно: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Повторната транскрипция не бе успешна. Опитайте отново.",
       "transcribing": "Транскрибиране...",
       "transcriptionFailed": "Транскрипцията не бе успешна. Можете да опитате отново с иконата за повторен опит.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Да се изтрие ли тази транскрипция и нейният запис? Това действие не може да бъде отменено.",
+      "deleteConfirmTitle": "Изтриване на запис",
+      "deleteFailed": "Изтриването на записа не бе успешно: {{error}}"
     },
     "debug": {
       "title": "Отстраняване",
@@ -589,8 +588,8 @@
         "appData": "Данни на приложението:",
         "models": "Модели:",
         "settings": "Настройки:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Пътища за отстраняване на грешки",
+        "description": "Показване на вътрешните пътища до файлове и директории за отстраняване на грешки"
       },
       "pasteDelay": {
         "title": "Забавяне при поставяне (преди)",
@@ -704,14 +703,14 @@
     "copy": "Копиране",
     "clear": "Изчистване",
     "noOptionsFound": "Няма намерени опции",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Отказ",
+    "options": "Опции",
+    "selectOption": "Изберете опция...",
+    "moreInformation": "Повече информация",
+    "notAvailable": "Не е налично",
+    "copyToClipboard": "Копиране в клипборда",
+    "play": "Възпроизвеждане",
+    "pause": "Пауза"
   },
   "accessibility": {
     "permissionsDescription": "Handy се нуждае от разрешения за достъпност, за да въвежда транскрибирания текст.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Неуспешно поставяне на текст",
     "pasteFailed": "Текстът не можа да бъде поставен в активното приложение.",
     "transcriptionFailedTitle": "Неуспешна транскрипция",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Запазването на настройката не бе успешно",
+    "updateCheckFailed": "Проверката за актуализации не бе успешна",
+    "updateInstallFailed": "Инсталирането на актуализацията не бе успешно",
+    "openUrlFailed": "Отварянето на връзката не бе успешно",
+    "unknown": "Неизвестна грешка"
   },
   "appLanguage": {
     "title": "Език на приложението",
@@ -773,7 +772,7 @@
     "dismiss": "Отхвърляне"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Изтегляне...",
+    "downloadingCount": "Изтеглят се {{count}}..."
   }
 }

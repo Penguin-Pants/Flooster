@@ -17,7 +17,7 @@
     "history": "हिस्ट्री",
     "debug": "डिबग",
     "about": "बारेमा",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "सेटिङ खण्डहरू"
   },
   "onboarding": {
     "subtitle": "सुरु गर्न, एउटा ट्रान्सक्रिप्सन मोडेल छान्नुहोस्",
@@ -154,11 +154,11 @@
       "translate": "अनुवाद",
       "streaming": "बोल्दै गर्दा लाइभ ट्रान्सक्रिप्सन देखाउँछ"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "मोडेलको स्थिति: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "मोडेलको स्थिति जाँच गर्न सकिएन",
+      "load": "मोडेल लोड गर्न सकिएन",
+      "switch": "मोडेल बदल्न सकिएन"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "सर्टकट सेट गर्न सकिएन: {{error}}",
           "reset": "सर्टकटलाई मूल मानमा रिसेट गर्न सकिएन"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "{{name}} को सर्टकट परिवर्तन गर्नुहोस्"
       },
       "language": {
         "title": "भाषा",
@@ -230,7 +230,7 @@
         "allLanguages": "सबै भाषाहरू",
         "streaming": "लाइभ ट्रान्सक्रिप्सन समर्थन गर्ने मोडेलहरू फिल्टर गर्नुहोस्",
         "translation": "अङ्ग्रेजीमा अनुवाद समर्थन गर्ने मोडेलहरू फिल्टर गर्नुहोस्",
-        "language": "Filter by language"
+        "language": "भाषा अनुसार फिल्टर गर्नुहोस्"
       },
       "rescan": {
         "label": "फेरि स्क्यान गर्नुहोस्",
@@ -238,14 +238,13 @@
       },
       "noModelsMatch": "यो फिल्टरसँग कुनै मोडेल मिल्दैन।",
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "मोडेलहरू लोड गर्न सकिएन: {{error}}",
+        "rescan": "मोडेलहरू पुनः स्क्यान गर्न सकिएन: {{error}}",
+        "select": "मोडेल बदल्न सकिएन: {{error}}",
+        "cancel": "डाउनलोड रद्द गर्न सकिएन: {{error}}",
+        "delete": "मोडेल मेटाउन सकिएन: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "साइज अज्ञात"
     },
     "sound": {
       "title": "साउन्ड",
@@ -275,7 +274,7 @@
         "title": "भोल्युम",
         "description": "अडियो फिडब्याक आवाजको भोल्युम मिलाउनुहोस्"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "ध्वनि थिम सुन्नुहोस् (पहिले सुरु, त्यसपछि रोक्ने ध्वनि बज्छ)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API कुञ्जी",
           "description": "चयन गरिएको प्रदायकका लागि API कुञ्जी।",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API कुञ्जी देखाउनुहोस्",
+          "hide": "API कुञ्जी लुकाउनुहोस्"
         },
         "model": {
           "title": "मोडेल",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "मोडेल खोज्नुहोस् वा चयन गर्नुहोस्",
           "placeholderNoOptions": "मोडेलको नाम टाइप गर्नुहोस्",
           "refreshModels": "मोडेलहरू रिफ्रेस गर्नुहोस्",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "\"{{input}}\" प्रयोग गर्नुहोस्"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "रद्द गर्नुहोस्",
         "selectToEdit": "विवरण हेर्न र सम्पादन गर्न माथिबाट प्रम्प्ट चयन गर्नुहोस्।",
         "createFirst": "आफ्नो पहिलो पोस्ट-प्रोसेसिङ प्रम्प्ट बनाउन माथिको 'नयाँ प्रम्प्ट बनाउनुहोस्' क्लिक गर्नुहोस्।",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "प्रम्प्ट \"{{name}}\" मेटाउने हो? यो कार्य पूर्ववत गर्न सकिँदैन।",
+        "deleteConfirmTitle": "प्रम्प्ट मेटाउनुहोस्",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "प्रम्प्ट सिर्जना गर्न सकिएन: {{error}}",
+          "update": "प्रम्प्ट अपडेट गर्न सकिएन: {{error}}",
+          "delete": "प्रम्प्ट मेटाउन सकिएन: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "फेरि ट्रान्सक्राइब गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
       "transcribing": "ट्रान्सक्राइब गरिँदैछ...",
       "transcriptionFailed": "ट्रान्सक्रिप्सन गर्न सकिएन। रिट्राई आइकन प्रयोग गरेर फेरि ट्रान्सक्राइब गर्न सक्नुहुन्छ।",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "यो ट्रान्सक्रिप्सन र यसको रेकर्डिङ मेटाउने हो? यो कार्य पूर्ववत गर्न सकिँदैन।",
+      "deleteConfirmTitle": "प्रविष्टि मेटाउनुहोस्",
+      "deleteFailed": "प्रविष्टि मेटाउन सकिएन: {{error}}"
     },
     "debug": {
       "title": "डिबग",
@@ -603,8 +602,8 @@
         "appData": "एप डेटा:",
         "models": "मोडेलहरू:",
         "settings": "सेटिङहरू:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "डिबग पथहरू",
+        "description": "डिबगिङका लागि आन्तरिक फाइल पथ र डाइरेक्टरीहरू देखाउनुहोस्"
       },
       "pasteDelay": {
         "title": "पेस्ट ढिलाइ (अघि)",
@@ -707,14 +706,14 @@
     "copy": "कपी गर्नुहोस्",
     "clear": "खाली गर्नुहोस्",
     "noOptionsFound": "कुनै विकल्प भेटिएन",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "रद्द गर्नुहोस्",
+    "options": "विकल्पहरू",
+    "selectOption": "एउटा विकल्प छान्नुहोस्...",
+    "moreInformation": "थप जानकारी",
+    "notAvailable": "उपलब्ध छैन",
+    "copyToClipboard": "क्लिपबोर्डमा कपी गर्नुहोस्",
+    "play": "बजाउनुहोस्",
+    "pause": "रोक्नुहोस्"
   },
   "accessibility": {
     "permissionsDescription": "ट्रान्सक्राइब गरिएको टेक्स्ट टाइप गर्न Handy लाई एक्सेसिबिलिटी अनुमति चाहिन्छ।",
@@ -737,11 +736,11 @@
     "pasteFailedTitle": "टेक्स्ट पेस्ट गर्न सकिएन",
     "pasteFailed": "सक्रिय एपमा टेक्स्ट पेस्ट गर्न सकिएन।",
     "transcriptionFailedTitle": "ट्रान्सक्रिप्सन गर्न सकिएन",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "सेटिङ बचत गर्न सकिएन",
+    "updateCheckFailed": "अपडेट जाँच गर्न सकिएन",
+    "updateInstallFailed": "अपडेट इन्स्टल गर्न सकिएन",
+    "openUrlFailed": "लिङ्क खोल्न सकिएन",
+    "unknown": "अज्ञात त्रुटि"
   },
   "appLanguage": {
     "title": "एपको भाषा",
@@ -773,7 +772,7 @@
     "dismiss": "हटाउनुहोस्"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "डाउनलोड हुँदैछ...",
+    "downloadingCount": "{{count}} डाउनलोड हुँदैछन्..."
   }
 }

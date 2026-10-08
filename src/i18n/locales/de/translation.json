@@ -17,7 +17,7 @@
     "history": "Verlauf",
     "debug": "Debug",
     "about": "Info",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Einstellungsbereiche"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -154,11 +154,11 @@
     "cancel": "Abbrechen",
     "cancelDownload": "Download abbrechen",
     "legacy": "Veraltet",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Modellstatus: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Modellstatus konnte nicht geprüft werden",
+      "load": "Modell konnte nicht geladen werden",
+      "switch": "Modell konnte nicht gewechselt werden"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Alle Sprachen",
         "streaming": "Modelle filtern, die Live-Transkription unterstützen",
         "translation": "Modelle filtern, die Übersetzungen ins Englische unterstützen",
-        "language": "Filter by language"
+        "language": "Nach Sprache filtern"
       },
       "noModelsMatch": "Keine Modelle entsprechen diesem Filter.",
       "yourModels": "Heruntergeladene Modelle",
@@ -186,14 +186,13 @@
         "tooltip": "Erneut nach Modellen scannen, die außerhalb von Handy zum Modellordner oder Hugging-Face-Cache hinzugefügt wurden"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Modelle konnten nicht geladen werden: {{error}}",
+        "rescan": "Modelle konnten nicht neu eingelesen werden: {{error}}",
+        "select": "Modell konnte nicht gewechselt werden: {{error}}",
+        "cancel": "Download konnte nicht abgebrochen werden: {{error}}",
+        "delete": "Modell konnte nicht gelöscht werden: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Unbekannte Größe"
     },
     "general": {
       "title": "Allgemein",
@@ -223,7 +222,7 @@
           "set": "Tastenkürzel konnte nicht gesetzt werden: {{error}}",
           "reset": "Tastenkürzel konnte nicht auf Originalwert zurückgesetzt werden"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Tastenkürzel für {{name}} ändern"
       },
       "language": {
         "title": "Sprache",
@@ -275,7 +274,7 @@
         "title": "Lautstärke",
         "description": "Lautstärke der Audio-Feedback-Töne anpassen"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Sound-Thema anhören (spielt Start, dann Stopp)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API-Schlüssel",
           "description": "API-Schlüssel für den ausgewählten Anbieter.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API-Schlüssel anzeigen",
+          "hide": "API-Schlüssel verbergen"
         },
         "model": {
           "title": "Modell",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Modell suchen oder auswählen",
           "placeholderNoOptions": "Modellnamen eingeben",
           "refreshModels": "Modelle aktualisieren",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "„{{input}}“ verwenden"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Prompt „{{name}}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+        "deleteConfirmTitle": "Prompt löschen",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Prompt konnte nicht erstellt werden: {{error}}",
+          "update": "Prompt konnte nicht aktualisiert werden: {{error}}",
+          "delete": "Prompt konnte nicht gelöscht werden: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",
       "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Diese Transkription und ihre Aufnahme löschen? Dies kann nicht rückgängig gemacht werden.",
+      "deleteConfirmTitle": "Eintrag löschen",
+      "deleteFailed": "Eintrag konnte nicht gelöscht werden: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -589,8 +588,8 @@
         "appData": "App-Daten:",
         "models": "Modelle:",
         "settings": "Einstellungen:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Debug-Pfade",
+        "description": "Interne Dateipfade und Verzeichnisse zur Fehlersuche anzeigen"
       },
       "pasteDelay": {
         "title": "Einfügeverzögerung (vorher)",
@@ -704,13 +703,13 @@
     "copy": "Kopieren",
     "clear": "Leeren",
     "noOptionsFound": "Keine Optionen gefunden",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
+    "cancel": "Abbrechen",
+    "options": "Optionen",
+    "selectOption": "Option auswählen...",
+    "moreInformation": "Weitere Informationen",
+    "notAvailable": "Nicht verfügbar",
+    "copyToClipboard": "In die Zwischenablage kopieren",
+    "play": "Abspielen",
     "pause": "Pause"
   },
   "accessibility": {
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Text konnte nicht eingefügt werden",
     "pasteFailed": "Der Text konnte nicht in die aktive Anwendung eingefügt werden.",
     "transcriptionFailedTitle": "Transkription fehlgeschlagen",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Einstellung konnte nicht gespeichert werden",
+    "updateCheckFailed": "Suche nach Updates fehlgeschlagen",
+    "updateInstallFailed": "Update konnte nicht installiert werden",
+    "openUrlFailed": "Link konnte nicht geöffnet werden",
+    "unknown": "Unbekannter Fehler"
   },
   "appLanguage": {
     "title": "Anwendungssprache",
@@ -773,7 +772,7 @@
     "dismiss": "Ausblenden"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Wird heruntergeladen...",
+    "downloadingCount": "{{count}} werden heruntergeladen..."
   }
 }
