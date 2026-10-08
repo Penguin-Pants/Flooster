@@ -227,7 +227,14 @@
         "label": "Opnieuw scannen",
         "tooltip": "Scannen naar modellen die buiten Handy om zijn toegevoegd aan de modellenmap of Hugging Face-cache"
       },
-      "noModelsMatch": "Geen modellen voldoen aan dit filter."
+      "noModelsMatch": "Geen modellen voldoen aan dit filter.",
+      "errors": {
+        "load": "Modellen laden mislukt: {{error}}",
+        "rescan": "Modellen opnieuw scannen mislukt: {{error}}",
+        "select": "Model wisselen mislukt: {{error}}",
+        "cancel": "Download annuleren mislukt: {{error}}",
+        "delete": "Model verwijderen mislukt: {{error}}"
+      }
     },
     "sound": {
       "title": "Geluid",
@@ -460,7 +467,14 @@
         "createPrompt": "Prompt maken",
         "cancel": "Annuleren",
         "selectToEdit": "Selecteer hierboven een prompt om de details te bekijken en te bewerken.",
-        "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken."
+        "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken.",
+        "deleteConfirm": "Prompt \"{{name}}\" verwijderen? Dit kan niet ongedaan worden gemaakt.",
+        "deleteConfirmTitle": "Prompt verwijderen",
+        "errors": {
+          "create": "Prompt aanmaken mislukt: {{error}}",
+          "update": "Prompt bijwerken mislukt: {{error}}",
+          "delete": "Prompt verwijderen mislukt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Opnieuw transcriberen",
       "retranscribeError": "Opnieuw transcriberen mislukt. Probeer het opnieuw.",
       "transcribing": "Transcriberen...",
-      "transcriptionFailed": "Transcriptie mislukt. Je kunt het opnieuw proberen via het herlaad-pictogram."
+      "transcriptionFailed": "Transcriptie mislukt. Je kunt het opnieuw proberen via het herlaad-pictogram.",
+      "deleteConfirm": "Deze transcriptie en de bijbehorende opname verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "deleteConfirmTitle": "Item verwijderen",
+      "deleteFailed": "Item verwijderen mislukt: {{error}}"
     },
     "debug": {
       "title": "Probleemoplossing",
@@ -694,7 +711,11 @@
     "modelLoadFailedUnknown": "onbekend model",
     "pasteFailedTitle": "Tekst plakken mislukt",
     "pasteFailed": "Tekst kon niet worden geplakt in de actieve applicatie.",
-    "transcriptionFailedTitle": "Transcriptie mislukt"
+    "transcriptionFailedTitle": "Transcriptie mislukt",
+    "settingUpdateFailed": "Instelling opslaan mislukt",
+    "updateCheckFailed": "Controleren op updates mislukt",
+    "updateInstallFailed": "Update installeren mislukt",
+    "openUrlFailed": "Link openen mislukt"
   },
   "appLanguage": {
     "title": "Interfacetaal",

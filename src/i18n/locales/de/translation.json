@@ -176,6 +176,13 @@
       "rescan": {
         "label": "Neu scannen",
         "tooltip": "Erneut nach Modellen scannen, die außerhalb von Handy zum Modellordner oder Hugging-Face-Cache hinzugefügt wurden"
+      },
+      "errors": {
+        "load": "Modelle konnten nicht geladen werden: {{error}}",
+        "rescan": "Modelle konnten nicht neu eingelesen werden: {{error}}",
+        "select": "Modell konnte nicht gewechselt werden: {{error}}",
+        "cancel": "Download konnte nicht abgebrochen werden: {{error}}",
+        "delete": "Modell konnte nicht gelöscht werden: {{error}}"
       }
     },
     "general": {
@@ -460,7 +467,14 @@
         "createPrompt": "Prompt erstellen",
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
-        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen."
+        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
+        "deleteConfirm": "Prompt „{{name}}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+        "deleteConfirmTitle": "Prompt löschen",
+        "errors": {
+          "create": "Prompt konnte nicht erstellt werden: {{error}}",
+          "update": "Prompt konnte nicht aktualisiert werden: {{error}}",
+          "delete": "Prompt konnte nicht gelöscht werden: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Erneut transkribieren",
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",
-      "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren."
+      "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren.",
+      "deleteConfirm": "Diese Transkription und ihre Aufnahme löschen? Dies kann nicht rückgängig gemacht werden.",
+      "deleteConfirmTitle": "Eintrag löschen",
+      "deleteFailed": "Eintrag konnte nicht gelöscht werden: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "unbekanntes Modell",
     "pasteFailedTitle": "Text konnte nicht eingefügt werden",
     "pasteFailed": "Der Text konnte nicht in die aktive Anwendung eingefügt werden.",
-    "transcriptionFailedTitle": "Transkription fehlgeschlagen"
+    "transcriptionFailedTitle": "Transkription fehlgeschlagen",
+    "settingUpdateFailed": "Einstellung konnte nicht gespeichert werden",
+    "updateCheckFailed": "Suche nach Updates fehlgeschlagen",
+    "updateInstallFailed": "Update konnte nicht installiert werden",
+    "openUrlFailed": "Link konnte nicht geöffnet werden"
   },
   "appLanguage": {
     "title": "Anwendungssprache",

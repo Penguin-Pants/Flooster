@@ -68,85 +68,116 @@ const RecordingOverlay: React.FC = () => {
   // until they scroll back down.
   const capRef = useRef<HTMLDivElement>(null);
   const pinnedRef = useRef(true);
+  // Bumped on every show/hide so a `show-overlay` handler that is still
+  // awaiting settings I/O when `hide-overlay` arrives (the backend hides as
+  // soon as capture fails) does not re-show the overlay afterwards.
+  const showSeqRef = useRef(0);
   const direction = getLanguageDirection(i18n.language);
 
   useEffect(() => {
+    // Listeners register asynchronously. The cleanup returned from an async
+    // function would be discarded by React, so the unlisten functions are
+    // collected here and the effect returns a synchronous cleanup. `cancelled`
+    // covers an unmount that happens while a `listen()` is still pending.
+    let cancelled = false;
+    const unlisteners: Array<() => void> = [];
+    const track = (unlisten: () => void) => {
+      if (cancelled) unlisten();
+      else unlisteners.push(unlisten);
+    };
+
     const setupEventListeners = async () => {
-      const unlistenShow = await listen("show-overlay", async (event) => {
-        const overlayState = event.payload as OverlayState;
-        // Reset synchronously before settings I/O. A fast microphone can emit
-        // recording-ready while the awaits below are in flight; resetting after
-        // them would overwrite that event and leave the overlay stuck arming.
-        if (overlayState === "recording" || overlayState === "streaming") {
-          setCaptureReady(false);
-          smoothedLevelsRef.current = Array(16).fill(0);
-          setLevels(Array(WAVE_BARS).fill(0));
-          setStreamText({ committed: "", tentative: "" });
-        }
-
-        await syncLanguageFromSettings();
-        // The Live panel flows downward from a top overlay and upward from a
-        // bottom one; read the placement so the layout can flip to match.
-        try {
-          const settings = await commands.getAppSettings();
-          if (settings.status === "ok") {
-            setPosition(
-              settings.data.overlay_position === "top" ? "top" : "bottom",
-            );
+      track(
+        await listen("show-overlay", async (event) => {
+          const overlayState = event.payload as OverlayState;
+          const seq = ++showSeqRef.current;
+          // Reset synchronously before settings I/O. A fast microphone can emit
+          // recording-ready while the awaits below are in flight; resetting after
+          // them would overwrite that event and leave the overlay stuck arming.
+          if (overlayState === "recording" || overlayState === "streaming") {
+            setCaptureReady(false);
+            smoothedLevelsRef.current = Array(16).fill(0);
+            setLevels(Array(WAVE_BARS).fill(0));
+            setStreamText({ committed: "", tentative: "" });
           }
-        } catch {
-          // Keep the previous/default placement if settings can't be read.
-        }
-        setState(overlayState);
-        if (overlayState === "streaming") {
-          setPhase("listening");
-          setWorkKind("transcribing");
+
+          await syncLanguageFromSettings();
+          // The Live panel flows downward from a top overlay and upward from a
+          // bottom one; read the placement so the layout can flip to match.
+          try {
+            const settings = await commands.getAppSettings();
+            if (settings.status === "ok") {
+              setPosition(
+                settings.data.overlay_position === "top" ? "top" : "bottom",
+              );
+            }
+          } catch {
+            // Keep the previous/default placement if settings can't be read.
+          }
+          // A hide (or a newer show) arrived during the awaits above: stop here
+          // so the stale show cannot overwrite it.
+          if (seq !== showSeqRef.current) return;
+          setState(overlayState);
+          if (overlayState === "streaming") {
+            setPhase("listening");
+            setWorkKind("transcribing");
+            setElapsed(0);
+            setLoadNoticeShown(false);
+            setSession((s) => s + 1); // remount the card fresh for this session
+          }
+          setIsVisible(true);
+        }),
+      );
+
+      track(
+        await listen("hide-overlay", () => {
+          showSeqRef.current += 1;
+          setIsVisible(false);
+          setCaptureReady(false);
+        }),
+      );
+
+      track(
+        await listen("recording-ready", () => {
           setElapsed(0);
-          setLoadNoticeShown(false);
-          setSession((s) => s + 1); // remount the card fresh for this session
-        }
-        setIsVisible(true);
-      });
+          setCaptureReady(true);
+        }),
+      );
 
-      const unlistenHide = await listen("hide-overlay", () => {
-        setIsVisible(false);
-        setCaptureReady(false);
-      });
+      track(
+        await listen<number[]>("mic-level", (event) => {
+          const newLevels = event.payload as number[];
+          // Exponential smoothing across the 16 buckets, then take the first N
+          // bars for the shared waveform.
+          const smoothed = smoothedLevelsRef.current.map((prev, i) => {
+            const target = newLevels[i] || 0;
+            return prev * 0.7 + target * 0.3;
+          });
+          smoothedLevelsRef.current = smoothed;
+          setLevels(smoothed.slice(0, WAVE_BARS));
+        }),
+      );
 
-      const unlistenReady = await listen("recording-ready", () => {
-        setElapsed(0);
-        setCaptureReady(true);
-      });
+      track(
+        await events.streamTextEvent.listen((event) => {
+          setStreamText(event.payload);
+        }),
+      );
 
-      const unlistenLevel = await listen<number[]>("mic-level", (event) => {
-        const newLevels = event.payload as number[];
-        // Exponential smoothing across the 16 buckets, then take the first N
-        // bars for the shared waveform.
-        const smoothed = smoothedLevelsRef.current.map((prev, i) => {
-          const target = newLevels[i] || 0;
-          return prev * 0.7 + target * 0.3;
-        });
-        smoothedLevelsRef.current = smoothed;
-        setLevels(smoothed.slice(0, WAVE_BARS));
-      });
-
-      const unlistenStream = await events.streamTextEvent.listen((event) => {
-        setStreamText(event.payload);
-      });
-
-      const unlistenPhase = await events.streamPhaseEvent.listen((event) => {
-        const payload: StreamPhaseEvent = event.payload;
-        setPhase(payload.phase);
-        if (payload.kind) setWorkKind(payload.kind);
-      });
+      track(
+        await events.streamPhaseEvent.listen((event) => {
+          const payload: StreamPhaseEvent = event.payload;
+          setPhase(payload.phase);
+          if (payload.kind) setWorkKind(payload.kind);
+        }),
+      );
 
       // The backend ends every `loading_started` with exactly one of completed
       // or failed, so only those end a load. Other events (e.g. `unloaded` from
       // the idle watcher) aren't ordered against an in-flight load and must not
       // clear it.
-      const unlistenModel = await listen<ModelStateEvent>(
-        "model-state-changed",
-        (event) => {
+      track(
+        await listen<ModelStateEvent>("model-state-changed", (event) => {
           const type = event.payload.event_type;
           if (type === "loading_started") {
             clearTimeout(modelLoadTimerRef.current);
@@ -164,22 +195,18 @@ const RecordingOverlay: React.FC = () => {
             setModelLoading(false);
             setModelLoadSlow(false);
           }
-        },
+        }),
       );
-
-      return () => {
-        unlistenShow();
-        unlistenHide();
-        unlistenReady();
-        unlistenLevel();
-        unlistenStream();
-        unlistenPhase();
-        unlistenModel();
-        clearTimeout(modelLoadTimerRef.current);
-      };
     };
 
     setupEventListeners();
+
+    return () => {
+      cancelled = true;
+      unlisteners.forEach((unlisten) => unlisten());
+      unlisteners.length = 0;
+      clearTimeout(modelLoadTimerRef.current);
+    };
   }, []);
 
   // Elapsed capture timer starts only once microphone samples are flowing.
@@ -245,7 +272,11 @@ const RecordingOverlay: React.FC = () => {
     <button
       className="sx"
       aria-label="cancel"
-      onClick={() => commands.cancelOperation()}
+      onClick={() => {
+        commands.cancelOperation().catch((error) => {
+          console.error("Failed to cancel operation:", error);
+        });
+      }}
     >
       <svg viewBox="0 0 16 16" aria-hidden="true">
         <path

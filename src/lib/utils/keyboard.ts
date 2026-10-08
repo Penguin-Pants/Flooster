@@ -19,6 +19,12 @@ const COMPOUND_KEY_DISPLAY: Record<string, string> = {
  * This function provides cross-platform keyboard event handling
  * and returns key names appropriate for the target operating system
  */
+// One name for the Meta key per OS, shared by the `e.code` and `e.key` paths so
+// the same physical key always records the same token. Windows uses "super",
+// not "win": the Tauri global-shortcut parser accepts only command/cmd/super.
+const metaKeyName = (osType: OSType): string =>
+  osType === "macos" ? "command" : "super";
+
 export const getKeyName = (
   e: KeyboardEvent,
   osType: OSType = "unknown",
@@ -53,13 +59,11 @@ export const getKeyName = (
         case "shift":
           return "shift";
         case "ctrl":
-          return osType === "macos" ? "ctrl" : "ctrl";
+          return "ctrl";
         case "alt":
           return osType === "macos" ? "option" : "alt";
         case "meta":
-          // Windows key on Windows/Linux, Command key on Mac
-          if (osType === "macos") return "command";
-          return "super";
+          return metaKeyName(osType);
         default:
           return baseModifier;
       }
@@ -137,13 +141,11 @@ export const getKeyName = (
 
     // Handle special key names with OS-specific formatting
     const keyMap: Record<string, string> = {
-      Control: osType === "macos" ? "ctrl" : "ctrl",
+      Control: "ctrl",
       Alt: osType === "macos" ? "option" : "alt",
       Shift: "shift",
-      Meta:
-        osType === "macos" ? "command" : osType === "windows" ? "win" : "super",
-      OS:
-        osType === "macos" ? "command" : osType === "windows" ? "win" : "super",
+      Meta: metaKeyName(osType),
+      OS: metaKeyName(osType),
       CapsLock: "capslock",
       ArrowUp: "up",
       ArrowDown: "down",

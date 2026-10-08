@@ -176,6 +176,13 @@
       "rescan": {
         "label": "重新扫描",
         "tooltip": "重新扫描在 Handy 之外添加到模型文件夹或 Hugging Face 缓存中的模型"
+      },
+      "errors": {
+        "load": "加载模型失败: {{error}}",
+        "rescan": "重新扫描模型失败: {{error}}",
+        "select": "切换模型失败: {{error}}",
+        "cancel": "取消下载失败: {{error}}",
+        "delete": "删除模型失败: {{error}}"
       }
     },
     "general": {
@@ -460,7 +467,14 @@
         "createPrompt": "创建提示词",
         "cancel": "取消",
         "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
-        "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
+        "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。",
+        "deleteConfirm": "删除提示词“{{name}}”？此操作无法撤销。",
+        "deleteConfirmTitle": "删除提示词",
+        "errors": {
+          "create": "创建提示词失败: {{error}}",
+          "update": "更新提示词失败: {{error}}",
+          "delete": "删除提示词失败: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "重新转录",
       "retranscribeError": "重新转录失败。请重试。",
       "transcribing": "转录中...",
-      "transcriptionFailed": "转录失败。您可以使用重试图标重新转录。"
+      "transcriptionFailed": "转录失败。您可以使用重试图标重新转录。",
+      "deleteConfirm": "删除此转录及其录音？此操作无法撤销。",
+      "deleteConfirmTitle": "删除记录",
+      "deleteFailed": "删除记录失败: {{error}}"
     },
     "debug": {
       "title": "调试",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "未知模型",
     "pasteFailedTitle": "粘贴文本失败",
     "pasteFailed": "无法将文本粘贴到当前活动的应用程序中。",
-    "transcriptionFailedTitle": "转录失败"
+    "transcriptionFailedTitle": "转录失败",
+    "settingUpdateFailed": "保存设置失败",
+    "updateCheckFailed": "检查更新失败",
+    "updateInstallFailed": "安装更新失败",
+    "openUrlFailed": "打开链接失败"
   },
   "appLanguage": {
     "title": "应用语言",

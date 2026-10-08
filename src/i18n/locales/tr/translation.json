@@ -176,6 +176,13 @@
       "rescan": {
         "label": "Yeniden Tara",
         "tooltip": "Handy dışında modeller klasörüne veya Hugging Face önbelleğine eklenen modelleri yeniden tara"
+      },
+      "errors": {
+        "load": "Modeller yüklenemedi: {{error}}",
+        "rescan": "Modeller yeniden taranamadı: {{error}}",
+        "select": "Model değiştirilemedi: {{error}}",
+        "cancel": "İndirme iptal edilemedi: {{error}}",
+        "delete": "Model silinemedi: {{error}}"
       }
     },
     "general": {
@@ -460,7 +467,14 @@
         "createPrompt": "Prompt Oluştur",
         "cancel": "İptal",
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
-        "createFirst": "İlk son işlem promptunuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
+        "createFirst": "İlk son işlem promptunuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın.",
+        "deleteConfirm": "\"{{name}}\" promptu silinsin mi? Bu işlem geri alınamaz.",
+        "deleteConfirmTitle": "Promptu Sil",
+        "errors": {
+          "create": "Prompt oluşturulamadı: {{error}}",
+          "update": "Prompt güncellenemedi: {{error}}",
+          "delete": "Prompt silinemedi: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Yeniden transkribe et",
       "retranscribeError": "Yeniden transkripsiyon başarısız oldu. Lütfen tekrar deneyin.",
       "transcribing": "Transkribe ediliyor...",
-      "transcriptionFailed": "Transkripsiyon başarısız oldu. Yeniden deneme simgesini kullanarak tekrar transkribe edebilirsiniz."
+      "transcriptionFailed": "Transkripsiyon başarısız oldu. Yeniden deneme simgesini kullanarak tekrar transkribe edebilirsiniz.",
+      "deleteConfirm": "Bu transkripsiyon ve kaydı silinsin mi? Bu işlem geri alınamaz.",
+      "deleteConfirmTitle": "Kaydı Sil",
+      "deleteFailed": "Kayıt silinemedi: {{error}}"
     },
     "debug": {
       "title": "Hata Ayıklama",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "bilinmeyen model",
     "pasteFailedTitle": "Metin yapıştırılamadı",
     "pasteFailed": "Metin etkin uygulamaya yapıştırılamadı.",
-    "transcriptionFailedTitle": "Transkripsiyon başarısız oldu"
+    "transcriptionFailedTitle": "Transkripsiyon başarısız oldu",
+    "settingUpdateFailed": "Ayar kaydedilemedi",
+    "updateCheckFailed": "Güncellemeler denetlenemedi",
+    "updateInstallFailed": "Güncelleme yüklenemedi",
+    "openUrlFailed": "Bağlantı açılamadı"
   },
   "appLanguage": {
     "title": "Uygulama Dili",

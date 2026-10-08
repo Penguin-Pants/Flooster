@@ -227,6 +227,13 @@
       "rescan": {
         "label": "סריקה מחדש",
         "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-Handy"
+      },
+      "errors": {
+        "load": "טעינת המודלים נכשלה: {{error}}",
+        "rescan": "סריקת המודלים מחדש נכשלה: {{error}}",
+        "select": "החלפת המודל נכשלה: {{error}}",
+        "cancel": "ביטול ההורדה נכשל: {{error}}",
+        "delete": "מחיקת המודל נכשלה: {{error}}"
       }
     },
     "sound": {
@@ -460,7 +467,14 @@
         "createPrompt": "צור פרומפט",
         "cancel": "ביטול",
         "selectToEdit": "בחר פרומפט למעלה כדי לצפות בפרטים שלו ולערוך אותם.",
-        "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך."
+        "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך.",
+        "deleteConfirm": "למחוק את הפרומפט \"{{name}}\"? לא ניתן לבטל פעולה זו.",
+        "deleteConfirmTitle": "מחיקת פרומפט",
+        "errors": {
+          "create": "יצירת הפרומפט נכשלה: {{error}}",
+          "update": "עדכון הפרומפט נכשל: {{error}}",
+          "delete": "מחיקת הפרומפט נכשלה: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "תמלל מחדש",
       "retranscribeError": "תמלול מחדש נכשל. נסה שוב.",
       "transcribing": "מתמלל...",
-      "transcriptionFailed": "התמלול נכשל. אפשר לתמלל מחדש באמצעות אייקון הניסיון החוזר."
+      "transcriptionFailed": "התמלול נכשל. אפשר לתמלל מחדש באמצעות אייקון הניסיון החוזר.",
+      "deleteConfirm": "למחוק את התמלול הזה ואת ההקלטה שלו? לא ניתן לבטל פעולה זו.",
+      "deleteConfirmTitle": "מחיקת רשומה",
+      "deleteFailed": "מחיקת הרשומה נכשלה: {{error}}"
     },
     "debug": {
       "title": "ניפוי שגיאות",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "מודל לא ידוע",
     "pasteFailedTitle": "ההדבקה נכשלה",
     "pasteFailed": "לא ניתן היה להדביק את הטקסט ביישום הפעיל.",
-    "transcriptionFailedTitle": "התמלול נכשל"
+    "transcriptionFailedTitle": "התמלול נכשל",
+    "settingUpdateFailed": "שמירת ההגדרה נכשלה",
+    "updateCheckFailed": "בדיקת העדכונים נכשלה",
+    "updateInstallFailed": "התקנת העדכון נכשלה",
+    "openUrlFailed": "פתיחת הקישור נכשלה"
   },
   "appLanguage": {
     "title": "שפת האפליקציה",

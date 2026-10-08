@@ -176,6 +176,13 @@
       "rescan": {
         "label": "再スキャン",
         "tooltip": "Handy を使わずに models フォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
+      },
+      "errors": {
+        "load": "モデルの読み込みに失敗しました: {{error}}",
+        "rescan": "モデルの再スキャンに失敗しました: {{error}}",
+        "select": "モデルの切り替えに失敗しました: {{error}}",
+        "cancel": "ダウンロードのキャンセルに失敗しました: {{error}}",
+        "delete": "モデルの削除に失敗しました: {{error}}"
       }
     },
     "general": {
@@ -460,7 +467,14 @@
         "createPrompt": "プロンプトを作成",
         "cancel": "キャンセル",
         "selectToEdit": "上からプロンプトを選択して、詳細を表示・編集します。",
-        "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。"
+        "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。",
+        "deleteConfirm": "プロンプト「{{name}}」を削除しますか？この操作は元に戻せません。",
+        "deleteConfirmTitle": "プロンプトを削除",
+        "errors": {
+          "create": "プロンプトの作成に失敗しました: {{error}}",
+          "update": "プロンプトの更新に失敗しました: {{error}}",
+          "delete": "プロンプトの削除に失敗しました: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "再文字起こし",
       "retranscribeError": "再文字起こしに失敗しました。もう一度お試しください。",
       "transcribing": "文字起こし中…",
-      "transcriptionFailed": "文字起こしに失敗しました。リトライアイコンを使用して再文字起こしできます。"
+      "transcriptionFailed": "文字起こしに失敗しました。リトライアイコンを使用して再文字起こしできます。",
+      "deleteConfirm": "この文字起こしと録音を削除しますか？この操作は元に戻せません。",
+      "deleteConfirmTitle": "項目を削除",
+      "deleteFailed": "項目の削除に失敗しました: {{error}}"
     },
     "debug": {
       "title": "デバッグ",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "不明なモデル",
     "pasteFailedTitle": "テキストの貼り付けに失敗しました",
     "pasteFailed": "アクティブなアプリにテキストを貼り付けられませんでした。",
-    "transcriptionFailedTitle": "文字起こしに失敗しました"
+    "transcriptionFailedTitle": "文字起こしに失敗しました",
+    "settingUpdateFailed": "設定の保存に失敗しました",
+    "updateCheckFailed": "アップデートの確認に失敗しました",
+    "updateInstallFailed": "アップデートのインストールに失敗しました",
+    "openUrlFailed": "リンクを開けませんでした"
   },
   "appLanguage": {
     "title": "アプリの言語",

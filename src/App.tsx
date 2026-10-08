@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useState,
@@ -205,6 +206,10 @@ function App() {
           }),
           {
             description: event.payload.error,
+            // Shared with modelStore.selectModel: a user-initiated switch that
+            // fails to load reports through both paths, and one id means one
+            // toast.
+            id: "model-load-failed",
           },
         );
       }
@@ -281,16 +286,18 @@ function App() {
     }
   };
 
-  const handleAccessibilityComplete = () => {
+  // Stable callbacks: the onboarding steps receive these as props and must not
+  // see a new function on every App render.
+  const handleAccessibilityComplete = useCallback(() => {
     // Returning users already have models, skip to main app
     // New users need to select a model
     setOnboardingStep(isReturningUser ? "done" : "model");
-  };
+  }, [isReturningUser]);
 
-  const handleModelSelected = () => {
+  const handleModelSelected = useCallback(() => {
     // Transition to main app - user has started a download
     setOnboardingStep("done");
-  };
+  }, []);
 
   // Rendered once around every step below (including onboarding) so
   // toast.error() calls surface to the user. sonner renders via a portal, so
@@ -314,16 +321,16 @@ function App() {
     />
   );
 
-  // Still checking onboarding status
-  if (onboardingStep === null) {
-    return null;
-  }
-
   // Select the content for the current step. The Toaster is rendered once, in a
   // stable wrapper around this node, so crossing between onboarding steps and
   // the main app never remounts it (which would drop any in-flight toast).
-  let content: ReactNode;
-  if (onboardingPreview) {
+  let content: ReactNode = null;
+  if (onboardingStep === null) {
+    // Still checking onboarding status. Only the toaster renders: main.tsx
+    // starts the model list load before this tree mounts, and sonner does not
+    // replay a toast published before its Toaster subscribed, so a startup
+    // failure would otherwise be silent.
+  } else if (onboardingPreview) {
     // Render previews in the same top-level slot as real onboarding. Keeping
     // the settings layout unmounted ensures viewport overflow behaves exactly
     // as it does during first-run onboarding.

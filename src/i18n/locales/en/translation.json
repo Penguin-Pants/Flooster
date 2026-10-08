@@ -227,7 +227,14 @@
         "label": "Rescan",
         "tooltip": "Rescan for models added to the models folder or Hugging Face cache outside Handy"
       },
-      "noModelsMatch": "No models match this filter."
+      "noModelsMatch": "No models match this filter.",
+      "errors": {
+        "load": "Failed to load models: {{error}}",
+        "rescan": "Failed to rescan models: {{error}}",
+        "select": "Failed to switch model: {{error}}",
+        "cancel": "Failed to cancel download: {{error}}",
+        "delete": "Failed to delete model: {{error}}"
+      }
     },
     "sound": {
       "title": "Sound",
@@ -460,7 +467,14 @@
         "createPrompt": "Create Prompt",
         "cancel": "Cancel",
         "selectToEdit": "Select a prompt above to view and edit its details.",
-        "createFirst": "Click 'Create New Prompt' above to create your first post-processing prompt."
+        "createFirst": "Click 'Create New Prompt' above to create your first post-processing prompt.",
+        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
+        "deleteConfirmTitle": "Delete Prompt",
+        "errors": {
+          "create": "Failed to create prompt: {{error}}",
+          "update": "Failed to update prompt: {{error}}",
+          "delete": "Failed to delete prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Re-transcribe",
       "retranscribeError": "Failed to re-transcribe. Please try again.",
       "transcribing": "Transcribing...",
-      "transcriptionFailed": "Transcription failed. You can re-transcribe using the retry icon."
+      "transcriptionFailed": "Transcription failed. You can re-transcribe using the retry icon.",
+      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
+      "deleteConfirmTitle": "Delete Entry",
+      "deleteFailed": "Failed to delete entry: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -694,7 +711,11 @@
     "modelLoadFailedUnknown": "unknown model",
     "pasteFailedTitle": "Failed to Paste Text",
     "pasteFailed": "Text could not be pasted into the active application.",
-    "transcriptionFailedTitle": "Transcription Failed"
+    "transcriptionFailedTitle": "Transcription Failed",
+    "settingUpdateFailed": "Failed to save setting",
+    "updateCheckFailed": "Failed to check for updates",
+    "updateInstallFailed": "Failed to install update",
+    "openUrlFailed": "Failed to open the link"
   },
   "appLanguage": {
     "title": "Application Language",

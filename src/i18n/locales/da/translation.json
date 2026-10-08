@@ -227,7 +227,14 @@
         "label": "Søg igen",
         "tooltip": "Søg igen efter modeller, der er tilføjet til modelmappen eller Hugging Face-cachen uden for Handy"
       },
-      "noModelsMatch": "Ingen modeller matcher dette filter."
+      "noModelsMatch": "Ingen modeller matcher dette filter.",
+      "errors": {
+        "load": "Kunne ikke indlæse modeller: {{error}}",
+        "rescan": "Kunne ikke genscanne modeller: {{error}}",
+        "select": "Kunne ikke skifte model: {{error}}",
+        "cancel": "Kunne ikke annullere download: {{error}}",
+        "delete": "Kunne ikke slette model: {{error}}"
+      }
     },
     "sound": {
       "title": "Lyd",
@@ -460,7 +467,14 @@
         "createPrompt": "Opret prompt",
         "cancel": "Annuller",
         "selectToEdit": "Vælg en prompt ovenfor for at se og redigere dens detaljer.",
-        "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt."
+        "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt.",
+        "deleteConfirm": "Slet prompten \"{{name}}\"? Dette kan ikke fortrydes.",
+        "deleteConfirmTitle": "Slet prompt",
+        "errors": {
+          "create": "Kunne ikke oprette prompt: {{error}}",
+          "update": "Kunne ikke opdatere prompt: {{error}}",
+          "delete": "Kunne ikke slette prompt: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Transskribér igen",
       "retranscribeError": "Kunne ikke transskribere igen. Prøv igen.",
       "transcribing": "Transskriberer...",
-      "transcriptionFailed": "Transskription mislykkedes. Du kan transskribere igen ved hjælp af genforsøgsikonet."
+      "transcriptionFailed": "Transskription mislykkedes. Du kan transskribere igen ved hjælp af genforsøgsikonet.",
+      "deleteConfirm": "Slet denne transskription og dens optagelse? Dette kan ikke fortrydes.",
+      "deleteConfirmTitle": "Slet post",
+      "deleteFailed": "Kunne ikke slette post: {{error}}"
     },
     "debug": {
       "title": "Fejlfinding",
@@ -694,7 +711,11 @@
     "modelLoadFailedUnknown": "ukendt model",
     "pasteFailedTitle": "Kunne ikke indsætte tekst",
     "pasteFailed": "Teksten kunne ikke indsættes i det aktive program.",
-    "transcriptionFailedTitle": "Transskription mislykkedes"
+    "transcriptionFailedTitle": "Transskription mislykkedes",
+    "settingUpdateFailed": "Kunne ikke gemme indstilling",
+    "updateCheckFailed": "Kunne ikke søge efter opdateringer",
+    "updateInstallFailed": "Kunne ikke installere opdatering",
+    "openUrlFailed": "Kunne ikke åbne linket"
   },
   "appLanguage": {
     "title": "Applikationssprog",

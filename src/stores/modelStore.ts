@@ -4,6 +4,8 @@ import { produce } from "immer";
 import { listen } from "@tauri-apps/api/event";
 import { commands, type ModelInfo } from "@/bindings";
 import { toast } from "sonner";
+import i18n from "@/i18n";
+import { errorMessage } from "@/lib/utils/result";
 
 interface DownloadProgress {
   model_id: string;
@@ -29,7 +31,6 @@ interface ModelsStore {
   downloadProgress: Record<string, DownloadProgress>;
   downloadStats: Record<string, DownloadStats>;
   loading: boolean;
-  error: string | null;
   initialized: boolean;
   isRescanning: boolean;
 
@@ -38,7 +39,12 @@ interface ModelsStore {
   loadModels: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
   rescanLocalModels: () => Promise<void>;
-  selectModel: (modelId: string) => Promise<boolean>;
+  /// `silent` skips the failure toast for automatic selections (e.g. after a
+  /// download completes); the result is still returned to the caller.
+  selectModel: (
+    modelId: string,
+    options?: { silent?: boolean },
+  ) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
   cancelDownload: (modelId: string) => Promise<boolean>;
   deleteModel: (modelId: string) => Promise<boolean>;
@@ -51,9 +57,17 @@ interface ModelsStore {
   // Internal setters
   setModels: (models: ModelInfo[]) => void;
   setCurrentModel: (modelId: string) => void;
-  setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 }
+
+// Model actions report failures with a toast. A stored `error` field was never
+// read by any component, so failures were silent.
+const reportError = (key: string, error: unknown, id: string = key) => {
+  console.error(`${key}:`, error);
+  // Keyed by message so a failure that repeats on every backend refresh event
+  // updates one toast instead of stacking.
+  toast.error(i18n.t(key, { error: errorMessage(error) }), { id });
+};
 
 export const useModelStore = create<ModelsStore>()(
   subscribeWithSelector((set, get) => ({
@@ -65,21 +79,19 @@ export const useModelStore = create<ModelsStore>()(
     downloadProgress: {},
     downloadStats: {},
     loading: true,
-    error: null,
     initialized: false,
     isRescanning: false,
 
     // Internal setters
     setModels: (models) => set({ models }),
     setCurrentModel: (currentModel) => set({ currentModel }),
-    setError: (error) => set({ error }),
     setLoading: (loading) => set({ loading }),
 
     loadModels: async () => {
       try {
         const result = await commands.getAvailableModels();
         if (result.status === "ok") {
-          set({ models: result.data, error: null });
+          set({ models: result.data });
 
           // Sync downloading state from backend
           set(
@@ -106,10 +118,10 @@ export const useModelStore = create<ModelsStore>()(
             }),
           );
         } else {
-          set({ error: `Failed to load models: ${result.error}` });
+          reportError("settings.models.errors.load", result.error);
         }
       } catch (err) {
-        set({ error: `Failed to load models: ${err}` });
+        reportError("settings.models.errors.load", err);
       } finally {
         set({ loading: false });
       }
@@ -131,37 +143,49 @@ export const useModelStore = create<ModelsStore>()(
       try {
         const result = await commands.rescanLocalModels();
         if (result.status !== "ok") {
-          set({ error: `Failed to rescan models: ${result.error}` });
+          reportError("settings.models.errors.rescan", result.error);
         }
         // On success the backend emits `models-updated`, which reloads the list
         // via the listener registered in initialize().
       } catch (err) {
-        set({ error: `Failed to rescan models: ${err}` });
+        reportError("settings.models.errors.rescan", err);
       } finally {
         set({ isRescanning: false });
       }
     },
 
-    selectModel: async (modelId: string) => {
+    selectModel: async (modelId: string, options?: { silent?: boolean }) => {
+      const report = (error: unknown) => {
+        if (options?.silent) {
+          console.error("settings.models.errors.select:", error);
+        } else {
+          // Same id as App.tsx's `model-state-changed` loading_failed toast:
+          // a switch that fails inside the engine load fires both, and the
+          // shared id collapses them into one toast.
+          reportError(
+            "settings.models.errors.select",
+            error,
+            "model-load-failed",
+          );
+        }
+      };
       try {
-        set({ error: null });
         const result = await commands.setActiveModel(modelId);
         if (result.status === "ok") {
           set({ currentModel: modelId });
           return true;
         } else {
-          set({ error: `Failed to switch to model: ${result.error}` });
+          report(result.error);
           return false;
         }
       } catch (err) {
-        set({ error: `Failed to switch to model: ${err}` });
+        report(err);
         return false;
       }
     },
 
     downloadModel: async (modelId: string) => {
       try {
-        set({ error: null });
         set(
           produce((state) => {
             state.downloadingModels[modelId] = true;
@@ -203,7 +227,6 @@ export const useModelStore = create<ModelsStore>()(
 
     cancelDownload: async (modelId: string) => {
       try {
-        set({ error: null });
         const result = await commands.cancelDownload(modelId);
         if (result.status === "ok") {
           set(
@@ -218,29 +241,28 @@ export const useModelStore = create<ModelsStore>()(
           await get().loadModels();
           return true;
         } else {
-          set({ error: `Failed to cancel download: ${result.error}` });
+          reportError("settings.models.errors.cancel", result.error);
           return false;
         }
       } catch (err) {
-        set({ error: `Failed to cancel download: ${err}` });
+        reportError("settings.models.errors.cancel", err);
         return false;
       }
     },
 
     deleteModel: async (modelId: string) => {
       try {
-        set({ error: null });
         const result = await commands.deleteModel(modelId);
         if (result.status === "ok") {
           await get().loadModels();
           await get().loadCurrentModel();
           return true;
         } else {
-          set({ error: `Failed to delete model: ${result.error}` });
+          reportError("settings.models.errors.delete", result.error);
           return false;
         }
       } catch (err) {
-        set({ error: `Failed to delete model: ${err}` });
+        reportError("settings.models.errors.delete", err);
         return false;
       }
     },
@@ -342,7 +364,6 @@ export const useModelStore = create<ModelsStore>()(
               delete state.verifyingModels[modelId];
               delete state.downloadProgress[modelId];
               delete state.downloadStats[modelId];
-              state.error = error;
             }),
           );
           toast.error(error);
@@ -393,9 +414,12 @@ export const useModelStore = create<ModelsStore>()(
           set(
             produce((state) => {
               delete state.extractingModels[modelId];
-              state.error = `Failed to extract model: ${event.payload.error}`;
             }),
           );
+          // State only. The backend returns the same error from the download
+          // command, which emits `model-download-failed`; that handler owns
+          // the toast.
+          console.error("Model extraction failed:", event.payload.error);
         },
       );
 

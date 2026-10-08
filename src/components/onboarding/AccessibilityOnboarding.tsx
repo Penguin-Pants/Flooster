@@ -47,6 +47,15 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const errorCountRef = useRef<number>(0);
   const MAX_POLLING_ERRORS = 3;
+  // Always call the latest `onComplete` without making it a dependency of the
+  // mount effect. App recreates the callback on every render, and the
+  // completion path itself triggers a store write that re-renders App, so
+  // depending on it re-ran the whole permission check (and re-initialized
+  // Enigo and the shortcuts) on each pass.
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   const isMacOS = permissionPlatform === "macos";
   const isWindows = permissionPlatform === "windows";
@@ -62,8 +71,9 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
   const completeOnboarding = useCallback(async () => {
     await Promise.all([refreshAudioDevices(), refreshOutputDevices()]);
-    timeoutRef.current = setTimeout(() => onComplete(), 300);
-  }, [onComplete, refreshAudioDevices, refreshOutputDevices]);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => onCompleteRef.current(), 300);
+  }, [refreshAudioDevices, refreshOutputDevices]);
 
   const hasWindowsMicrophoneAccess = useCallback(async (): Promise<boolean> => {
     const microphoneStatus =
@@ -100,7 +110,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
     // Skip immediately on unsupported platforms
     if (nextPlatform === "other") {
-      onComplete();
+      onCompleteRef.current();
       return;
     }
 
@@ -168,7 +178,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     };
 
     checkInitial();
-  }, [completeOnboarding, hasWindowsMicrophoneAccess, onComplete, preview, t]);
+  }, [completeOnboarding, hasWindowsMicrophoneAccess, preview, t]);
 
   // Polling for permissions after user clicks a button
   const startPolling = useCallback(() => {

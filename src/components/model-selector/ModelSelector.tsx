@@ -109,7 +109,8 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
               setPendingModelId(modelId);
               setModelError(null);
               setShowModelDropdown(false);
-              const success = await selectModel(modelId);
+              // Automatic selection: no toast, the user did not ask for it.
+              const success = await selectModel(modelId, { silent: true });
               if (!success) {
                 setPendingModelId(null);
               }

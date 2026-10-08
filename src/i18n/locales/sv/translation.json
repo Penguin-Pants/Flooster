@@ -227,6 +227,13 @@
       "rescan": {
         "label": "Skanna om",
         "tooltip": "Skanna om efter modeller som lagts till i modellmappen eller Hugging Face-cachen utanför Handy"
+      },
+      "errors": {
+        "load": "Det gick inte att ladda modellerna: {{error}}",
+        "rescan": "Det gick inte att söka igenom modellerna igen: {{error}}",
+        "select": "Det gick inte att byta modell: {{error}}",
+        "cancel": "Det gick inte att avbryta nedladdningen: {{error}}",
+        "delete": "Det gick inte att ta bort modellen: {{error}}"
       }
     },
     "sound": {
@@ -460,7 +467,14 @@
         "createPrompt": "Skapa prompt",
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
-        "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
+        "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning.",
+        "deleteConfirm": "Ta bort prompten \"{{name}}\"? Detta kan inte ångras.",
+        "deleteConfirmTitle": "Ta bort prompt",
+        "errors": {
+          "create": "Det gick inte att skapa prompten: {{error}}",
+          "update": "Det gick inte att uppdatera prompten: {{error}}",
+          "delete": "Det gick inte att ta bort prompten: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Transkribera igen",
       "retranscribeError": "Misslyckades med att transkribera igen. Försök igen.",
       "transcribing": "Transkriberar...",
-      "transcriptionFailed": "Transkribering misslyckades. Du kan transkribera igen med hjälp av ikonen för nytt försök."
+      "transcriptionFailed": "Transkribering misslyckades. Du kan transkribera igen med hjälp av ikonen för nytt försök.",
+      "deleteConfirm": "Ta bort den här transkriptionen och dess inspelning? Detta kan inte ångras.",
+      "deleteConfirmTitle": "Ta bort post",
+      "deleteFailed": "Det gick inte att ta bort posten: {{error}}"
     },
     "debug": {
       "title": "Felsökning",
@@ -691,7 +708,11 @@
     "noInputDevice": "Ingen ljudenhet hittades. Anslut en mikrofon eller ett headset och försök igen.",
     "pasteFailedTitle": "Det gick inte att klistra in texten",
     "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet.",
-    "transcriptionFailedTitle": "Transkriptionen misslyckades"
+    "transcriptionFailedTitle": "Transkriptionen misslyckades",
+    "settingUpdateFailed": "Det gick inte att spara inställningen",
+    "updateCheckFailed": "Det gick inte att söka efter uppdateringar",
+    "updateInstallFailed": "Det gick inte att installera uppdateringen",
+    "openUrlFailed": "Det gick inte att öppna länken"
   },
   "appLanguage": {
     "title": "Applikationsspråk",

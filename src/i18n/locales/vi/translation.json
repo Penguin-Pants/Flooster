@@ -176,6 +176,13 @@
       "rescan": {
         "label": "Quét lại",
         "tooltip": "Quét lại các mô hình được thêm vào thư mục mô hình hoặc bộ nhớ đệm Hugging Face bên ngoài Handy"
+      },
+      "errors": {
+        "load": "Không thể tải danh sách mô hình: {{error}}",
+        "rescan": "Không thể quét lại mô hình: {{error}}",
+        "select": "Không thể chuyển mô hình: {{error}}",
+        "cancel": "Không thể hủy tải xuống: {{error}}",
+        "delete": "Không thể xóa mô hình: {{error}}"
       }
     },
     "general": {
@@ -460,7 +467,14 @@
         "createPrompt": "Tạo Prompt",
         "cancel": "Hủy",
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
-        "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
+        "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn.",
+        "deleteConfirm": "Xóa câu lệnh \"{{name}}\"? Hành động này không thể hoàn tác.",
+        "deleteConfirmTitle": "Xóa câu lệnh",
+        "errors": {
+          "create": "Không thể tạo câu lệnh: {{error}}",
+          "update": "Không thể cập nhật câu lệnh: {{error}}",
+          "delete": "Không thể xóa câu lệnh: {{error}}"
+        }
       }
     },
     "history": {
@@ -477,7 +491,10 @@
       "retranscribe": "Phiên âm lại",
       "retranscribeError": "Không thể phiên âm lại. Vui lòng thử lại.",
       "transcribing": "Đang phiên âm...",
-      "transcriptionFailed": "Phiên âm thất bại. Bạn có thể phiên âm lại bằng biểu tượng thử lại."
+      "transcriptionFailed": "Phiên âm thất bại. Bạn có thể phiên âm lại bằng biểu tượng thử lại.",
+      "deleteConfirm": "Xóa bản phiên âm này cùng bản ghi âm của nó? Hành động này không thể hoàn tác.",
+      "deleteConfirmTitle": "Xóa mục",
+      "deleteFailed": "Không thể xóa mục: {{error}}"
     },
     "debug": {
       "title": "Gỡ lỗi",
@@ -691,7 +708,11 @@
     "modelLoadFailedUnknown": "mô hình không xác định",
     "pasteFailedTitle": "Không thể dán văn bản",
     "pasteFailed": "Không thể dán văn bản vào ứng dụng đang hoạt động.",
-    "transcriptionFailedTitle": "Phiên âm thất bại"
+    "transcriptionFailedTitle": "Phiên âm thất bại",
+    "settingUpdateFailed": "Không thể lưu cài đặt",
+    "updateCheckFailed": "Không thể kiểm tra bản cập nhật",
+    "updateInstallFailed": "Không thể cài đặt bản cập nhật",
+    "openUrlFailed": "Không thể mở liên kết"
   },
   "appLanguage": {
     "title": "Ngôn ngữ ứng dụng",

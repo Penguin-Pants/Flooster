@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { convertFileSrc } from "@tauri-apps/api/core";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { Check, Copy, FolderOpen, RotateCcw, Star, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,7 @@ import {
   type HistoryUpdatePayload,
 } from "@/bindings";
 import { useOsType } from "@/hooks/useOsType";
+import { errorMessage } from "@/lib/utils/result";
 import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
@@ -195,17 +197,40 @@ export const HistorySettings: React.FC = () => {
   );
 
   const deleteAudioEntry = async (id: number) => {
-    // Optimistically remove
+    // Deleting removes the row and the recording for good, so confirm first
+    // (same dialog pattern as model deletion).
+    const confirmed = await ask(t("settings.history.deleteConfirm"), {
+      title: t("settings.history.deleteConfirmTitle"),
+      kind: "warning",
+    });
+    if (!confirmed) return;
+
+    // Optimistically remove, keeping the entry so a failure can put it back
+    // in place instead of reloading page 1 and losing the scroll position.
+    const removed = entriesRef.current.find((e) => e.id === id);
     setEntries((prev) => prev.filter((e) => e.id !== id));
+    const restore = (error: unknown) => {
+      console.error("Failed to delete entry:", error);
+      if (removed) {
+        setEntries((prev) =>
+          prev.some((e) => e.id === id)
+            ? prev
+            : [...prev, removed].sort((a, b) => b.id - a.id),
+        );
+      }
+      toast.error(
+        t("settings.history.deleteFailed", {
+          error: errorMessage(error),
+        }),
+      );
+    };
     try {
       const result = await commands.deleteHistoryEntry(id);
       if (result.status !== "ok") {
-        // Reload on failure
-        loadPage();
+        restore(result.error);
       }
     } catch (error) {
-      console.error("Failed to delete entry:", error);
-      loadPage();
+      restore(error);
     }
   };
 
