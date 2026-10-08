@@ -178,12 +178,11 @@
         "tooltip": "Erneut nach Modellen scannen, die außerhalb von Handy zum Modellordner oder Hugging-Face-Cache hinzugefügt wurden"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Modelle konnten nicht geladen werden: {{error}}",
+        "rescan": "Modelle konnten nicht neu eingelesen werden: {{error}}",
+        "select": "Modell konnte nicht gewechselt werden: {{error}}",
+        "cancel": "Download konnte nicht abgebrochen werden: {{error}}",
+        "delete": "Modell konnte nicht gelöscht werden: {{error}}"
       }
     },
     "general": {
@@ -469,12 +468,12 @@
         "cancel": "Abbrechen",
         "selectToEdit": "Wähle oben einen Prompt aus, um dessen Details anzuzeigen und zu bearbeiten.",
         "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Prompt „{{name}}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+        "deleteConfirmTitle": "Prompt löschen",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Prompt konnte nicht erstellt werden: {{error}}",
+          "update": "Prompt konnte nicht aktualisiert werden: {{error}}",
+          "delete": "Prompt konnte nicht gelöscht werden: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",
       "transcriptionFailed": "Transkription fehlgeschlagen. Du kannst über das Wiederholen-Symbol erneut transkribieren.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Diese Transkription und ihre Aufnahme löschen? Dies kann nicht rückgängig gemacht werden.",
+      "deleteConfirmTitle": "Eintrag löschen",
+      "deleteFailed": "Eintrag konnte nicht gelöscht werden: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "Text konnte nicht eingefügt werden",
     "pasteFailed": "Der Text konnte nicht in die aktive Anwendung eingefügt werden.",
     "transcriptionFailedTitle": "Transkription fehlgeschlagen",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Einstellung konnte nicht gespeichert werden",
+    "updateCheckFailed": "Suche nach Updates fehlgeschlagen",
+    "updateInstallFailed": "Update konnte nicht installiert werden",
+    "openUrlFailed": "Link konnte nicht geöffnet werden"
   },
   "appLanguage": {
     "title": "Anwendungssprache",

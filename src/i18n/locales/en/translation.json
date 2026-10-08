@@ -233,8 +233,7 @@
         "rescan": "Failed to rescan models: {{error}}",
         "select": "Failed to switch model: {{error}}",
         "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "delete": "Failed to delete model: {{error}}"
       }
     },
     "sound": {

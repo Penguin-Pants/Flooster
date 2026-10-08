@@ -229,12 +229,11 @@
       },
       "noModelsMatch": "Ingen modeller matcher dette filter.",
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Kunne ikke indlæse modeller: {{error}}",
+        "rescan": "Kunne ikke genscanne modeller: {{error}}",
+        "select": "Kunne ikke skifte model: {{error}}",
+        "cancel": "Kunne ikke annullere download: {{error}}",
+        "delete": "Kunne ikke slette model: {{error}}"
       }
     },
     "sound": {
@@ -469,12 +468,12 @@
         "cancel": "Annuller",
         "selectToEdit": "Vælg en prompt ovenfor for at se og redigere dens detaljer.",
         "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Slet prompten \"{{name}}\"? Dette kan ikke fortrydes.",
+        "deleteConfirmTitle": "Slet prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Kunne ikke oprette prompt: {{error}}",
+          "update": "Kunne ikke opdatere prompt: {{error}}",
+          "delete": "Kunne ikke slette prompt: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Kunne ikke transskribere igen. Prøv igen.",
       "transcribing": "Transskriberer...",
       "transcriptionFailed": "Transskription mislykkedes. Du kan transskribere igen ved hjælp af genforsøgsikonet.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Slet denne transskription og dens optagelse? Dette kan ikke fortrydes.",
+      "deleteConfirmTitle": "Slet post",
+      "deleteFailed": "Kunne ikke slette post: {{error}}"
     },
     "debug": {
       "title": "Fejlfinding",
@@ -713,10 +712,10 @@
     "pasteFailedTitle": "Kunne ikke indsætte tekst",
     "pasteFailed": "Teksten kunne ikke indsættes i det aktive program.",
     "transcriptionFailedTitle": "Transskription mislykkedes",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Kunne ikke gemme indstilling",
+    "updateCheckFailed": "Kunne ikke søge efter opdateringer",
+    "updateInstallFailed": "Kunne ikke installere opdatering",
+    "openUrlFailed": "Kunne ikke åbne linket"
   },
   "appLanguage": {
     "title": "Applikationssprog",

@@ -229,12 +229,11 @@
         "tooltip": "Reescaneia em busca de modelos adicionados à pasta de modelos ou ao cache do Hugging Face fora do Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Falha ao carregar os modelos: {{error}}",
+        "rescan": "Falha ao verificar os modelos novamente: {{error}}",
+        "select": "Falha ao trocar de modelo: {{error}}",
+        "cancel": "Falha ao cancelar o download: {{error}}",
+        "delete": "Falha ao excluir o modelo: {{error}}"
       }
     },
     "sound": {
@@ -469,12 +468,12 @@
         "cancel": "Cancelar",
         "selectToEdit": "Selecione um prompt acima para visualizar e editar seus detalhes.",
         "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Excluir o prompt \"{{name}}\"? Esta ação não pode ser desfeita.",
+        "deleteConfirmTitle": "Excluir prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Falha ao criar o prompt: {{error}}",
+          "update": "Falha ao atualizar o prompt: {{error}}",
+          "delete": "Falha ao excluir o prompt: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Falha ao re-transcrever. Por favor, tente novamente.",
       "transcribing": "Transcrevendo...",
       "transcriptionFailed": "A transcrição falhou. Você pode re-transcrever usando o ícone de tentar novamente.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Excluir esta transcrição e sua gravação? Esta ação não pode ser desfeita.",
+      "deleteConfirmTitle": "Excluir entrada",
+      "deleteFailed": "Falha ao excluir a entrada: {{error}}"
     },
     "debug": {
       "title": "Depuração",
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "Falha ao colar o texto",
     "pasteFailed": "Não foi possível colar o texto no aplicativo ativo.",
     "transcriptionFailedTitle": "Falha na transcrição",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Falha ao salvar a configuração",
+    "updateCheckFailed": "Falha ao verificar atualizações",
+    "updateInstallFailed": "Falha ao instalar a atualização",
+    "openUrlFailed": "Falha ao abrir o link"
   },
   "appLanguage": {
     "title": "Idioma da Aplicação",

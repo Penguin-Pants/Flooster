@@ -229,12 +229,11 @@
         "tooltip": "Skanna om efter modeller som lagts till i modellmappen eller Hugging Face-cachen utanför Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Det gick inte att ladda modellerna: {{error}}",
+        "rescan": "Det gick inte att söka igenom modellerna igen: {{error}}",
+        "select": "Det gick inte att byta modell: {{error}}",
+        "cancel": "Det gick inte att avbryta nedladdningen: {{error}}",
+        "delete": "Det gick inte att ta bort modellen: {{error}}"
       }
     },
     "sound": {
@@ -469,12 +468,12 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Ta bort prompten \"{{name}}\"? Detta kan inte ångras.",
+        "deleteConfirmTitle": "Ta bort prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Det gick inte att skapa prompten: {{error}}",
+          "update": "Det gick inte att uppdatera prompten: {{error}}",
+          "delete": "Det gick inte att ta bort prompten: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Misslyckades med att transkribera igen. Försök igen.",
       "transcribing": "Transkriberar...",
       "transcriptionFailed": "Transkribering misslyckades. Du kan transkribera igen med hjälp av ikonen för nytt försök.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Ta bort den här transkriptionen och dess inspelning? Detta kan inte ångras.",
+      "deleteConfirmTitle": "Ta bort post",
+      "deleteFailed": "Det gick inte att ta bort posten: {{error}}"
     },
     "debug": {
       "title": "Felsökning",
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "Det gick inte att klistra in texten",
     "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet.",
     "transcriptionFailedTitle": "Transkriptionen misslyckades",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Det gick inte att spara inställningen",
+    "updateCheckFailed": "Det gick inte att söka efter uppdateringar",
+    "updateInstallFailed": "Det gick inte att installera uppdateringen",
+    "openUrlFailed": "Det gick inte att öppna länken"
   },
   "appLanguage": {
     "title": "Applikationsspråk",

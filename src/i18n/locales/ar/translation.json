@@ -438,12 +438,12 @@
         "cancel": "إلغاء",
         "selectToEdit": ".اختر مطالبة أعلاه لعرض وتعديل تفاصيلها",
         "createFirst": ".انقر على 'إنشاء مطالبة جديدة' أعلاه لإنشاء أول مطالبة معالجة لاحقة لك",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "هل تريد حذف المطالبة \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+        "deleteConfirmTitle": "حذف المطالبة",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "فشل إنشاء المطالبة: {{error}}",
+          "update": "فشل تحديث المطالبة: {{error}}",
+          "delete": "فشل حذف المطالبة: {{error}}"
         }
       }
     },
@@ -462,9 +462,9 @@
       "retranscribeError": "فشلت إعادة النسخ. يرجى المحاولة مرة أخرى.",
       "transcribing": "جارٍ النسخ...",
       "transcriptionFailed": "فشل النسخ. يمكنك إعادة النسخ باستخدام أيقونة إعادة المحاولة.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "هل تريد حذف هذا التفريغ النصي وتسجيله؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteConfirmTitle": "حذف الإدخال",
+      "deleteFailed": "فشل حذف الإدخال: {{error}}"
     },
     "debug": {
       "title": "تصحيح الأخطاء",
@@ -656,12 +656,11 @@
         "tooltip": "إعادة الفحص بحثًا عن النماذج المضافة إلى مجلد النماذج أو ذاكرة Hugging Face التخزينية المؤقتة خارج Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "فشل تحميل النماذج: {{error}}",
+        "rescan": "فشل إعادة فحص النماذج: {{error}}",
+        "select": "فشل تبديل النموذج: {{error}}",
+        "cancel": "فشل إلغاء التنزيل: {{error}}",
+        "delete": "فشل حذف النموذج: {{error}}"
       }
     }
   },
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "فشل لصق النص",
     "pasteFailed": "تعذر لصق النص في التطبيق النشط.",
     "transcriptionFailedTitle": "فشل التفريغ النصي",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "فشل حفظ الإعداد",
+    "updateCheckFailed": "فشل التحقق من وجود تحديثات",
+    "updateInstallFailed": "فشل تثبيت التحديث",
+    "openUrlFailed": "فشل فتح الرابط"
   },
   "appLanguage": {
     "title": "لغة التطبيق",

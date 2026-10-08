@@ -178,12 +178,11 @@
         "tooltip": "Znovu prohledat modely přidané do složky modelů nebo mezipaměti Hugging Face mimo Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Nepodařilo se načíst modely: {{error}}",
+        "rescan": "Nepodařilo se znovu prohledat modely: {{error}}",
+        "select": "Nepodařilo se přepnout model: {{error}}",
+        "cancel": "Nepodařilo se zrušit stahování: {{error}}",
+        "delete": "Nepodařilo se smazat model: {{error}}"
       }
     },
     "general": {
@@ -469,12 +468,12 @@
         "cancel": "Zrušit",
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Smazat prompt „{{name}}“? Tuto akci nelze vrátit zpět.",
+        "deleteConfirmTitle": "Smazat prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Nepodařilo se vytvořit prompt: {{error}}",
+          "update": "Nepodařilo se aktualizovat prompt: {{error}}",
+          "delete": "Nepodařilo se smazat prompt: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Opětovný přepis se nezdařil. Zkuste to prosím znovu.",
       "transcribing": "Přepisuji...",
       "transcriptionFailed": "Přepis selhal. Můžete zkusit přepis znovu pomocí ikony opakování.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Smazat tento přepis a jeho nahrávku? Tuto akci nelze vrátit zpět.",
+      "deleteConfirmTitle": "Smazat záznam",
+      "deleteFailed": "Nepodařilo se smazat záznam: {{error}}"
     },
     "debug": {
       "title": "Ladění",
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "Vložení textu se nezdařilo",
     "pasteFailed": "Text nebylo možné vložit do aktivní aplikace.",
     "transcriptionFailedTitle": "Přepis selhal",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Nepodařilo se uložit nastavení",
+    "updateCheckFailed": "Nepodařilo se zkontrolovat aktualizace",
+    "updateInstallFailed": "Nepodařilo se nainstalovat aktualizaci",
+    "openUrlFailed": "Nepodařilo se otevřít odkaz"
   },
   "appLanguage": {
     "title": "Jazyk aplikace",

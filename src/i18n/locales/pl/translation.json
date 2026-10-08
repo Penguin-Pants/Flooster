@@ -178,12 +178,11 @@
         "tooltip": "Skanuj ponownie w poszukiwaniu modeli dodanych do folderu modeli lub pamięci podręcznej Hugging Face poza Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Nie udało się załadować modeli: {{error}}",
+        "rescan": "Nie udało się ponownie przeskanować modeli: {{error}}",
+        "select": "Nie udało się zmienić modelu: {{error}}",
+        "cancel": "Nie udało się anulować pobierania: {{error}}",
+        "delete": "Nie udało się usunąć modelu: {{error}}"
       }
     },
     "general": {
@@ -469,12 +468,12 @@
         "cancel": "Anuluj",
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Usunąć prompt „{{name}}”? Tej operacji nie można cofnąć.",
+        "deleteConfirmTitle": "Usuń prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Nie udało się utworzyć promptu: {{error}}",
+          "update": "Nie udało się zaktualizować promptu: {{error}}",
+          "delete": "Nie udało się usunąć promptu: {{error}}"
         }
       }
     },
@@ -493,9 +492,9 @@
       "retranscribeError": "Nie udało się ponownie transkrybować. Spróbuj ponownie.",
       "transcribing": "Transkrybuję...",
       "transcriptionFailed": "Transkrypcja nie powiodła się. Możesz transkrybować ponownie za pomocą ikony ponowienia.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Usunąć tę transkrypcję i jej nagranie? Tej operacji nie można cofnąć.",
+      "deleteConfirmTitle": "Usuń wpis",
+      "deleteFailed": "Nie udało się usunąć wpisu: {{error}}"
     },
     "debug": {
       "title": "Debugowanie",
@@ -710,10 +709,10 @@
     "pasteFailedTitle": "Nie udało się wkleić tekstu",
     "pasteFailed": "Nie można było wkleić tekstu do aktywnej aplikacji.",
     "transcriptionFailedTitle": "Transkrypcja nie powiodła się",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "settingUpdateFailed": "Nie udało się zapisać ustawienia",
+    "updateCheckFailed": "Nie udało się sprawdzić dostępności aktualizacji",
+    "updateInstallFailed": "Nie udało się zainstalować aktualizacji",
+    "openUrlFailed": "Nie udało się otworzyć linku"
   },
   "appLanguage": {
     "title": "Język aplikacji",
