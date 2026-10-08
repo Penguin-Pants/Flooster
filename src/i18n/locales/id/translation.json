@@ -17,7 +17,7 @@
     "history": "Riwayat",
     "debug": "Debug",
     "about": "Tentang",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Bagian pengaturan"
   },
   "onboarding": {
     "subtitle": "Untuk memulai, pilih model transkripsi",
@@ -154,11 +154,11 @@
       "translate": "Terjemahkan",
       "streaming": "Menampilkan transkripsi langsung saat Anda berbicara"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Status model: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Gagal memeriksa status model",
+      "load": "Gagal memuat model",
+      "switch": "Gagal mengganti model"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Gagal mengatur pintasan: {{error}}",
           "reset": "Gagal mengembalikan pintasan ke nilai awal"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Ubah pintasan untuk {{name}}"
       },
       "language": {
         "title": "Bahasa",
@@ -230,7 +230,7 @@
         "allLanguages": "Semua Bahasa",
         "streaming": "Saring model yang mendukung transkripsi waktu nyata",
         "translation": "Saring model yang mendukung penerjemahan ke bahasa Inggris",
-        "language": "Filter by language"
+        "language": "Filter berdasarkan bahasa"
       },
       "rescan": {
         "label": "Pindai Ulang",
@@ -244,7 +244,7 @@
         "cancel": "Gagal membatalkan unduhan: {{error}}",
         "delete": "Gagal menghapus model: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Ukuran tidak diketahui"
     },
     "sound": {
       "title": "Suara",
@@ -274,7 +274,7 @@
         "title": "Volume",
         "description": "Sesuaikan volume suara umpan balik audio"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Dengarkan tema suara (memutar suara mulai lalu berhenti)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Kunci API",
           "description": "Kunci API untuk penyedia yang dipilih.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Tampilkan kunci API",
+          "hide": "Sembunyikan kunci API"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Cari atau pilih model",
           "placeholderNoOptions": "Ketik nama model",
           "refreshModels": "Segarkan model",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Gunakan \"{{input}}\""
         }
       },
       "prompts": {
@@ -602,8 +602,8 @@
         "appData": "Data Aplikasi:",
         "models": "Model:",
         "settings": "Pengaturan:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Jalur Debug",
+        "description": "Tampilkan jalur file dan direktori internal untuk keperluan debugging"
       },
       "pasteDelay": {
         "title": "Jeda Tempel (Sebelum)",
@@ -706,14 +706,14 @@
     "copy": "Salin",
     "clear": "Bersihkan",
     "noOptionsFound": "Tidak ada opsi yang ditemukan",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Batal",
+    "options": "Opsi",
+    "selectOption": "Pilih opsi...",
+    "moreInformation": "Informasi selengkapnya",
+    "notAvailable": "Tidak tersedia",
+    "copyToClipboard": "Salin ke papan klip",
+    "play": "Putar",
+    "pause": "Jeda"
   },
   "accessibility": {
     "permissionsDescription": "Handy memerlukan izin aksesibilitas untuk mengetik teks hasil transkripsi.",
@@ -740,7 +740,7 @@
     "updateCheckFailed": "Gagal memeriksa pembaruan",
     "updateInstallFailed": "Gagal memasang pembaruan",
     "openUrlFailed": "Gagal membuka tautan",
-    "unknown": "Unknown error"
+    "unknown": "Kesalahan tidak diketahui"
   },
   "appLanguage": {
     "title": "Bahasa Aplikasi",
@@ -772,7 +772,7 @@
     "dismiss": "Tutup"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Mengunduh...",
+    "downloadingCount": "{{count}} sedang diunduh..."
   }
 }

@@ -17,7 +17,7 @@
     "history": "Histórico",
     "debug": "Depuração",
     "about": "Sobre",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Seções de configurações"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -154,11 +154,11 @@
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar download",
     "legacy": "Legado",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Status do modelo: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Falha ao verificar o status do modelo",
+      "load": "Falha ao carregar o modelo",
+      "switch": "Falha ao trocar de modelo"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Falha ao definir atalho: {{error}}",
           "reset": "Falha ao redefinir atalho para o valor original"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Alterar atalho de {{name}}"
       },
       "language": {
         "title": "Idioma",
@@ -227,7 +227,7 @@
         "allLanguages": "Todos os Idiomas",
         "streaming": "Filtrar modelos compatíveis com transcrição ao vivo",
         "translation": "Filtrar modelos compatíveis com tradução para inglês",
-        "language": "Filter by language"
+        "language": "Filtrar por idioma"
       },
       "noModelsMatch": "Nenhum modelo corresponde a este filtro.",
       "yourModels": "Modelos baixados",
@@ -244,7 +244,7 @@
         "cancel": "Falha ao cancelar o download: {{error}}",
         "delete": "Falha ao excluir o modelo: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Tamanho desconhecido"
     },
     "sound": {
       "title": "Som",
@@ -274,7 +274,7 @@
         "title": "Volume",
         "description": "Ajustar o volume dos sons de feedback de áudio"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Ouvir o tema de som (toca início e depois fim)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Chave da API",
           "description": "Chave da API para o provedor selecionado.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Mostrar chave de API",
+          "hide": "Ocultar chave de API"
         },
         "model": {
           "title": "Modelo",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Buscar ou selecionar um modelo",
           "placeholderNoOptions": "Digite o nome de um modelo",
           "refreshModels": "Atualizar modelos",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Usar \"{{input}}\""
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Dados do App:",
         "models": "Modelos:",
         "settings": "Configurações:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Caminhos de depuração",
+        "description": "Exibir caminhos de arquivos e diretórios internos para depuração"
       },
       "pasteDelay": {
         "title": "Atraso de colagem (antes)",
@@ -703,14 +703,14 @@
     "copy": "Copiar",
     "clear": "Limpar",
     "noOptionsFound": "Nenhuma opção encontrada",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Cancelar",
+    "options": "Opções",
+    "selectOption": "Selecione uma opção...",
+    "moreInformation": "Mais informações",
+    "notAvailable": "Não disponível",
+    "copyToClipboard": "Copiar para a área de transferência",
+    "play": "Reproduzir",
+    "pause": "Pausar"
   },
   "accessibility": {
     "permissionsDescription": "O Handy precisa de permissões de acessibilidade para digitar o texto transcrito.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Falha ao verificar atualizações",
     "updateInstallFailed": "Falha ao instalar a atualização",
     "openUrlFailed": "Falha ao abrir o link",
-    "unknown": "Unknown error"
+    "unknown": "Erro desconhecido"
   },
   "appLanguage": {
     "title": "Idioma da Aplicação",
@@ -772,7 +772,7 @@
     "dismiss": "Dispensar"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Baixando...",
+    "downloadingCount": "{{count}} baixando..."
   }
 }

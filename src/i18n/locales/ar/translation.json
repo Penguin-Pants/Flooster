@@ -17,7 +17,7 @@
     "debug": "تصحيح الأخطاء",
     "about": "حول",
     "models": "النماذج",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "أقسام الإعدادات"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -154,11 +154,11 @@
       "streaming": "يعرض النسخ المباشر أثناء التحدث"
     },
     "legacy": "قديم",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "حالة النموذج: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "فشل التحقق من حالة النموذج",
+      "load": "فشل تحميل النموذج",
+      "switch": "فشل تبديل النموذج"
     }
   },
   "settings": {
@@ -190,7 +190,7 @@
           "set": "فشل تعيين الاختصار: {{error}}",
           "reset": "فشل إعادة تعيين الاختصار إلى قيمته الأصلية"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "تغيير اختصار {{name}}"
       },
       "language": {
         "title": "اللغة",
@@ -242,7 +242,7 @@
         "title": "مستوى الصوت",
         "description": "ضبط مستوى صوت تنبيهات الصوت"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "معاينة سمة الصوت (تشغيل صوت البدء ثم صوت التوقف)"
     },
     "advanced": {
       "groups": {
@@ -417,8 +417,8 @@
           "title": "مفتاح API",
           "description": "مفتاح API للمزود المختار.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "إظهار مفتاح API",
+          "hide": "إخفاء مفتاح API"
         },
         "model": {
           "title": "النموذج",
@@ -427,7 +427,7 @@
           "placeholderWithOptions": "ابحث عن نموذج أو اختره",
           "placeholderNoOptions": "اكتب اسم النموذج",
           "refreshModels": "تحديث النماذج",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "استخدام \"{{input}}\""
         }
       },
       "prompts": {
@@ -556,8 +556,8 @@
         "appData": "بيانات التطبيق:",
         "models": "النماذج:",
         "settings": "الإعدادات:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "مسارات تصحيح الأخطاء",
+        "description": "عرض مسارات الملفات والمجلدات الداخلية لأغراض تصحيح الأخطاء"
       },
       "pasteDelay": {
         "title": "تأخير اللصق (قبل)",
@@ -662,7 +662,7 @@
         "allLanguages": "جميع اللغات",
         "streaming": "تصفية النماذج التي تدعم النسخ المباشر",
         "translation": "تصفية النماذج التي تدعم الترجمة إلى الإنجليزية",
-        "language": "Filter by language"
+        "language": "التصفية حسب اللغة"
       },
       "noModelsMatch": "لا توجد نماذج مطابقة لهذا الفلتر.",
       "searchPlaceholder": "ابحث عن النماذج بالاسم…",
@@ -677,7 +677,7 @@
         "cancel": "فشل إلغاء التنزيل: {{error}}",
         "delete": "فشل حذف النموذج: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "الحجم غير معروف"
     }
   },
   "footer": {
@@ -703,14 +703,14 @@
     "copy": "نسخ",
     "clear": "مسح",
     "noOptionsFound": "لم يتم العثور على خيارات",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "إلغاء",
+    "options": "الخيارات",
+    "selectOption": "اختر خيارًا...",
+    "moreInformation": "مزيد من المعلومات",
+    "notAvailable": "غير متاح",
+    "copyToClipboard": "نسخ إلى الحافظة",
+    "play": "تشغيل",
+    "pause": "إيقاف مؤقت"
   },
   "accessibility": {
     "permissionsDescription": ".يحتاج Handy إلى أذونات إمكانية الوصول لكتابة النص المفرغ",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "فشل التحقق من وجود تحديثات",
     "updateInstallFailed": "فشل تثبيت التحديث",
     "openUrlFailed": "فشل فتح الرابط",
-    "unknown": "Unknown error"
+    "unknown": "خطأ غير معروف"
   },
   "appLanguage": {
     "title": "لغة التطبيق",
@@ -772,7 +772,7 @@
     "dismiss": "تجاهل"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "جارٍ التنزيل...",
+    "downloadingCount": "جارٍ تنزيل {{count}}..."
   }
 }

@@ -17,7 +17,7 @@
     "history": "Geçmiş",
     "debug": "Hata Ayıklama",
     "about": "Hakkında",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Ayar bölümleri"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -154,11 +154,11 @@
     "cancel": "İptal",
     "cancelDownload": "İndirmeyi iptal et",
     "legacy": "Eski",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Model durumu: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Model durumu denetlenemedi",
+      "load": "Model yüklenemedi",
+      "switch": "Model değiştirilemedi"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Tüm Diller",
         "streaming": "Canlı transkripsiyonu destekleyen modelleri filtrele",
         "translation": "İngilizce'ye çeviriyi destekleyen modelleri filtrele",
-        "language": "Filter by language"
+        "language": "Dile göre filtrele"
       },
       "noModelsMatch": "Bu filtreyle eşleşen model yok.",
       "yourModels": "İndirilen Modeller",
@@ -192,7 +192,7 @@
         "cancel": "İndirme iptal edilemedi: {{error}}",
         "delete": "Model silinemedi: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Bilinmeyen boyut"
     },
     "general": {
       "title": "Genel",
@@ -222,7 +222,7 @@
           "set": "Kısayol ayarlanamadı: {{error}}",
           "reset": "Kısayol orijinal değerine sıfırlanamadı"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "{{name}} kısayolunu değiştir"
       },
       "language": {
         "title": "Dil",
@@ -274,7 +274,7 @@
         "title": "Ses Seviyesi",
         "description": "Sesli geri bildirimlerin ses seviyesini ayarlayın"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Ses temasını dinle (önce başlat, sonra durdur sesini çalar)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API Anahtarı",
           "description": "Seçili sağlayıcı için API anahtarı.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API anahtarını göster",
+          "hide": "API anahtarını gizle"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Model ara veya seç",
           "placeholderNoOptions": "Model adı yazın",
           "refreshModels": "Modelleri Yenile",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "\"{{input}}\" kullan"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Uygulama Verileri:",
         "models": "Modeller:",
         "settings": "Ayarlar:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Hata Ayıklama Yolları",
+        "description": "Hata ayıklama için dahili dosya yollarını ve dizinleri görüntüle"
       },
       "pasteDelay": {
         "title": "Yapıştırma Gecikmesi (Önce)",
@@ -703,14 +703,14 @@
     "copy": "Kopyala",
     "clear": "Temizle",
     "noOptionsFound": "Seçenek bulunamadı",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "İptal",
+    "options": "Seçenekler",
+    "selectOption": "Bir seçenek seçin...",
+    "moreInformation": "Daha fazla bilgi",
+    "notAvailable": "Kullanılamıyor",
+    "copyToClipboard": "Panoya kopyala",
+    "play": "Oynat",
+    "pause": "Duraklat"
   },
   "accessibility": {
     "permissionsDescription": "Handy, transkribe edilen metni yazabilmek için erişilebilirlik izinlerine ihtiyaç duyar.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Güncellemeler denetlenemedi",
     "updateInstallFailed": "Güncelleme yüklenemedi",
     "openUrlFailed": "Bağlantı açılamadı",
-    "unknown": "Unknown error"
+    "unknown": "Bilinmeyen hata"
   },
   "appLanguage": {
     "title": "Uygulama Dili",
@@ -772,7 +772,7 @@
     "dismiss": "Kapat"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "İndiriliyor...",
+    "downloadingCount": "{{count}} indiriliyor..."
   }
 }

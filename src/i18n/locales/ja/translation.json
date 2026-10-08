@@ -17,7 +17,7 @@
     "history": "履歴",
     "debug": "デバッグ",
     "about": "概要",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "設定セクション"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -154,11 +154,11 @@
     "cancel": "キャンセル",
     "cancelDownload": "ダウンロードをキャンセル",
     "legacy": "旧式",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "モデルの状態: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "モデルの状態を確認できませんでした",
+      "load": "モデルを読み込めませんでした",
+      "switch": "モデルを切り替えられませんでした"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "すべての言語",
         "streaming": "リアルタイム文字起こしに対応するモデルを絞り込む",
         "translation": "英語への翻訳に対応するモデルを絞り込む",
-        "language": "Filter by language"
+        "language": "言語で絞り込む"
       },
       "noModelsMatch": "このフィルターに一致するモデルがありません。",
       "yourModels": "ダウンロード済みモデル",
@@ -192,7 +192,7 @@
         "cancel": "ダウンロードのキャンセルに失敗しました: {{error}}",
         "delete": "モデルの削除に失敗しました: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "サイズ不明"
     },
     "general": {
       "title": "一般",
@@ -222,7 +222,7 @@
           "set": "ショートカットを設定できませんでした: {{error}}",
           "reset": "ショートカットを元の値にリセットできませんでした"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "{{name}}のショートカットを変更"
       },
       "language": {
         "title": "言語",
@@ -274,7 +274,7 @@
         "title": "音量",
         "description": "オーディオフィードバックの音量を調整"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "サウンドテーマを試聴（開始音、次に停止音を再生）"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API キー",
           "description": "選択したプロバイダーの API キー。",
           "placeholder": "sk-…",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "APIキーを表示",
+          "hide": "APIキーを隠す"
         },
         "model": {
           "title": "モデル",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "モデルを検索または選択",
           "placeholderNoOptions": "モデル名を入力",
           "refreshModels": "モデルを更新",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "「{{input}}」を使用"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "アプリデータ:",
         "models": "モデル:",
         "settings": "設定:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "デバッグ用パス",
+        "description": "デバッグ用に内部のファイルパスとディレクトリを表示します"
       },
       "pasteDelay": {
         "title": "貼り付け遅延(前)",
@@ -703,14 +703,14 @@
     "copy": "コピー",
     "clear": "クリア",
     "noOptionsFound": "オプションが見つかりません",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "キャンセル",
+    "options": "オプション",
+    "selectOption": "オプションを選択...",
+    "moreInformation": "詳細情報",
+    "notAvailable": "利用不可",
+    "copyToClipboard": "クリップボードにコピー",
+    "play": "再生",
+    "pause": "一時停止"
   },
   "accessibility": {
     "permissionsDescription": "Handy が文字起こしテキストを入力するには、アクセシビリティ権限が必要です。",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "アップデートの確認に失敗しました",
     "updateInstallFailed": "アップデートのインストールに失敗しました",
     "openUrlFailed": "リンクを開けませんでした",
-    "unknown": "Unknown error"
+    "unknown": "不明なエラー"
   },
   "appLanguage": {
     "title": "アプリの言語",
@@ -772,7 +772,7 @@
     "dismiss": "閉じる"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "ダウンロード中...",
+    "downloadingCount": "{{count}}件をダウンロード中..."
   }
 }

@@ -17,7 +17,7 @@
     "history": "Geschiedenis",
     "debug": "Probleemoplossing",
     "about": "Over Handy",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Instellingensecties"
   },
   "onboarding": {
     "subtitle": "Kies een transcriptiemodel om aan de slag te gaan",
@@ -154,11 +154,11 @@
       "translate": "Vertalen",
       "streaming": "Toont live transcriptie tijdens het spreken"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Modelstatus: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Modelstatus controleren mislukt",
+      "load": "Model laden mislukt",
+      "switch": "Model wisselen mislukt"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Instellen van sneltoets mislukt: {{error}}",
           "reset": "Sneltoets terugzetten naar standaardwaarde mislukt"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Sneltoets voor {{name}} wijzigen"
       },
       "language": {
         "title": "Taal",
@@ -230,7 +230,7 @@
         "allLanguages": "Alle talen",
         "streaming": "Filter modellen die live transcriptie ondersteunen",
         "translation": "Filter modellen die vertaling naar het Engels ondersteunen",
-        "language": "Filter by language"
+        "language": "Filteren op taal"
       },
       "rescan": {
         "label": "Opnieuw scannen",
@@ -244,7 +244,7 @@
         "cancel": "Download annuleren mislukt: {{error}}",
         "delete": "Model verwijderen mislukt: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Onbekende grootte"
     },
     "sound": {
       "title": "Geluid",
@@ -274,7 +274,7 @@
         "title": "Volume",
         "description": "Pas het volume van de geluidsfeedback aan"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Geluidsthema beluisteren (speelt start en daarna stop)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API-sleutel",
           "description": "API-sleutel voor de geselecteerde provider.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API-sleutel tonen",
+          "hide": "API-sleutel verbergen"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Zoek of selecteer een model",
           "placeholderNoOptions": "Typ een modelnaam",
           "refreshModels": "Modellen verversen",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "\"{{input}}\" gebruiken"
         }
       },
       "prompts": {
@@ -602,8 +602,8 @@
         "appData": "App-data:",
         "models": "Modellen:",
         "settings": "Instellingen:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Debugpaden",
+        "description": "Interne bestandspaden en mappen tonen voor foutopsporing"
       },
       "pasteDelay": {
         "title": "Plakvertraging (voor)",
@@ -706,14 +706,14 @@
     "copy": "Kopiëren",
     "clear": "Wissen",
     "noOptionsFound": "Geen opties gevonden",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Annuleren",
+    "options": "Opties",
+    "selectOption": "Kies een optie...",
+    "moreInformation": "Meer informatie",
+    "notAvailable": "Niet beschikbaar",
+    "copyToClipboard": "Kopiëren naar klembord",
+    "play": "Afspelen",
+    "pause": "Pauzeren"
   },
   "accessibility": {
     "permissionsDescription": "Handy heeft toegankelijkheidsmachtigingen nodig om getranscribeerde tekst te kunnen typen.",
@@ -740,7 +740,7 @@
     "updateCheckFailed": "Controleren op updates mislukt",
     "updateInstallFailed": "Update installeren mislukt",
     "openUrlFailed": "Link openen mislukt",
-    "unknown": "Unknown error"
+    "unknown": "Onbekende fout"
   },
   "appLanguage": {
     "title": "Interfacetaal",
@@ -772,7 +772,7 @@
     "dismiss": "Sluiten"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Downloaden...",
+    "downloadingCount": "{{count}} worden gedownload..."
   }
 }

@@ -17,7 +17,7 @@
     "history": "Historie",
     "debug": "Ladění",
     "about": "O aplikaci",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Sekce nastavení"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -154,11 +154,11 @@
     "cancel": "Zrušit",
     "cancelDownload": "Zrušit stahování",
     "legacy": "Zastaralé",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Stav modelu: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Nepodařilo se zjistit stav modelu",
+      "load": "Nepodařilo se načíst model",
+      "switch": "Nepodařilo se přepnout model"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Všechny jazyky",
         "streaming": "Filtrovat modely podporující živý přepis",
         "translation": "Filtrovat modely podporující překlad do angličtiny",
-        "language": "Filter by language"
+        "language": "Filtrovat podle jazyka"
       },
       "noModelsMatch": "Tomuto filtru neodpovídají žádné modely.",
       "yourModels": "Stažené modely",
@@ -192,7 +192,7 @@
         "cancel": "Nepodařilo se zrušit stahování: {{error}}",
         "delete": "Nepodařilo se smazat model: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Neznámá velikost"
     },
     "general": {
       "title": "Obecné",
@@ -222,7 +222,7 @@
           "set": "Nepodařilo se nastavit zkratku: {{error}}",
           "reset": "Nepodařilo se vrátit zkratku na původní hodnotu"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Změnit zkratku pro {{name}}"
       },
       "language": {
         "title": "Jazyk",
@@ -274,7 +274,7 @@
         "title": "Hlasitost",
         "description": "Upravte hlasitost zvukové odezvy"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Poslechnout zvukové téma (přehraje start a poté stop)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API klíč",
           "description": "API klíč pro vybraného poskytovatele.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Zobrazit klíč API",
+          "hide": "Skrýt klíč API"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Vyhledejte nebo vyberte model",
           "placeholderNoOptions": "Zadejte název modelu",
           "refreshModels": "Obnovit modely",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Použít „{{input}}“"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Data aplikace:",
         "models": "Modely:",
         "settings": "Nastavení:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Ladicí cesty",
+        "description": "Zobrazit interní cesty k souborům a adresářům pro ladění"
       },
       "pasteDelay": {
         "title": "Zpoždění vložení (před)",
@@ -703,14 +703,14 @@
     "copy": "Kopírovat",
     "clear": "Vymazat",
     "noOptionsFound": "Nenalezeny žádné možnosti",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Zrušit",
+    "options": "Možnosti",
+    "selectOption": "Vyberte možnost...",
+    "moreInformation": "Více informací",
+    "notAvailable": "Není k dispozici",
+    "copyToClipboard": "Kopírovat do schránky",
+    "play": "Přehrát",
+    "pause": "Pozastavit"
   },
   "accessibility": {
     "permissionsDescription": "Handy potřebuje oprávnění usnadnění přístupu, aby mohlo psát přepsaný text.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Nepodařilo se zkontrolovat aktualizace",
     "updateInstallFailed": "Nepodařilo se nainstalovat aktualizaci",
     "openUrlFailed": "Nepodařilo se otevřít odkaz",
-    "unknown": "Unknown error"
+    "unknown": "Neznámá chyba"
   },
   "appLanguage": {
     "title": "Jazyk aplikace",
@@ -772,7 +772,7 @@
     "dismiss": "Zavřít"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Stahování...",
+    "downloadingCount": "Stahuje se: {{count}}..."
   }
 }

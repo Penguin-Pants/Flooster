@@ -17,7 +17,7 @@
     "history": "歷史紀錄",
     "debug": "偵錯",
     "about": "關於",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "設定分區"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -154,11 +154,11 @@
       "streaming": "在您說話時即時顯示轉錄"
     },
     "legacy": "舊版",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "模型狀態: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "檢查模型狀態失敗",
+      "load": "載入模型失敗",
+      "switch": "切換模型失敗"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "無法設定快捷鍵: {{error}}",
           "reset": "無法將快捷鍵重設為原始值"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "變更 {{name}} 的快速鍵"
       },
       "language": {
         "title": "語言",
@@ -229,7 +229,7 @@
         "allLanguages": "所有語言",
         "streaming": "篩選支援即時轉錄的模型",
         "translation": "篩選支援翻譯為英語的模型",
-        "language": "Filter by language"
+        "language": "依語言篩選"
       },
       "noModelsMatch": "沒有符合此篩選條件的模型",
       "searchPlaceholder": "依名稱搜尋模型…",
@@ -244,7 +244,7 @@
         "cancel": "取消下載失敗: {{error}}",
         "delete": "刪除模型失敗: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "大小不明"
     },
     "sound": {
       "title": "聲音",
@@ -274,7 +274,7 @@
         "title": "音量",
         "description": "調整聲音回饋的音量"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "試聽音效主題（先播放開始音，再播放停止音）"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API 金鑰",
           "description": "所選供應商的 API 金鑰",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "顯示 API 金鑰",
+          "hide": "隱藏 API 金鑰"
         },
         "model": {
           "title": "模型",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "搜尋或選擇模型",
           "placeholderNoOptions": "輸入模型名稱",
           "refreshModels": "重新整理模型",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "使用「{{input}}」"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "應用程式資料:",
         "models": "模型:",
         "settings": "設定:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "偵錯路徑",
+        "description": "顯示內部檔案路徑與目錄，用於偵錯"
       },
       "pasteDelay": {
         "title": "貼上延遲（前）",
@@ -703,14 +703,14 @@
     "copy": "複製",
     "clear": "清除",
     "noOptionsFound": "未找到選項",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "取消",
+    "options": "選項",
+    "selectOption": "請選擇一個選項...",
+    "moreInformation": "更多資訊",
+    "notAvailable": "無法使用",
+    "copyToClipboard": "複製到剪貼簿",
+    "play": "播放",
+    "pause": "暫停"
   },
   "accessibility": {
     "permissionsDescription": "Handy 需要輔助使用權限才能輸入轉錄的文字",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "檢查更新失敗",
     "updateInstallFailed": "安裝更新失敗",
     "openUrlFailed": "開啟連結失敗",
-    "unknown": "Unknown error"
+    "unknown": "未知錯誤"
   },
   "appLanguage": {
     "title": "應用程式語言",
@@ -772,7 +772,7 @@
     "dismiss": "關閉"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "下載中...",
+    "downloadingCount": "{{count}} 個下載中..."
   }
 }

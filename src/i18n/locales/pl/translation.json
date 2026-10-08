@@ -17,7 +17,7 @@
     "history": "Historia",
     "debug": "Debugowanie",
     "about": "O programie",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Sekcje ustawień"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -154,11 +154,11 @@
     "cancel": "Anuluj",
     "cancelDownload": "Anuluj pobieranie",
     "legacy": "Przestarzałe",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Stan modelu: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Nie udało się sprawdzić stanu modelu",
+      "load": "Nie udało się załadować modelu",
+      "switch": "Nie udało się zmienić modelu"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Wszystkie języki",
         "streaming": "Filtruj modele obsługujące transkrypcję na żywo",
         "translation": "Filtruj modele obsługujące tłumaczenie na język angielski",
-        "language": "Filter by language"
+        "language": "Filtruj według języka"
       },
       "noModelsMatch": "Żadne modele nie pasują do tego filtra.",
       "yourModels": "Pobrane modele",
@@ -192,7 +192,7 @@
         "cancel": "Nie udało się anulować pobierania: {{error}}",
         "delete": "Nie udało się usunąć modelu: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Nieznany rozmiar"
     },
     "general": {
       "title": "Ogólne",
@@ -222,7 +222,7 @@
           "set": "Nie udało się ustawić skrótu: {{error}}",
           "reset": "Nie udało się zresetować skrótu do wartości domyślnej"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Zmień skrót dla {{name}}"
       },
       "language": {
         "title": "Język",
@@ -274,7 +274,7 @@
         "title": "Głośność",
         "description": "Dostosuj głośność dźwięków informacyjnych"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Odsłuchaj motyw dźwiękowy (odtwarza start, potem stop)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Klucz API",
           "description": "Klucz API dla wybranego dostawcy.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Pokaż klucz API",
+          "hide": "Ukryj klucz API"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Wyszukaj lub wybierz model",
           "placeholderNoOptions": "Wpisz nazwę modelu",
           "refreshModels": "Odśwież modele",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Użyj „{{input}}”"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Dane aplikacji:",
         "models": "Modele:",
         "settings": "Ustawienia:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Ścieżki debugowania",
+        "description": "Wyświetl wewnętrzne ścieżki plików i katalogów do celów debugowania"
       },
       "pasteDelay": {
         "title": "Opóźnienie wklejania (przed)",
@@ -703,14 +703,14 @@
     "copy": "Kopiuj",
     "clear": "Wyczyść",
     "noOptionsFound": "Nie znaleziono opcji",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Anuluj",
+    "options": "Opcje",
+    "selectOption": "Wybierz opcję...",
+    "moreInformation": "Więcej informacji",
+    "notAvailable": "Niedostępne",
+    "copyToClipboard": "Kopiuj do schowka",
+    "play": "Odtwórz",
+    "pause": "Pauza"
   },
   "accessibility": {
     "permissionsDescription": "Handy potrzebuje uprawnień dostępności, aby wpisywać transkrybowany tekst.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Nie udało się sprawdzić dostępności aktualizacji",
     "updateInstallFailed": "Nie udało się zainstalować aktualizacji",
     "openUrlFailed": "Nie udało się otworzyć linku",
-    "unknown": "Unknown error"
+    "unknown": "Nieznany błąd"
   },
   "appLanguage": {
     "title": "Język aplikacji",
@@ -772,7 +772,7 @@
     "dismiss": "Odrzuć"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Pobieranie...",
+    "downloadingCount": "Pobieranie: {{count}}..."
   }
 }

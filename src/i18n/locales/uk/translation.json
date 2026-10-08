@@ -17,7 +17,7 @@
     "history": "Історія",
     "debug": "Дебаг",
     "about": "Інфо",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Розділи налаштувань"
   },
   "onboarding": {
     "subtitle": "Для початку оберіть модель транскрипції",
@@ -154,11 +154,11 @@
     "cancel": "Скасувати",
     "cancelDownload": "Скасувати завантаження",
     "legacy": "Застаріле",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Стан моделі: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Не вдалося перевірити стан моделі",
+      "load": "Не вдалося завантажити модель",
+      "switch": "Не вдалося змінити модель"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Не вдалося встановити скорочення: {{error}}",
           "reset": "Не вдалося скинути скорочення до початкового значення"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Змінити комбінацію клавіш для {{name}}"
       },
       "language": {
         "title": "Мова",
@@ -227,7 +227,7 @@
         "allLanguages": "Усі мови",
         "streaming": "Фільтрувати моделі з підтримкою транскрипції в реальному часі",
         "translation": "Фільтрувати моделі з підтримкою перекладу англійською",
-        "language": "Filter by language"
+        "language": "Фільтр за мовою"
       },
       "noModelsMatch": "Жодна модель не відповідає цьому фільтру.",
       "yourModels": "Завантажені моделі",
@@ -244,7 +244,7 @@
         "cancel": "Не вдалося скасувати завантаження: {{error}}",
         "delete": "Не вдалося видалити модель: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Невідомий розмір"
     },
     "sound": {
       "title": "Звук",
@@ -274,7 +274,7 @@
         "title": "Гучність",
         "description": "Налаштуйте гучність звукових сповіщень"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Прослухати звукову тему (спочатку старт, потім стоп)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API-ключ",
           "description": "API-ключ для обраного провайдера",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Показати ключ API",
+          "hide": "Сховати ключ API"
         },
         "model": {
           "title": "Модель",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Шукайте або оберіть модель",
           "placeholderNoOptions": "Введіть назву моделі",
           "refreshModels": "Оновити моделі",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Використати «{{input}}»"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Дані програми:",
         "models": "Моделі:",
         "settings": "Налаштування:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Шляхи для налагодження",
+        "description": "Показати внутрішні шляхи до файлів і каталогів для налагодження"
       },
       "pasteDelay": {
         "title": "Затримка вставки (до)",
@@ -703,14 +703,14 @@
     "copy": "Копіювати",
     "clear": "Очистити",
     "noOptionsFound": "Опцій не знайдено",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Скасувати",
+    "options": "Параметри",
+    "selectOption": "Виберіть варіант...",
+    "moreInformation": "Докладніше",
+    "notAvailable": "Недоступно",
+    "copyToClipboard": "Копіювати в буфер обміну",
+    "play": "Відтворити",
+    "pause": "Пауза"
   },
   "accessibility": {
     "permissionsDescription": "Handy потребує дозволи доступності для введення транскрибованого тексту.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Не вдалося перевірити наявність оновлень",
     "updateInstallFailed": "Не вдалося встановити оновлення",
     "openUrlFailed": "Не вдалося відкрити посилання",
-    "unknown": "Unknown error"
+    "unknown": "Невідома помилка"
   },
   "appLanguage": {
     "title": "Мова інтерфейсу",
@@ -772,7 +772,7 @@
     "dismiss": "Приховати"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Завантаження...",
+    "downloadingCount": "Завантажується: {{count}}..."
   }
 }

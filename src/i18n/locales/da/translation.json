@@ -17,7 +17,7 @@
     "history": "Historik",
     "debug": "Fejlfinding",
     "about": "Om",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Indstillingssektioner"
   },
   "onboarding": {
     "subtitle": "For at komme i gang skal du vælge en transskriptionsmodel",
@@ -154,11 +154,11 @@
       "translate": "Oversæt",
       "streaming": "Viser live transskription, mens du taler"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Modelstatus: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Kunne ikke kontrollere modelstatus",
+      "load": "Kunne ikke indlæse model",
+      "switch": "Kunne ikke skifte model"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Kunne ikke indstille genvej: {{error}}",
           "reset": "Kunne ikke nulstille genvej til oprindelig indstilling"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Skift genvej for {{name}}"
       },
       "language": {
         "title": "Sprog",
@@ -230,7 +230,7 @@
         "allLanguages": "Alle sprog",
         "streaming": "Filtrer modeller, der understøtter live transskription",
         "translation": "Filtrer modeller, der understøtter oversættelse til engelsk",
-        "language": "Filter by language"
+        "language": "Filtrer efter sprog"
       },
       "rescan": {
         "label": "Søg igen",
@@ -244,7 +244,7 @@
         "cancel": "Kunne ikke annullere download: {{error}}",
         "delete": "Kunne ikke slette model: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Ukendt størrelse"
     },
     "sound": {
       "title": "Lyd",
@@ -274,7 +274,7 @@
         "title": "Lydstyrke",
         "description": "Juster lydstyrken for lydfeedback"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Lyt til lydtemaet (afspiller start og derefter stop)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API-nøgle",
           "description": "API-nøgle til den valgte udbyder.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Vis API-nøgle",
+          "hide": "Skjul API-nøgle"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Søg eller vælg en model",
           "placeholderNoOptions": "Skriv et modelnavn",
           "refreshModels": "Opdater modeller",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Brug \"{{input}}\""
         }
       },
       "prompts": {
@@ -602,8 +602,8 @@
         "appData": "Appdata:",
         "models": "Modeller:",
         "settings": "Indstillinger:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Fejlsøgningsstier",
+        "description": "Vis interne filstier og mapper til fejlsøgning"
       },
       "pasteDelay": {
         "title": "Forsinkelse af indsættelse (før)",
@@ -706,13 +706,13 @@
     "copy": "Kopiér",
     "clear": "Ryd",
     "noOptionsFound": "Ingen muligheder fundet",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
+    "cancel": "Annuller",
+    "options": "Indstillinger",
+    "selectOption": "Vælg en mulighed...",
+    "moreInformation": "Mere information",
+    "notAvailable": "Ikke tilgængelig",
+    "copyToClipboard": "Kopiér til udklipsholder",
+    "play": "Afspil",
     "pause": "Pause"
   },
   "accessibility": {
@@ -740,7 +740,7 @@
     "updateCheckFailed": "Kunne ikke søge efter opdateringer",
     "updateInstallFailed": "Kunne ikke installere opdatering",
     "openUrlFailed": "Kunne ikke åbne linket",
-    "unknown": "Unknown error"
+    "unknown": "Ukendt fejl"
   },
   "appLanguage": {
     "title": "Applikationssprog",
@@ -772,7 +772,7 @@
     "dismiss": "Afvis"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Downloader...",
+    "downloadingCount": "{{count}} downloader..."
   }
 }

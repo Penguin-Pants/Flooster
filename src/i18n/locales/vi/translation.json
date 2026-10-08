@@ -17,7 +17,7 @@
     "history": "Lịch sử",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Các mục cài đặt"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -154,11 +154,11 @@
     "cancel": "Hủy",
     "cancelDownload": "Hủy tải xuống",
     "legacy": "Cũ",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Trạng thái mô hình: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Không thể kiểm tra trạng thái mô hình",
+      "load": "Không thể tải mô hình",
+      "switch": "Không thể chuyển mô hình"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Tất cả ngôn ngữ",
         "streaming": "Lọc các mô hình hỗ trợ phiên âm trực tiếp",
         "translation": "Lọc các mô hình hỗ trợ dịch sang tiếng Anh",
-        "language": "Filter by language"
+        "language": "Lọc theo ngôn ngữ"
       },
       "noModelsMatch": "Không có mô hình nào khớp với bộ lọc này.",
       "yourModels": "Mô hình đã tải",
@@ -192,7 +192,7 @@
         "cancel": "Không thể hủy tải xuống: {{error}}",
         "delete": "Không thể xóa mô hình: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Kích cỡ không xác định"
     },
     "general": {
       "title": "Chung",
@@ -222,7 +222,7 @@
           "set": "Không thể đặt phím tắt: {{error}}",
           "reset": "Không thể đặt lại phím tắt về giá trị gốc"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Thay đổi phím tắt cho {{name}}"
       },
       "language": {
         "title": "Ngôn ngữ",
@@ -274,7 +274,7 @@
         "title": "Âm lượng",
         "description": "Điều chỉnh âm lượng của âm thanh phản hồi"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Nghe thử bộ âm thanh (phát âm bắt đầu rồi âm dừng)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Khóa API",
           "description": "Khóa API cho nhà cung cấp đã chọn.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Hiện khóa API",
+          "hide": "Ẩn khóa API"
         },
         "model": {
           "title": "Mô hình",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Tìm kiếm hoặc chọn một mô hình",
           "placeholderNoOptions": "Nhập tên mô hình",
           "refreshModels": "Làm mới mô hình",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Dùng \"{{input}}\""
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Dữ liệu ứng dụng:",
         "models": "Mô hình:",
         "settings": "Cài đặt:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Đường dẫn gỡ lỗi",
+        "description": "Hiển thị đường dẫn tệp và thư mục nội bộ để gỡ lỗi"
       },
       "pasteDelay": {
         "title": "Độ trễ dán (trước)",
@@ -703,14 +703,14 @@
     "copy": "Sao chép",
     "clear": "Xóa",
     "noOptionsFound": "Không tìm thấy tùy chọn",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Hủy",
+    "options": "Tùy chọn",
+    "selectOption": "Chọn một tùy chọn...",
+    "moreInformation": "Thông tin thêm",
+    "notAvailable": "Không khả dụng",
+    "copyToClipboard": "Sao chép vào bộ nhớ tạm",
+    "play": "Phát",
+    "pause": "Tạm dừng"
   },
   "accessibility": {
     "permissionsDescription": "Handy cần quyền truy cập để gõ văn bản đã chuyển đổi.",
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Không thể kiểm tra bản cập nhật",
     "updateInstallFailed": "Không thể cài đặt bản cập nhật",
     "openUrlFailed": "Không thể mở liên kết",
-    "unknown": "Unknown error"
+    "unknown": "Lỗi không xác định"
   },
   "appLanguage": {
     "title": "Ngôn ngữ ứng dụng",
@@ -772,7 +772,7 @@
     "dismiss": "Bỏ qua"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Đang tải xuống...",
+    "downloadingCount": "{{count}} đang tải xuống..."
   }
 }

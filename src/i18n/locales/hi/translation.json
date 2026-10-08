@@ -17,7 +17,7 @@
     "history": "इतिहास",
     "debug": "डिबग",
     "about": "के बारे में",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "सेटिंग अनुभाग"
   },
   "onboarding": {
     "subtitle": "शुरू करने के लिए, एक ट्रांसक्रिप्शन मॉडल चुनें",
@@ -154,11 +154,11 @@
       "translate": "अनुवाद करें",
       "streaming": "बोलते समय लाइव ट्रांसक्रिप्शन दिखाता है"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "मॉडल की स्थिति: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "मॉडल की स्थिति जांची नहीं जा सकी",
+      "load": "मॉडल लोड नहीं हो सका",
+      "switch": "मॉडल बदला नहीं जा सका"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "शॉर्टकट सेट नहीं हो सका: {{error}}",
           "reset": "शॉर्टकट को पहले जैसा रीसेट नहीं किया जा सका"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "{{name}} के लिए शॉर्टकट बदलें"
       },
       "language": {
         "title": "भाषा",
@@ -230,7 +230,7 @@
         "allLanguages": "सभी भाषाएं",
         "streaming": "लाइव ट्रांसक्रिप्शन का समर्थन करने वाले मॉडल फ़िल्टर करें",
         "translation": "अंग्रेज़ी में अनुवाद का समर्थन करने वाले मॉडल फ़िल्टर करें",
-        "language": "Filter by language"
+        "language": "भाषा के अनुसार फ़िल्टर करें"
       },
       "rescan": {
         "label": "फिर से स्कैन करें",
@@ -244,7 +244,7 @@
         "cancel": "डाउनलोड रद्द नहीं हो सका: {{error}}",
         "delete": "मॉडल हटाया नहीं जा सका: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "आकार अज्ञात"
     },
     "sound": {
       "title": "आवाज़",
@@ -274,7 +274,7 @@
         "title": "वॉल्यूम",
         "description": "ऑडियो फ़ीडबैक साउंड का वॉल्यूम सेट करें"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "साउंड थीम सुनें (पहले शुरू, फिर रुकने की ध्वनि बजती है)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "API कुंजी",
           "description": "चुने गए प्रोवाइडर के लिए API कुंजी.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "API कुंजी दिखाएं",
+          "hide": "API कुंजी छिपाएं"
         },
         "model": {
           "title": "मॉडल",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "मॉडल खोजें या चुनें",
           "placeholderNoOptions": "मॉडल का नाम लिखें",
           "refreshModels": "मॉडल रीफ़्रेश करें",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "\"{{input}}\" का उपयोग करें"
         }
       },
       "prompts": {
@@ -602,8 +602,8 @@
         "appData": "ऐप डेटा:",
         "models": "मॉडल:",
         "settings": "सेटिंग:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "डीबग पथ",
+        "description": "डीबगिंग के लिए आंतरिक फ़ाइल पथ और डायरेक्टरी दिखाएं"
       },
       "pasteDelay": {
         "title": "पेस्ट में देरी (पहले)",
@@ -706,14 +706,14 @@
     "copy": "कॉपी करें",
     "clear": "मिटाएं",
     "noOptionsFound": "कोई विकल्प नहीं मिला",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "रद्द करें",
+    "options": "विकल्प",
+    "selectOption": "एक विकल्प चुनें...",
+    "moreInformation": "अधिक जानकारी",
+    "notAvailable": "उपलब्ध नहीं",
+    "copyToClipboard": "क्लिपबोर्ड पर कॉपी करें",
+    "play": "चलाएं",
+    "pause": "रोकें"
   },
   "accessibility": {
     "permissionsDescription": "ट्रांसक्राइब किया गया टेक्स्ट टाइप करने के लिए, Handy को ऐक्सेसिबिलिटी अनुमतियों की ज़रूरत है.",
@@ -740,7 +740,7 @@
     "updateCheckFailed": "अपडेट की जांच नहीं हो सकी",
     "updateInstallFailed": "अपडेट इंस्टॉल नहीं हो सका",
     "openUrlFailed": "लिंक खोला नहीं जा सका",
-    "unknown": "Unknown error"
+    "unknown": "अज्ञात त्रुटि"
   },
   "appLanguage": {
     "title": "ऐप्लिकेशन की भाषा",
@@ -772,7 +772,7 @@
     "dismiss": "खारिज करें"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "डाउनलोड हो रहा है...",
+    "downloadingCount": "{{count}} डाउनलोड हो रहे हैं..."
   }
 }

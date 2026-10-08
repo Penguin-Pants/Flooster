@@ -17,7 +17,7 @@
     "history": "Historial",
     "debug": "Depuració",
     "about": "Quant a",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Seccions de la configuració"
   },
   "onboarding": {
     "subtitle": "Per començar, trieu un model de transcripció",
@@ -154,11 +154,11 @@
       "translate": "Tradueix",
       "streaming": "Mostra la transcripció en temps real mentre parleu"
     },
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Estat del model: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "No s'ha pogut comprovar l'estat del model",
+      "load": "No s'ha pogut carregar el model",
+      "switch": "No s'ha pogut canviar el model"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "No s'ha pogut definir la drecera: {{error}}",
           "reset": "No s'ha pogut restablir la drecera al valor original"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Canvia la drecera de {{name}}"
       },
       "language": {
         "title": "Llengua",
@@ -230,7 +230,7 @@
         "allLanguages": "Totes les llengües",
         "streaming": "Filtra els models que admeten la transcripció en temps real",
         "translation": "Filtra els models que admeten la traducció a l'anglès",
-        "language": "Filter by language"
+        "language": "Filtra per idioma"
       },
       "rescan": {
         "label": "Torna a cercar",
@@ -244,7 +244,7 @@
         "cancel": "No s'ha pogut cancel·lar la baixada: {{error}}",
         "delete": "No s'ha pogut suprimir el model: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Mida desconeguda"
     },
     "sound": {
       "title": "So",
@@ -274,7 +274,7 @@
         "title": "Volum",
         "description": "Ajusta el volum dels avisos sonors"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Escolta el tema de so (reprodueix l'inici i després el final)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Clau de l'API",
           "description": "Clau de l'API del proveïdor seleccionat.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Mostra la clau d'API",
+          "hide": "Amaga la clau d'API"
         },
         "model": {
           "title": "Model",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Cerqueu o seleccioneu un model",
           "placeholderNoOptions": "Escriviu el nom d'un model",
           "refreshModels": "Actualitzeu els models",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Utilitza \"{{input}}\""
         }
       },
       "prompts": {
@@ -602,8 +602,8 @@
         "appData": "Dades de l'aplicació:",
         "models": "Models:",
         "settings": "Configuració:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Camins de depuració",
+        "description": "Mostra els camins de fitxers i directoris interns per a la depuració"
       },
       "pasteDelay": {
         "title": "Retard abans d'enganxar",
@@ -706,14 +706,14 @@
     "copy": "Copia",
     "clear": "Neteja",
     "noOptionsFound": "No s'ha trobat cap opció",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Cancel·la",
+    "options": "Opcions",
+    "selectOption": "Selecciona una opció...",
+    "moreInformation": "Més informació",
+    "notAvailable": "No disponible",
+    "copyToClipboard": "Copia al porta-retalls",
+    "play": "Reprodueix",
+    "pause": "Pausa"
   },
   "accessibility": {
     "permissionsDescription": "El Handy necessita permisos d'accessibilitat per escriure el text transcrit.",
@@ -740,7 +740,7 @@
     "updateCheckFailed": "No s'han pogut cercar actualitzacions",
     "updateInstallFailed": "No s'ha pogut instal·lar l'actualització",
     "openUrlFailed": "No s'ha pogut obrir l'enllaç",
-    "unknown": "Unknown error"
+    "unknown": "Error desconegut"
   },
   "appLanguage": {
     "title": "Llengua de l'aplicació",
@@ -772,7 +772,7 @@
     "dismiss": "Descarta"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "S'està baixant...",
+    "downloadingCount": "S'estan baixant {{count}}..."
   }
 }

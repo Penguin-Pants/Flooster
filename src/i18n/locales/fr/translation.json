@@ -17,7 +17,7 @@
     "history": "Historique",
     "debug": "Débogage",
     "about": "À propos",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Sections des paramètres"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -154,11 +154,11 @@
     "cancel": "Annuler",
     "cancelDownload": "Annuler le téléchargement",
     "legacy": "Hérité",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "État du modèle : {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Échec de la vérification de l'état du modèle",
+      "load": "Échec du chargement du modèle",
+      "switch": "Échec du changement de modèle"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Toutes les langues",
         "streaming": "Filtrer les modèles prenant en charge la transcription en direct",
         "translation": "Filtrer les modèles prenant en charge la traduction vers l'anglais",
-        "language": "Filter by language"
+        "language": "Filtrer par langue"
       },
       "noModelsMatch": "Aucun modèle ne correspond à ce filtre.",
       "yourModels": "Modèles téléchargés",
@@ -192,7 +192,7 @@
         "cancel": "Échec de l'annulation du téléchargement : {{error}}",
         "delete": "Échec de la suppression du modèle : {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Taille inconnue"
     },
     "general": {
       "title": "Général",
@@ -222,7 +222,7 @@
           "set": "Échec de la définition du raccourci : {{error}}",
           "reset": "Échec de la réinitialisation du raccourci à sa valeur d'origine"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Modifier le raccourci pour {{name}}"
       },
       "language": {
         "title": "Langue",
@@ -274,7 +274,7 @@
         "title": "Volume",
         "description": "Ajuster le volume du signal sonore"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Écouter le thème sonore (joue le début puis la fin)"
     },
     "advanced": {
       "groups": {
@@ -449,8 +449,8 @@
           "title": "Clé API",
           "description": "Clé API pour le fournisseur sélectionné.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Afficher la clé API",
+          "hide": "Masquer la clé API"
         },
         "model": {
           "title": "Modèle",
@@ -459,7 +459,7 @@
           "placeholderWithOptions": "Rechercher ou sélectionner un modèle",
           "placeholderNoOptions": "Tapez un nom de modèle",
           "refreshModels": "Actualiser les modèles",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Utiliser « {{input}} »"
         }
       },
       "prompts": {
@@ -588,8 +588,8 @@
         "appData": "Données de l'application :",
         "models": "Modèles :",
         "settings": "Paramètres :",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Chemins de débogage",
+        "description": "Afficher les chemins de fichiers et répertoires internes à des fins de débogage"
       },
       "pasteDelay": {
         "title": "Délai de collage (avant)",
@@ -703,13 +703,13 @@
     "copy": "Copier",
     "clear": "Effacer",
     "noOptionsFound": "Aucune option trouvée",
-    "cancel": "Cancel",
+    "cancel": "Annuler",
     "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
+    "selectOption": "Sélectionner une option...",
+    "moreInformation": "Plus d'informations",
+    "notAvailable": "Non disponible",
+    "copyToClipboard": "Copier dans le presse-papiers",
+    "play": "Lecture",
     "pause": "Pause"
   },
   "accessibility": {
@@ -737,7 +737,7 @@
     "updateCheckFailed": "Échec de la recherche de mises à jour",
     "updateInstallFailed": "Échec de l'installation de la mise à jour",
     "openUrlFailed": "Échec de l'ouverture du lien",
-    "unknown": "Unknown error"
+    "unknown": "Erreur inconnue"
   },
   "appLanguage": {
     "title": "Langue de l'application",
@@ -772,7 +772,7 @@
     "dismiss": "Ignorer"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Téléchargement...",
+    "downloadingCount": "{{count}} en cours de téléchargement..."
   }
 }
