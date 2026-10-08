@@ -205,13 +205,10 @@ fn http_client() -> Result<&'static reqwest::Client, String> {
 /// Reads an error response body with a size cap, logs it at debug level and
 /// returns a short, truncated excerpt for the error message. The full body is
 /// never logged at info or above because it may contain transcript text.
-async fn error_body_excerpt(response: reqwest::Response, context: &str) -> String {
+async fn error_body_excerpt(mut response: reqwest::Response, context: &str) -> String {
     let status = response.status();
-    let body = match response.bytes().await {
-        Ok(bytes) => {
-            let cut = bytes.len().min(MAX_ERROR_BODY_LOG_BYTES);
-            String::from_utf8_lossy(&bytes[..cut]).into_owned()
-        }
+    let body = match read_body_capped(&mut response, MAX_ERROR_BODY_LOG_BYTES).await {
+        Ok(bytes) => String::from_utf8_lossy(&bytes).into_owned(),
         Err(e) => report_reqwest_error(context, &e),
     };
     debug!("{} (status {}): {}", context, status, body);
@@ -221,6 +218,26 @@ async fn error_body_excerpt(response: reqwest::Response, context: &str) -> Strin
     } else {
         excerpt
     }
+}
+
+/// Reads at most `cap` bytes of a body and leaves the rest unread, so a huge or
+/// unending error response from a misconfigured or hostile endpoint cannot grow
+/// memory until the request timeout. Dropping the response closes the stream.
+async fn read_body_capped(
+    response: &mut reqwest::Response,
+    cap: usize,
+) -> reqwest::Result<Vec<u8>> {
+    let mut buf = Vec::with_capacity(cap.min(4096));
+    while buf.len() < cap {
+        match response.chunk().await? {
+            Some(chunk) => {
+                let room = cap - buf.len();
+                buf.extend_from_slice(&chunk[..chunk.len().min(room)]);
+            }
+            None => break,
+        }
+    }
+    Ok(buf)
 }
 
 /// Format a bounded error source chain.
@@ -630,7 +647,8 @@ mod tests {
             let (mut stream, _) = listener.accept().await.unwrap();
             let mut request = [0_u8; 2048];
             let _ = stream.read(&mut request).await.unwrap();
-            stream.write_all(response.as_bytes()).await.unwrap();
+            // The client may stop reading early (capped body reads).
+            let _ = stream.write_all(response.as_bytes()).await;
         });
 
         format!("http://{address}")
@@ -667,6 +685,31 @@ mod tests {
             sanitized_url_for_log("not a URL containing secret"),
             "<invalid URL>"
         );
+    }
+
+    #[tokio::test]
+    async fn error_body_read_stops_at_the_cap() {
+        let body = "x".repeat(1 << 20);
+        let base_url = serve_one_response("500 Internal Server Error", &body).await;
+        let mut response = reqwest::get(&base_url).await.unwrap();
+
+        let bytes = read_body_capped(&mut response, MAX_ERROR_BODY_LOG_BYTES)
+            .await
+            .unwrap();
+
+        assert_eq!(bytes.len(), MAX_ERROR_BODY_LOG_BYTES);
+    }
+
+    #[tokio::test]
+    async fn error_body_excerpt_is_truncated_for_the_message() {
+        let body = "y".repeat(1 << 20);
+        let base_url = serve_one_response("500 Internal Server Error", &body).await;
+        let response = reqwest::get(&base_url).await.unwrap();
+
+        let excerpt = error_body_excerpt(response, "test").await;
+
+        assert_eq!(excerpt.chars().count(), MAX_ERROR_BODY_MESSAGE_CHARS + 1);
+        assert!(excerpt.ends_with('…'));
     }
 
     #[tokio::test]

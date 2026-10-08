@@ -601,6 +601,19 @@ fn last_transcript_text(entry: &HistoryEntry) -> &str {
         .unwrap_or(&entry.transcription_text)
 }
 
+/// Whether the user has a tray icon to get back into the app with: one was
+/// created at startup (creation can fail on a missing icon resource or a
+/// desktop without a tray host), the setting shows it and `--no-tray` was not
+/// passed. Decisions that would otherwise leave the app with no visible
+/// surface (start hidden, hide on close) must use this, not the settings alone.
+pub fn tray_available(app: &AppHandle) -> bool {
+    let no_tray = app
+        .try_state::<crate::cli::CliArgs>()
+        .map(|args| args.no_tray)
+        .unwrap_or(false);
+    !no_tray && settings::get_settings(app).show_tray_icon && app.try_state::<TrayIcon>().is_some()
+}
+
 pub fn set_tray_visibility(app: &AppHandle, visible: bool) {
     // No tray was created (icon or host unavailable at startup).
     let Some(tray) = app.try_state::<TrayIcon>() else {
@@ -622,11 +635,7 @@ pub fn set_tray_visibility(app: &AppHandle, visible: bool) {
 /// relaunch brings the icon back without a full quit.
 #[cfg(target_os = "macos")]
 pub fn recreate_tray_icon(app: &AppHandle) {
-    let no_tray = app
-        .try_state::<crate::cli::CliArgs>()
-        .map(|args| args.no_tray)
-        .unwrap_or(false);
-    if no_tray || !settings::get_settings(app).show_tray_icon {
+    if !tray_available(app) {
         return;
     }
     let Some(tray) = app.try_state::<TrayIcon>() else {

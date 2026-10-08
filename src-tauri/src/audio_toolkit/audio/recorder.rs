@@ -679,6 +679,10 @@ fn handle_frame(
             log::warn!("VAD detector mutex poisoned by an earlier panic; resetting it");
             let mut detector = poisoned.into_inner();
             detector.reset();
+            // `into_inner` hands back the guard but leaves the poison flag
+            // set; without this every later frame would reset the detector
+            // again and log the same warning.
+            cfg.detector.clear_poison();
             detector
         });
         match detector.push_frame(samples) {

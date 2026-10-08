@@ -138,8 +138,10 @@ fn show_main_window(app: &AppHandle) {
 /// Mirrors the show-window decision in `setup`: the app launches without a
 /// Dock icon only when it will start hidden (setting or `--start-hidden`) AND a
 /// tray icon is available (setting and not `--no-tray`). With no tray the Dock
-/// icon stays as the only way back into the app (#903). Headless one-shot
-/// runs are left alone.
+/// icon stays as the only way back into the app (#903). The tray does not
+/// exist yet at this point; if its creation then fails in `setup`, the
+/// show-window fallback there promotes the app back to Regular. Headless
+/// one-shot runs are left alone.
 #[cfg(target_os = "macos")]
 fn apply_startup_activation_policy(app: &mut tauri::App, headless_mode: bool) {
     if headless_mode {
@@ -1039,11 +1041,11 @@ pub fn run(cli_args: CliArgs) {
             let should_hide = settings.start_hidden || cli_args.start_hidden;
             let should_force_show = should_force_show_permissions_window(&app_handle);
 
-            // If start_hidden but tray is disabled, we must show the window
-            // anyway. Without a tray icon, the dock is the only way back in.
-            // Keep in sync with `apply_startup_activation_policy` (macOS).
-            let tray_available = settings.show_tray_icon && !cli_args.no_tray;
-            if should_force_show || !should_hide || !tray_available {
+            // If start_hidden but no tray is available (setting, `--no-tray`,
+            // or tray creation failed above), we must show the window anyway:
+            // without a tray icon the window is the only way back in. On
+            // macOS this also promotes an Accessory launch back to Regular.
+            if should_force_show || !should_hide || !tray::tray_available(&app_handle) {
                 show_main_window(&app_handle);
             }
 
@@ -1056,10 +1058,7 @@ pub fn run(cli_args: CliArgs) {
 
                 #[cfg(target_os = "macos")]
                 {
-                    let settings = get_settings(window.app_handle());
-                    let tray_visible =
-                        settings.show_tray_icon && !window.app_handle().state::<CliArgs>().no_tray;
-                    if tray_visible {
+                    if tray::tray_available(window.app_handle()) {
                         // Tray is available: hide the dock icon, app lives in the tray
                         let res = window
                             .app_handle()

@@ -207,35 +207,53 @@ pub fn change_binding(
         }
     };
 
-    // If this is the cancel binding, just update the settings and return
-    // It's managed dynamically, so we don't register/unregister here
+    // The cancel binding is registered dynamically (only while recording), so
+    // the unregister/register path below does not apply. Validate it the same
+    // way, swap a live registration if one exists, and only then persist: a
+    // chord that cannot be registered must not become the setting.
     if id == "cancel" {
         if let Some(mut b) = settings.bindings.get(&id).cloned() {
+            if let Err(e) =
+                validate_shortcut_for_implementation(&binding, settings.keyboard_implementation)
+            {
+                warn!("change_binding validation error: {}", e);
+                return Err(e);
+            }
             b.current_binding = binding;
-            settings.bindings.insert(id.clone(), b.clone());
-            settings::write_settings(&app, settings);
-            // If a recording is in progress the old chord is live: swap it for
-            // the new one now, otherwise Escape would keep cancelling and the
-            // new key would not work until restart.
             #[cfg(not(target_os = "linux"))]
             {
                 let mut registered = CANCEL_REGISTERED.lock().unwrap_or_else(|e| e.into_inner());
-                if let Some(old_chord) = registered.take() {
-                    let mut old_binding = b.clone();
-                    old_binding.current_binding = old_chord;
-                    if let Err(e) = unregister_shortcut(&app, old_binding) {
+                if let Some(live_chord) = registered.take() {
+                    let mut live_binding = b.clone();
+                    live_binding.current_binding = live_chord.clone();
+                    if let Err(e) = unregister_shortcut(&app, live_binding.clone()) {
                         error!("Failed to unregister previous cancel shortcut: {}", e);
                     }
                     match register_shortcut(&app, b.clone()) {
                         Ok(()) => *registered = Some(b.current_binding.clone()),
-                        Err(e) => error!("Failed to register new cancel shortcut: {}", e),
+                        Err(e) => {
+                            // Put the old chord back so the recording in
+                            // progress keeps a working cancel key, and leave
+                            // the persisted setting untouched.
+                            let error_msg = format!("Failed to register cancel shortcut: {}", e);
+                            error!("change_binding error: {}", error_msg);
+                            restore_registration(&app, &live_binding);
+                            *registered = Some(live_chord);
+                            return Ok(BindingResponse {
+                                success: false,
+                                binding: None,
+                                error: Some(error_msg),
+                            });
+                        }
                     }
                 }
             }
+            settings.bindings.insert(id.clone(), b.clone());
+            settings::write_settings(&app, settings);
             crate::secure_input::reconcile_fallback(&app);
             return Ok(BindingResponse {
                 success: true,
-                binding: Some(b.clone()),
+                binding: Some(b),
                 error: None,
             });
         }
