@@ -18,9 +18,12 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
     // Masked by default; the toggle lets the user check a pasted key.
     const [revealed, setRevealed] = useState(false);
 
-    // Sync with prop changes
+    // Sync with prop changes. A new value is another provider's key (the
+    // component stays mounted across provider switches), so mask it again
+    // rather than showing it in plain text because the previous one was shown.
     React.useEffect(() => {
       setLocalValue(value);
+      setRevealed(false);
     }, [value]);
 
     return (
