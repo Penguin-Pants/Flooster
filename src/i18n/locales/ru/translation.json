@@ -17,7 +17,7 @@
     "history": "История",
     "debug": "Отладка",
     "about": "О программе",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Разделы настроек"
   },
   "onboarding": {
     "subtitle": "Для начала выберите модель транскрипции",
@@ -154,11 +154,11 @@
     "cancel": "Отмена",
     "cancelDownload": "Отменить загрузку",
     "legacy": "Устаревшее",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Состояние модели: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Не удалось проверить состояние модели",
+      "load": "Не удалось загрузить модель",
+      "switch": "Не удалось переключить модель"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Все языки",
         "streaming": "Фильтровать модели с поддержкой транскрипции в реальном времени",
         "translation": "Фильтровать модели с поддержкой перевода на английский",
-        "language": "Filter by language"
+        "language": "Фильтр по языку"
       },
       "noModelsMatch": "Нет моделей, соответствующих этому фильтру.",
       "yourModels": "Загруженные модели",
@@ -186,14 +186,13 @@
         "tooltip": "Пересканировать модели, добавленные в папку моделей или кэш Hugging Face вне Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Не удалось загрузить модели: {{error}}",
+        "rescan": "Не удалось повторно просканировать модели: {{error}}",
+        "select": "Не удалось переключить модель: {{error}}",
+        "cancel": "Не удалось отменить загрузку: {{error}}",
+        "delete": "Не удалось удалить модель: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Неизвестный размер"
     },
     "general": {
       "title": "Общие",
@@ -223,7 +222,7 @@
           "set": "Не удалось установить ярлык: {{error}}",
           "reset": "Не удалось сбросить ярлык до исходного значения"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Изменить сочетание клавиш для {{name}}"
       },
       "language": {
         "title": "Язык",
@@ -275,7 +274,7 @@
         "title": "Громкость",
         "description": "Отрегулируйте громкость звуков обратной связи"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Прослушать звуковую тему (сначала старт, затем стоп)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API-ключ",
           "description": "API-ключ для выбранного провайдера.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Показать ключ API",
+          "hide": "Скрыть ключ API"
         },
         "model": {
           "title": "Модель",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Найдите или выберите модель",
           "placeholderNoOptions": "Введите название модели",
           "refreshModels": "Обновить модели",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Использовать «{{input}}»"
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Отмена",
         "selectToEdit": "Выберите запрос выше, чтобы просмотреть и изменить его сведения.",
         "createFirst": "Нажмите «Создать новый запрос» выше, чтобы создать первый запрос для постобработки.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Удалить запрос «{{name}}»? Это действие нельзя отменить.",
+        "deleteConfirmTitle": "Удалить запрос",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Не удалось создать запрос: {{error}}",
+          "update": "Не удалось обновить запрос: {{error}}",
+          "delete": "Не удалось удалить запрос: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Не удалось перетранскрибировать. Пожалуйста, попробуйте снова.",
       "transcribing": "Транскрибирование...",
       "transcriptionFailed": "Транскрипция не удалась. Вы можете перетранскрибировать, используя значок повтора.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Удалить эту транскрипцию и её запись? Это действие нельзя отменить.",
+      "deleteConfirmTitle": "Удалить запись",
+      "deleteFailed": "Не удалось удалить запись: {{error}}"
     },
     "debug": {
       "title": "Отлаживать",
@@ -589,8 +588,8 @@
         "appData": "Данные приложения:",
         "models": "Модели:",
         "settings": "Настройки:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Пути для отладки",
+        "description": "Показать внутренние пути к файлам и каталогам для отладки"
       },
       "pasteDelay": {
         "title": "Задержка вставки (до)",
@@ -704,14 +703,14 @@
     "copy": "Копировать",
     "clear": "Очистить",
     "noOptionsFound": "Вариантов не найдено",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Отмена",
+    "options": "Параметры",
+    "selectOption": "Выберите вариант...",
+    "moreInformation": "Подробнее",
+    "notAvailable": "Недоступно",
+    "copyToClipboard": "Копировать в буфер обмена",
+    "play": "Воспроизвести",
+    "pause": "Пауза"
   },
   "accessibility": {
     "permissionsDescription": "Handy необходимы разрешения на доступ для ввода расшифрованного текста.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Не удалось вставить текст",
     "pasteFailed": "Не удалось вставить текст в активное приложение.",
     "transcriptionFailedTitle": "Ошибка транскрипции",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Не удалось сохранить настройку",
+    "updateCheckFailed": "Не удалось проверить наличие обновлений",
+    "updateInstallFailed": "Не удалось установить обновление",
+    "openUrlFailed": "Не удалось открыть ссылку",
+    "unknown": "Неизвестная ошибка"
   },
   "appLanguage": {
     "title": "Язык приложения",
@@ -773,7 +772,7 @@
     "dismiss": "Скрыть"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Загрузка...",
+    "downloadingCount": "Загружается: {{count}}..."
   }
 }

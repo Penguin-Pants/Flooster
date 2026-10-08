@@ -17,7 +17,7 @@
     "history": "Cronologia",
     "debug": "Debug",
     "about": "Informazioni",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Sezioni delle impostazioni"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -154,11 +154,11 @@
     "cancel": "Annulla",
     "cancelDownload": "Annulla download",
     "legacy": "Obsoleto",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Stato del modello: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Impossibile verificare lo stato del modello",
+      "load": "Impossibile caricare il modello",
+      "switch": "Impossibile cambiare modello"
     }
   },
   "settings": {
@@ -175,7 +175,7 @@
         "allLanguages": "Tutte le lingue",
         "streaming": "Filtra i modelli che supportano la trascrizione in tempo reale",
         "translation": "Filtra i modelli che supportano la traduzione in inglese",
-        "language": "Filter by language"
+        "language": "Filtra per lingua"
       },
       "noModelsMatch": "Nessun modello corrisponde a questo filtro.",
       "yourModels": "Modelli scaricati",
@@ -186,14 +186,13 @@
         "tooltip": "Riscansiona per trovare modelli aggiunti alla cartella dei modelli o alla cache di Hugging Face al di fuori di Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Impossibile caricare i modelli: {{error}}",
+        "rescan": "Impossibile ripetere la scansione dei modelli: {{error}}",
+        "select": "Impossibile cambiare modello: {{error}}",
+        "cancel": "Impossibile annullare il download: {{error}}",
+        "delete": "Impossibile eliminare il modello: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Dimensione sconosciuta"
     },
     "general": {
       "title": "Generale",
@@ -223,7 +222,7 @@
           "set": "Errore nella configurazione della scorciatoia: {{error}}",
           "reset": "Errore nella reinizializzazione della scorciatoia al valore originale"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Modifica la scorciatoia per {{name}}"
       },
       "language": {
         "title": "Lingua",
@@ -275,7 +274,7 @@
         "title": "Volume",
         "description": "Regola il volume del feedback audio"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Anteprima del tema sonoro (riproduce avvio e poi stop)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "Chiave API",
           "description": "Chiave API per il provider selezionato.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Mostra chiave API",
+          "hide": "Nascondi chiave API"
         },
         "model": {
           "title": "Modello",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Cerca o scegli un modello",
           "placeholderNoOptions": "Digita il nome di un modello",
           "refreshModels": "Aggiorna modelli",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Usa \"{{input}}\""
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Annulla",
         "selectToEdit": "Scegli un prompt qui sopra per visualizzare o modificare i dettagli.",
         "createFirst": "Clicca 'Crea un nuovo prompt' qui sopra per creare il tuo primo prompt di post-elaborazione.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Eliminare il prompt \"{{name}}\"? L'operazione non può essere annullata.",
+        "deleteConfirmTitle": "Elimina prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Impossibile creare il prompt: {{error}}",
+          "update": "Impossibile aggiornare il prompt: {{error}}",
+          "delete": "Impossibile eliminare il prompt: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Impossibile ri-trascrivere. Riprova.",
       "transcribing": "Trascrizione in corso...",
       "transcriptionFailed": "Trascrizione fallita. Puoi ri-trascrivere usando l'icona di ripetizione.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Eliminare questa trascrizione e la sua registrazione? L'operazione non può essere annullata.",
+      "deleteConfirmTitle": "Elimina voce",
+      "deleteFailed": "Impossibile eliminare la voce: {{error}}"
     },
     "debug": {
       "title": "Debug",
@@ -589,8 +588,8 @@
         "appData": "Dati App:",
         "models": "Modelli:",
         "settings": "Impostazioni:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Percorsi di debug",
+        "description": "Mostra percorsi di file e directory interni a scopo di debug"
       },
       "pasteDelay": {
         "title": "Ritardo incolla (prima)",
@@ -704,14 +703,14 @@
     "copy": "Copia",
     "clear": "Svuota",
     "noOptionsFound": "Nessuna opzione trovata",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Annulla",
+    "options": "Opzioni",
+    "selectOption": "Seleziona un'opzione...",
+    "moreInformation": "Maggiori informazioni",
+    "notAvailable": "Non disponibile",
+    "copyToClipboard": "Copia negli appunti",
+    "play": "Riproduci",
+    "pause": "Pausa"
   },
   "accessibility": {
     "permissionsDescription": "Handy ha bisogno dei permessi di accessibilità per digitare il testo trascritto.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Impossibile incollare il testo",
     "pasteFailed": "Non è stato possibile incollare il testo nell'applicazione attiva.",
     "transcriptionFailedTitle": "Trascrizione non riuscita",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Impossibile salvare l'impostazione",
+    "updateCheckFailed": "Impossibile verificare la presenza di aggiornamenti",
+    "updateInstallFailed": "Impossibile installare l'aggiornamento",
+    "openUrlFailed": "Impossibile aprire il link",
+    "unknown": "Errore sconosciuto"
   },
   "appLanguage": {
     "title": "Lingua Applicazione",
@@ -773,7 +772,7 @@
     "dismiss": "Ignora"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Download in corso...",
+    "downloadingCount": "{{count}} in download..."
   }
 }

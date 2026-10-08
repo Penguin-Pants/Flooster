@@ -17,7 +17,7 @@
     "history": "היסטוריה",
     "debug": "ניפוי שגיאות",
     "about": "אודות",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "מקטעי הגדרות"
   },
   "onboarding": {
     "subtitle": "כדי להתחיל, בחר מודל תמלול",
@@ -154,11 +154,11 @@
       "streaming": "מציג תמלול חי תוך כדי דיבור"
     },
     "legacy": "מדור קודם",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "מצב המודל: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "בדיקת מצב המודל נכשלה",
+      "load": "טעינת המודל נכשלה",
+      "switch": "החלפת המודל נכשלה"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "הגדרת קיצור הדרך נכשלה: {{error}}",
           "reset": "איפוס קיצור הדרך לערך המקורי נכשל"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "שינוי קיצור הדרך עבור {{name}}"
       },
       "language": {
         "title": "שפה",
@@ -229,7 +229,7 @@
         "allLanguages": "כל השפות",
         "streaming": "סינון דגמים התומכים בתמלול חי",
         "translation": "סינון דגמים התומכים בתרגום לאנגלית",
-        "language": "Filter by language"
+        "language": "סינון לפי שפה"
       },
       "noModelsMatch": "אין מודלים שמתאימים לסינון הזה.",
       "searchPlaceholder": "חיפוש מודלים לפי שם…",
@@ -238,14 +238,13 @@
         "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "טעינת המודלים נכשלה: {{error}}",
+        "rescan": "סריקת המודלים מחדש נכשלה: {{error}}",
+        "select": "החלפת המודל נכשלה: {{error}}",
+        "cancel": "ביטול ההורדה נכשל: {{error}}",
+        "delete": "מחיקת המודל נכשלה: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "גודל לא ידוע"
     },
     "sound": {
       "title": "שמע",
@@ -275,7 +274,7 @@
         "title": "עוצמת קול",
         "description": "כוונן את עוצמת צלילי המשוב"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "האזנה לערכת הצלילים (מנגן התחלה ואז עצירה)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "מפתח API",
           "description": "מפתח API עבור הספק הנבחר.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "הצגת מפתח API",
+          "hide": "הסתרת מפתח API"
         },
         "model": {
           "title": "מודל",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "חפש או בחר מודל",
           "placeholderNoOptions": "הקלד שם מודל",
           "refreshModels": "רענן מודלים",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "השתמש ב-\"{{input}}\""
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "ביטול",
         "selectToEdit": "בחר פרומפט למעלה כדי לצפות בפרטים שלו ולערוך אותם.",
         "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "למחוק את הפרומפט \"{{name}}\"? לא ניתן לבטל פעולה זו.",
+        "deleteConfirmTitle": "מחיקת פרומפט",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "יצירת הפרומפט נכשלה: {{error}}",
+          "update": "עדכון הפרומפט נכשל: {{error}}",
+          "delete": "מחיקת הפרומפט נכשלה: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "תמלול מחדש נכשל. נסה שוב.",
       "transcribing": "מתמלל...",
       "transcriptionFailed": "התמלול נכשל. אפשר לתמלל מחדש באמצעות אייקון הניסיון החוזר.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "למחוק את התמלול הזה ואת ההקלטה שלו? לא ניתן לבטל פעולה זו.",
+      "deleteConfirmTitle": "מחיקת רשומה",
+      "deleteFailed": "מחיקת הרשומה נכשלה: {{error}}"
     },
     "debug": {
       "title": "ניפוי שגיאות",
@@ -589,8 +588,8 @@
         "appData": "נתוני אפליקציה:",
         "models": "מודלים:",
         "settings": "הגדרות:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "נתיבי ניפוי שגיאות",
+        "description": "הצגת נתיבי קבצים ותיקיות פנימיים לצורכי ניפוי שגיאות"
       },
       "pasteDelay": {
         "title": "השהיית הדבקה (לפני)",
@@ -704,14 +703,14 @@
     "copy": "העתק",
     "clear": "נקה",
     "noOptionsFound": "לא נמצאו אפשרויות",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "ביטול",
+    "options": "אפשרויות",
+    "selectOption": "בחר אפשרות...",
+    "moreInformation": "מידע נוסף",
+    "notAvailable": "לא זמין",
+    "copyToClipboard": "העתקה ללוח",
+    "play": "הפעלה",
+    "pause": "השהיה"
   },
   "accessibility": {
     "permissionsDescription": "Handy צריך הרשאות נגישות כדי להקליד את הטקסט המתומלל.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "ההדבקה נכשלה",
     "pasteFailed": "לא ניתן היה להדביק את הטקסט ביישום הפעיל.",
     "transcriptionFailedTitle": "התמלול נכשל",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "שמירת ההגדרה נכשלה",
+    "updateCheckFailed": "בדיקת העדכונים נכשלה",
+    "updateInstallFailed": "התקנת העדכון נכשלה",
+    "openUrlFailed": "פתיחת הקישור נכשלה",
+    "unknown": "שגיאה לא ידועה"
   },
   "appLanguage": {
     "title": "שפת האפליקציה",
@@ -773,7 +772,7 @@
     "dismiss": "התעלם"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "מוריד...",
+    "downloadingCount": "{{count}} בהורדה..."
   }
 }

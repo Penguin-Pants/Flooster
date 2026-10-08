@@ -17,7 +17,7 @@
     "history": "Historik",
     "debug": "Felsökning",
     "about": "Om",
-    "navigationLabel": "Settings sections"
+    "navigationLabel": "Inställningsavsnitt"
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -154,11 +154,11 @@
       "streaming": "Visar transkription i realtid medan du talar"
     },
     "legacy": "Äldre",
-    "statusTitle": "Model status: {{status}}",
+    "statusTitle": "Modellstatus: {{status}}",
     "errors": {
-      "checkStatus": "Failed to check model status",
-      "load": "Failed to load model",
-      "switch": "Failed to switch model"
+      "checkStatus": "Det gick inte att kontrollera modellens status",
+      "load": "Det gick inte att ladda modellen",
+      "switch": "Det gick inte att byta modell"
     }
   },
   "settings": {
@@ -193,7 +193,7 @@
           "set": "Misslyckades med att ställa in kortkommando: {{error}}",
           "reset": "Misslyckades med att återställa kortkommando till ursprungsvärdet"
         },
-        "changeShortcut": "Change shortcut for {{name}}"
+        "changeShortcut": "Ändra kortkommando för {{name}}"
       },
       "language": {
         "title": "Språk",
@@ -229,7 +229,7 @@
         "allLanguages": "Alla språk",
         "streaming": "Filtrera modeller som stöder transkription i realtid",
         "translation": "Filtrera modeller som stöder översättning till engelska",
-        "language": "Filter by language"
+        "language": "Filtrera efter språk"
       },
       "noModelsMatch": "Inga modeller matchar detta filter.",
       "searchPlaceholder": "Sök modeller efter namn…",
@@ -238,14 +238,13 @@
         "tooltip": "Skanna om efter modeller som lagts till i modellmappen eller Hugging Face-cachen utanför Handy"
       },
       "errors": {
-        "load": "Failed to load models: {{error}}",
-        "rescan": "Failed to rescan models: {{error}}",
-        "select": "Failed to switch model: {{error}}",
-        "cancel": "Failed to cancel download: {{error}}",
-        "delete": "Failed to delete model: {{error}}",
-        "extract": "Failed to extract model: {{error}}"
+        "load": "Det gick inte att ladda modellerna: {{error}}",
+        "rescan": "Det gick inte att söka igenom modellerna igen: {{error}}",
+        "select": "Det gick inte att byta modell: {{error}}",
+        "cancel": "Det gick inte att avbryta nedladdningen: {{error}}",
+        "delete": "Det gick inte att ta bort modellen: {{error}}"
       },
-      "unknownSize": "Unknown size"
+      "unknownSize": "Okänd storlek"
     },
     "sound": {
       "title": "Ljud",
@@ -275,7 +274,7 @@
         "title": "Volym",
         "description": "Justera volymen för ljudåterkopplingsljud"
       },
-      "previewTheme": "Preview sound theme (plays start then stop)"
+      "previewTheme": "Lyssna på ljudtemat (spelar start och sedan stopp)"
     },
     "advanced": {
       "groups": {
@@ -450,8 +449,8 @@
           "title": "API-nyckel",
           "description": "API-nyckel för den valda leverantören.",
           "placeholder": "sk-...",
-          "show": "Show API key",
-          "hide": "Hide API key"
+          "show": "Visa API-nyckel",
+          "hide": "Dölj API-nyckel"
         },
         "model": {
           "title": "Modell",
@@ -460,7 +459,7 @@
           "placeholderWithOptions": "Sök eller välj en modell",
           "placeholderNoOptions": "Ange ett modellnamn",
           "refreshModels": "Uppdatera modeller",
-          "useCustom": "Use \"{{input}}\""
+          "useCustom": "Använd \"{{input}}\""
         }
       },
       "prompts": {
@@ -483,12 +482,12 @@
         "cancel": "Avbryt",
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning.",
-        "deleteConfirm": "Delete the prompt \"{{name}}\"? This cannot be undone.",
-        "deleteConfirmTitle": "Delete Prompt",
+        "deleteConfirm": "Ta bort prompten \"{{name}}\"? Detta kan inte ångras.",
+        "deleteConfirmTitle": "Ta bort prompt",
         "errors": {
-          "create": "Failed to create prompt: {{error}}",
-          "update": "Failed to update prompt: {{error}}",
-          "delete": "Failed to delete prompt: {{error}}"
+          "create": "Det gick inte att skapa prompten: {{error}}",
+          "update": "Det gick inte att uppdatera prompten: {{error}}",
+          "delete": "Det gick inte att ta bort prompten: {{error}}"
         }
       }
     },
@@ -507,9 +506,9 @@
       "retranscribeError": "Misslyckades med att transkribera igen. Försök igen.",
       "transcribing": "Transkriberar...",
       "transcriptionFailed": "Transkribering misslyckades. Du kan transkribera igen med hjälp av ikonen för nytt försök.",
-      "deleteConfirm": "Delete this transcription and its recording? This cannot be undone.",
-      "deleteConfirmTitle": "Delete Entry",
-      "deleteFailed": "Failed to delete entry: {{error}}"
+      "deleteConfirm": "Ta bort den här transkriptionen och dess inspelning? Detta kan inte ångras.",
+      "deleteConfirmTitle": "Ta bort post",
+      "deleteFailed": "Det gick inte att ta bort posten: {{error}}"
     },
     "debug": {
       "title": "Felsökning",
@@ -589,8 +588,8 @@
         "appData": "Appdata:",
         "models": "Modeller:",
         "settings": "Inställningar:",
-        "title": "Debug Paths",
-        "description": "Display internal file paths and directories for debugging purposes"
+        "title": "Felsökningssökvägar",
+        "description": "Visa interna filsökvägar och kataloger för felsökning"
       },
       "pasteDelay": {
         "title": "Fördröjning vid klistra in (före)",
@@ -704,14 +703,14 @@
     "copy": "Kopiera",
     "clear": "Rensa",
     "noOptionsFound": "Inga alternativ hittades",
-    "cancel": "Cancel",
-    "options": "Options",
-    "selectOption": "Select an option...",
-    "moreInformation": "More information",
-    "notAvailable": "Not available",
-    "copyToClipboard": "Copy to clipboard",
-    "play": "Play",
-    "pause": "Pause"
+    "cancel": "Avbryt",
+    "options": "Alternativ",
+    "selectOption": "Välj ett alternativ...",
+    "moreInformation": "Mer information",
+    "notAvailable": "Inte tillgängligt",
+    "copyToClipboard": "Kopiera till urklipp",
+    "play": "Spela upp",
+    "pause": "Pausa"
   },
   "accessibility": {
     "permissionsDescription": "Handy behöver behörighet för hjälpmedel för att kunna skriva transkriberad text.",
@@ -734,11 +733,11 @@
     "pasteFailedTitle": "Det gick inte att klistra in texten",
     "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet.",
     "transcriptionFailedTitle": "Transkriptionen misslyckades",
-    "settingUpdateFailed": "Failed to save setting",
-    "updateCheckFailed": "Failed to check for updates",
-    "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link",
-    "unknown": "Unknown error"
+    "settingUpdateFailed": "Det gick inte att spara inställningen",
+    "updateCheckFailed": "Det gick inte att söka efter uppdateringar",
+    "updateInstallFailed": "Det gick inte att installera uppdateringen",
+    "openUrlFailed": "Det gick inte att öppna länken",
+    "unknown": "Okänt fel"
   },
   "appLanguage": {
     "title": "Applikationsspråk",
@@ -773,7 +772,7 @@
     "dismiss": "Avfärda"
   },
   "progress": {
-    "downloading": "Downloading...",
-    "downloadingCount": "{{count}} downloading..."
+    "downloading": "Laddar ner...",
+    "downloadingCount": "{{count}} laddas ner..."
   }
 }
