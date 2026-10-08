@@ -321,13 +321,23 @@ fn command_on_path(name: &str) -> bool {
 
 #[cfg(target_os = "linux")]
 fn command_in_dirs(dirs: impl Iterator<Item = std::path::PathBuf>, name: &str) -> bool {
-    use std::os::unix::fs::PermissionsExt;
+    use std::ffi::CString;
+    use std::os::unix::ffi::OsStrExt;
     dirs.into_iter().any(|dir| {
         let candidate = dir.join(name);
-        candidate
-            .metadata()
-            .map(|m| m.is_file() && m.permissions().mode() & 0o111 != 0)
-            .unwrap_or(false)
+        if !candidate.is_file() {
+            return false;
+        }
+        // `access(X_OK)` answers for the effective user, like `which`'s
+        // `[ -x ]`; a mode-bit check would accept a root-only 0100 binary
+        // and the spawn would then fail with EACCES instead of trying the
+        // next tool.
+        let Ok(path) = CString::new(candidate.as_os_str().as_bytes()) else {
+            return false;
+        };
+        // SAFETY: `path` is a valid NUL-terminated string that outlives the
+        // call; `access` only reads it.
+        unsafe { libc::access(path.as_ptr(), libc::X_OK) == 0 }
     })
 }
 

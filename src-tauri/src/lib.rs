@@ -1089,6 +1089,19 @@ pub fn run(cli_args: CliArgs) {
         })
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
+                // With no tray to come back from (setting, `--no-tray`, or tray
+                // creation failed at startup) the window is the only surface on
+                // Windows and Linux, so closing it quits. macOS keeps the Dock
+                // icon, so hiding is enough there.
+                #[cfg(not(target_os = "macos"))]
+                {
+                    if !tray::tray_available(window.app_handle()) {
+                        log::info!("Main window closed with no tray available; quitting");
+                        window.app_handle().exit(0);
+                        return;
+                    }
+                }
+
                 api.prevent_close();
                 let _res = window.hide();
 
