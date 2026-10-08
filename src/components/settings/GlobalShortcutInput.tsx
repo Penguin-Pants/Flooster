@@ -5,8 +5,7 @@ import {
   formatKeyCombination,
   normalizeKey,
 } from "../../lib/utils/keyboard";
-import { ResetButton } from "../ui/ResetButton";
-import { SettingContainer } from "../ui/SettingContainer";
+import { ShortcutInputView } from "./ShortcutInputView";
 import { useSettings } from "../../hooks/useSettings";
 import { useOsType } from "../../hooks/useOsType";
 import { commands } from "@/bindings";
@@ -209,94 +208,22 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
     shortcutRefs.current.set(id, ref);
   };
 
-  // If still loading, show loading state
-  if (isLoading) {
-    return (
-      <SettingContainer
-        title={t("settings.general.shortcut.title")}
-        description={t("settings.general.shortcut.description")}
-        descriptionMode={descriptionMode}
-        grouped={grouped}
-      >
-        <div className="text-sm text-mid-gray">
-          {t("settings.general.shortcut.loading")}
-        </div>
-      </SettingContainer>
-    );
-  }
-
-  // If no bindings are loaded, show empty state
-  if (Object.keys(bindings).length === 0) {
-    return (
-      <SettingContainer
-        title={t("settings.general.shortcut.title")}
-        description={t("settings.general.shortcut.description")}
-        descriptionMode={descriptionMode}
-        grouped={grouped}
-      >
-        <div className="text-sm text-mid-gray">
-          {t("settings.general.shortcut.none")}
-        </div>
-      </SettingContainer>
-    );
-  }
-
-  const binding = bindings[shortcutId];
-  if (!binding) {
-    return (
-      <SettingContainer
-        title={t("settings.general.shortcut.title")}
-        description={t("settings.general.shortcut.notFound")}
-        descriptionMode={descriptionMode}
-        grouped={grouped}
-      >
-        <div className="text-sm text-mid-gray">
-          {t("settings.general.shortcut.none")}
-        </div>
-      </SettingContainer>
-    );
-  }
-
-  // Get translated name and description for the binding
-  const translatedName = t(
-    `settings.general.shortcut.bindings.${shortcutId}.name`,
-    binding.name,
-  );
-  const translatedDescription = t(
-    `settings.general.shortcut.bindings.${shortcutId}.description`,
-    binding.description,
-  );
-
   return (
-    <SettingContainer
-      title={translatedName}
-      description={translatedDescription}
+    <ShortcutInputView
       descriptionMode={descriptionMode}
       grouped={grouped}
       disabled={disabled}
-      layout="horizontal"
-    >
-      <div className="flex items-center space-x-1">
-        {editingShortcutId === shortcutId ? (
-          <div
-            ref={(ref) => setShortcutRef(shortcutId, ref)}
-            className="px-2 py-1 text-sm font-semibold border border-logo-primary bg-logo-primary/30 rounded-md"
-          >
-            {formatCurrentKeys()}
-          </div>
-        ) : (
-          <div
-            className="px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 hover:bg-logo-primary/10 rounded-md cursor-pointer hover:border-logo-primary"
-            onClick={() => startRecording(shortcutId)}
-          >
-            {formatKeyCombination(binding.current_binding, osType)}
-          </div>
-        )}
-        <ResetButton
-          onClick={() => resetBinding(shortcutId)}
-          disabled={isUpdating(`binding_${shortcutId}`)}
-        />
-      </div>
-    </SettingContainer>
+      shortcutId={shortcutId}
+      osType={osType}
+      isLoading={isLoading}
+      hasBindings={Object.keys(bindings).length > 0}
+      binding={bindings[shortcutId]}
+      isRecording={editingShortcutId === shortcutId}
+      recordingLabel={formatCurrentKeys()}
+      recordingRef={(ref) => setShortcutRef(shortcutId, ref)}
+      onStartRecording={() => startRecording(shortcutId)}
+      onReset={() => resetBinding(shortcutId)}
+      resetDisabled={isUpdating(`binding_${shortcutId}`)}
+    />
   );
 };

@@ -16,7 +16,8 @@
     "postProcessing": "עיבוד משלים",
     "history": "היסטוריה",
     "debug": "ניפוי שגיאות",
-    "about": "אודות"
+    "about": "אודות",
+    "navigationLabel": "מקטעי הגדרות"
   },
   "onboarding": {
     "subtitle": "כדי להתחיל, בחר מודל תמלול",
@@ -152,7 +153,13 @@
       "translate": "תרגם לאנגלית",
       "streaming": "מציג תמלול חי תוך כדי דיבור"
     },
-    "legacy": "מדור קודם"
+    "legacy": "מדור קודם",
+    "statusTitle": "מצב המודל: {{status}}",
+    "errors": {
+      "checkStatus": "בדיקת מצב המודל נכשלה",
+      "load": "טעינת המודל נכשלה",
+      "switch": "החלפת המודל נכשלה"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -185,7 +192,8 @@
           "restore": "שחזור קיצור הדרך המקורי נכשל",
           "set": "הגדרת קיצור הדרך נכשלה: {{error}}",
           "reset": "איפוס קיצור הדרך לערך המקורי נכשל"
-        }
+        },
+        "changeShortcut": "שינוי קיצור הדרך עבור {{name}}"
       },
       "language": {
         "title": "שפה",
@@ -220,7 +228,8 @@
       "filters": {
         "allLanguages": "כל השפות",
         "streaming": "סינון דגמים התומכים בתמלול חי",
-        "translation": "סינון דגמים התומכים בתרגום לאנגלית"
+        "translation": "סינון דגמים התומכים בתרגום לאנגלית",
+        "language": "סינון לפי שפה"
       },
       "noModelsMatch": "אין מודלים שמתאימים לסינון הזה.",
       "searchPlaceholder": "חיפוש מודלים לפי שם…",
@@ -234,7 +243,8 @@
         "select": "החלפת המודל נכשלה: {{error}}",
         "cancel": "ביטול ההורדה נכשל: {{error}}",
         "delete": "מחיקת המודל נכשלה: {{error}}"
-      }
+      },
+      "unknownSize": "גודל לא ידוע"
     },
     "sound": {
       "title": "שמע",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "עוצמת קול",
         "description": "כוונן את עוצמת צלילי המשוב"
-      }
+      },
+      "previewTheme": "האזנה לערכת הצלילים (מנגן התחלה ואז עצירה)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "מפתח API",
           "description": "מפתח API עבור הספק הנבחר.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "הצגת מפתח API",
+          "hide": "הסתרת מפתח API"
         },
         "model": {
           "title": "מודל",
@@ -445,7 +458,8 @@
           "descriptionDefault": "בחר מודל שהספק הנבחר חושף.",
           "placeholderWithOptions": "חפש או בחר מודל",
           "placeholderNoOptions": "הקלד שם מודל",
-          "refreshModels": "רענן מודלים"
+          "refreshModels": "רענן מודלים",
+          "useCustom": "השתמש ב-\"{{input}}\""
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "נתוני אפליקציה:",
         "models": "מודלים:",
-        "settings": "הגדרות:"
+        "settings": "הגדרות:",
+        "title": "נתיבי ניפוי שגיאות",
+        "description": "הצגת נתיבי קבצים ותיקיות פנימיים לצורכי ניפוי שגיאות"
       },
       "pasteDelay": {
         "title": "השהיית הדבקה (לפני)",
@@ -686,7 +702,15 @@
     "open": "פתח",
     "copy": "העתק",
     "clear": "נקה",
-    "noOptionsFound": "לא נמצאו אפשרויות"
+    "noOptionsFound": "לא נמצאו אפשרויות",
+    "cancel": "ביטול",
+    "options": "אפשרויות",
+    "selectOption": "בחר אפשרות...",
+    "moreInformation": "מידע נוסף",
+    "notAvailable": "לא זמין",
+    "copyToClipboard": "העתקה ללוח",
+    "play": "הפעלה",
+    "pause": "השהיה"
   },
   "accessibility": {
     "permissionsDescription": "Handy צריך הרשאות נגישות כדי להקליד את הטקסט המתומלל.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "שמירת ההגדרה נכשלה",
     "updateCheckFailed": "בדיקת העדכונים נכשלה",
     "updateInstallFailed": "התקנת העדכון נכשלה",
-    "openUrlFailed": "פתיחת הקישור נכשלה"
+    "openUrlFailed": "פתיחת הקישור נכשלה",
+    "unknown": "שגיאה לא ידועה"
   },
   "appLanguage": {
     "title": "שפת האפליקציה",
@@ -745,5 +770,9 @@
     "learnMore": "איך לתקן את זה",
     "recorderBlocked": "לא ניתן להקליט קיצורים כרגע — Secure Input של macOS חוסם אירועי מקשים. פתור תחילה את אזהרת Secure Input.",
     "dismiss": "התעלם"
+  },
+  "progress": {
+    "downloading": "מוריד...",
+    "downloadingCount": "{{count}} בהורדה..."
   }
 }

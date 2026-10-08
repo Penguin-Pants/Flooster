@@ -16,7 +16,8 @@
     "postProcessing": "पोस्ट प्रोसेस",
     "history": "इतिहास",
     "debug": "डिबग",
-    "about": "के बारे में"
+    "about": "के बारे में",
+    "navigationLabel": "सेटिंग अनुभाग"
   },
   "onboarding": {
     "subtitle": "शुरू करने के लिए, एक ट्रांसक्रिप्शन मॉडल चुनें",
@@ -152,6 +153,12 @@
       "translation": "अंग्रेज़ी में अनुवाद कर सकता है",
       "translate": "अनुवाद करें",
       "streaming": "बोलते समय लाइव ट्रांसक्रिप्शन दिखाता है"
+    },
+    "statusTitle": "मॉडल की स्थिति: {{status}}",
+    "errors": {
+      "checkStatus": "मॉडल की स्थिति जांची नहीं जा सकी",
+      "load": "मॉडल लोड नहीं हो सका",
+      "switch": "मॉडल बदला नहीं जा सका"
     }
   },
   "settings": {
@@ -185,7 +192,8 @@
           "restore": "पहले वाला शॉर्टकट वापस नहीं लाया जा सका",
           "set": "शॉर्टकट सेट नहीं हो सका: {{error}}",
           "reset": "शॉर्टकट को पहले जैसा रीसेट नहीं किया जा सका"
-        }
+        },
+        "changeShortcut": "{{name}} के लिए शॉर्टकट बदलें"
       },
       "language": {
         "title": "भाषा",
@@ -221,7 +229,8 @@
       "filters": {
         "allLanguages": "सभी भाषाएं",
         "streaming": "लाइव ट्रांसक्रिप्शन का समर्थन करने वाले मॉडल फ़िल्टर करें",
-        "translation": "अंग्रेज़ी में अनुवाद का समर्थन करने वाले मॉडल फ़िल्टर करें"
+        "translation": "अंग्रेज़ी में अनुवाद का समर्थन करने वाले मॉडल फ़िल्टर करें",
+        "language": "भाषा के अनुसार फ़िल्टर करें"
       },
       "rescan": {
         "label": "फिर से स्कैन करें",
@@ -234,7 +243,8 @@
         "select": "मॉडल बदला नहीं जा सका: {{error}}",
         "cancel": "डाउनलोड रद्द नहीं हो सका: {{error}}",
         "delete": "मॉडल हटाया नहीं जा सका: {{error}}"
-      }
+      },
+      "unknownSize": "आकार अज्ञात"
     },
     "sound": {
       "title": "आवाज़",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "वॉल्यूम",
         "description": "ऑडियो फ़ीडबैक साउंड का वॉल्यूम सेट करें"
-      }
+      },
+      "previewTheme": "साउंड थीम सुनें (पहले शुरू, फिर रुकने की ध्वनि बजती है)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API कुंजी",
           "description": "चुने गए प्रोवाइडर के लिए API कुंजी.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "API कुंजी दिखाएं",
+          "hide": "API कुंजी छिपाएं"
         },
         "model": {
           "title": "मॉडल",
@@ -445,7 +458,8 @@
           "descriptionDefault": "चुने गए प्रोवाइडर का कोई मॉडल चुनें.",
           "placeholderWithOptions": "मॉडल खोजें या चुनें",
           "placeholderNoOptions": "मॉडल का नाम लिखें",
-          "refreshModels": "मॉडल रीफ़्रेश करें"
+          "refreshModels": "मॉडल रीफ़्रेश करें",
+          "useCustom": "\"{{input}}\" का उपयोग करें"
         }
       },
       "prompts": {
@@ -587,7 +601,9 @@
       "paths": {
         "appData": "ऐप डेटा:",
         "models": "मॉडल:",
-        "settings": "सेटिंग:"
+        "settings": "सेटिंग:",
+        "title": "डीबग पथ",
+        "description": "डीबगिंग के लिए आंतरिक फ़ाइल पथ और डायरेक्टरी दिखाएं"
       },
       "pasteDelay": {
         "title": "पेस्ट में देरी (पहले)",
@@ -689,7 +705,15 @@
     "open": "खोलें",
     "copy": "कॉपी करें",
     "clear": "मिटाएं",
-    "noOptionsFound": "कोई विकल्प नहीं मिला"
+    "noOptionsFound": "कोई विकल्प नहीं मिला",
+    "cancel": "रद्द करें",
+    "options": "विकल्प",
+    "selectOption": "एक विकल्प चुनें...",
+    "moreInformation": "अधिक जानकारी",
+    "notAvailable": "उपलब्ध नहीं",
+    "copyToClipboard": "क्लिपबोर्ड पर कॉपी करें",
+    "play": "चलाएं",
+    "pause": "रोकें"
   },
   "accessibility": {
     "permissionsDescription": "ट्रांसक्राइब किया गया टेक्स्ट टाइप करने के लिए, Handy को ऐक्सेसिबिलिटी अनुमतियों की ज़रूरत है.",
@@ -715,7 +739,8 @@
     "settingUpdateFailed": "सेटिंग सहेजी नहीं जा सकी",
     "updateCheckFailed": "अपडेट की जांच नहीं हो सकी",
     "updateInstallFailed": "अपडेट इंस्टॉल नहीं हो सका",
-    "openUrlFailed": "लिंक खोला नहीं जा सका"
+    "openUrlFailed": "लिंक खोला नहीं जा सका",
+    "unknown": "अज्ञात त्रुटि"
   },
   "appLanguage": {
     "title": "ऐप्लिकेशन की भाषा",
@@ -745,5 +770,9 @@
     "learnMore": "इसे कैसे ठीक करें",
     "recorderBlocked": "अभी शॉर्टकट रिकॉर्ड नहीं किए जा सकते — macOS Secure Input कुंजी इवेंट ब्लॉक कर रहा है. पहले Secure Input चेतावनी हल करें.",
     "dismiss": "खारिज करें"
+  },
+  "progress": {
+    "downloading": "डाउनलोड हो रहा है...",
+    "downloadingCount": "{{count}} डाउनलोड हो रहे हैं..."
   }
 }

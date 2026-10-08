@@ -16,7 +16,8 @@
     "postProcessing": "Post Process",
     "history": "History",
     "debug": "Debug",
-    "about": "About"
+    "about": "About",
+    "navigationLabel": "Settings sections"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -152,6 +153,12 @@
       "translation": "Can translate to English",
       "translate": "Translate",
       "streaming": "Shows live transcription as you speak"
+    },
+    "statusTitle": "Model status: {{status}}",
+    "errors": {
+      "checkStatus": "Failed to check model status",
+      "load": "Failed to load model",
+      "switch": "Failed to switch model"
     }
   },
   "settings": {
@@ -185,7 +192,8 @@
           "restore": "Failed to restore original shortcut",
           "set": "Failed to set shortcut: {{error}}",
           "reset": "Failed to reset shortcut to original value"
-        }
+        },
+        "changeShortcut": "Change shortcut for {{name}}"
       },
       "language": {
         "title": "Language",
@@ -221,7 +229,8 @@
       "filters": {
         "allLanguages": "All Languages",
         "streaming": "Filter models that support live streaming transcription",
-        "translation": "Filter models that support translation to English"
+        "translation": "Filter models that support translation to English",
+        "language": "Filter by language"
       },
       "rescan": {
         "label": "Rescan",
@@ -234,7 +243,8 @@
         "select": "Failed to switch model: {{error}}",
         "cancel": "Failed to cancel download: {{error}}",
         "delete": "Failed to delete model: {{error}}"
-      }
+      },
+      "unknownSize": "Unknown size"
     },
     "sound": {
       "title": "Sound",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Adjust the volume of audio feedback sounds"
-      }
+      },
+      "previewTheme": "Preview sound theme (plays start then stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API Key",
           "description": "API key for the selected provider.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Show API key",
+          "hide": "Hide API key"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Choose a model exposed by the selected provider.",
           "placeholderWithOptions": "Search or select a model",
           "placeholderNoOptions": "Type a model name",
-          "refreshModels": "Refresh models"
+          "refreshModels": "Refresh models",
+          "useCustom": "Use \"{{input}}\""
         }
       },
       "prompts": {
@@ -587,7 +601,9 @@
       "paths": {
         "appData": "App Data:",
         "models": "Models:",
-        "settings": "Settings:"
+        "settings": "Settings:",
+        "title": "Debug Paths",
+        "description": "Display internal file paths and directories for debugging purposes"
       },
       "pasteDelay": {
         "title": "Paste Delay (Before)",
@@ -689,7 +705,15 @@
     "open": "Open",
     "copy": "Copy",
     "clear": "Clear",
-    "noOptionsFound": "No options found"
+    "noOptionsFound": "No options found",
+    "cancel": "Cancel",
+    "options": "Options",
+    "selectOption": "Select an option...",
+    "moreInformation": "More information",
+    "notAvailable": "Not available",
+    "copyToClipboard": "Copy to clipboard",
+    "play": "Play",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy needs accessibility permissions to type transcribed text.",
@@ -715,7 +739,8 @@
     "settingUpdateFailed": "Failed to save setting",
     "updateCheckFailed": "Failed to check for updates",
     "updateInstallFailed": "Failed to install update",
-    "openUrlFailed": "Failed to open the link"
+    "openUrlFailed": "Failed to open the link",
+    "unknown": "Unknown error"
   },
   "appLanguage": {
     "title": "Application Language",
@@ -745,5 +770,9 @@
     "learnMore": "How to fix",
     "recorderBlocked": "Can't record shortcuts right now — macOS Secure Input is blocking key events. Resolve the Secure Input warning first.",
     "dismiss": "Dismiss"
+  },
+  "progress": {
+    "downloading": "Downloading...",
+    "downloadingCount": "{{count}} downloading..."
   }
 }

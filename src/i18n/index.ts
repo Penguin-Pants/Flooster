@@ -124,14 +124,14 @@ export const syncLanguageFromSettings = async () => {
 // Run language sync on init
 syncLanguageFromSettings();
 
-// Listen for language changes to update HTML dir and lang attributes
-i18n.on("languageChanged", (lng) => {
-  const dir = getLanguageDirection(lng);
-  updateDocumentDirection(dir);
+// Keep the document's dir and lang attributes in step with the active
+// language: once for the initial language and on every change after that.
+// (This is the single owner of those attributes; App no longer sets them.)
+const applyDocumentLanguage = (lng: string) => {
+  updateDocumentDirection(getLanguageDirection(lng));
   updateDocumentLanguage(lng);
-});
-
-// Re-export RTL utilities for convenience
-export { getLanguageDirection, isRTLLanguage } from "@/lib/utils/rtl";
+};
+applyDocumentLanguage(i18n.language);
+i18n.on("languageChanged", applyDocumentLanguage);
 
 export default i18n;

@@ -14,6 +14,8 @@ interface TooltipProps {
   targetRef: React.RefObject<HTMLElement>;
   position?: TooltipPosition;
   children: React.ReactNode;
+  /** Set by the trigger's `aria-describedby` so assistive tech links them. */
+  id?: string;
 }
 
 const TOOLTIP_WIDTH = 200;
@@ -26,6 +28,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   targetRef,
   position = "top",
   children,
+  id,
 }) => {
   const [coords, setCoords] = useState<TooltipCoords | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -93,6 +96,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return createPortal(
     <div
       ref={tooltipRef}
+      id={id}
+      role="tooltip"
       style={{
         position: "fixed",
         top: coords?.top ?? -9999,

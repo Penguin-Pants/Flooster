@@ -105,7 +105,8 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const displayDescription = getTranslatedModelDescription(model, t);
   const showModelSize =
     status === "downloadable" || status === "available" || status === "active";
-  const formattedModelSize = formatModelSize(Number(model.size_mb));
+  const formattedModelSize =
+    formatModelSize(Number(model.size_mb)) ?? t("settings.models.unknownSize");
   const quantLabel = getQuantLabel(model.filename);
   const capabilityLanguages = getUniqueCapabilityLanguages(
     model.supported_languages,

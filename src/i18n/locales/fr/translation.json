@@ -16,7 +16,8 @@
     "postProcessing": "Post-traitement",
     "history": "Historique",
     "debug": "Débogage",
-    "about": "À propos"
+    "about": "À propos",
+    "navigationLabel": "Sections des paramètres"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -152,7 +153,13 @@
     },
     "cancel": "Annuler",
     "cancelDownload": "Annuler le téléchargement",
-    "legacy": "Hérité"
+    "legacy": "Hérité",
+    "statusTitle": "État du modèle : {{status}}",
+    "errors": {
+      "checkStatus": "Échec de la vérification de l'état du modèle",
+      "load": "Échec du chargement du modèle",
+      "switch": "Échec du changement de modèle"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Toutes les langues",
         "streaming": "Filtrer les modèles prenant en charge la transcription en direct",
-        "translation": "Filtrer les modèles prenant en charge la traduction vers l'anglais"
+        "translation": "Filtrer les modèles prenant en charge la traduction vers l'anglais",
+        "language": "Filtrer par langue"
       },
       "noModelsMatch": "Aucun modèle ne correspond à ce filtre.",
       "yourModels": "Modèles téléchargés",
@@ -183,7 +191,8 @@
         "select": "Échec du changement de modèle : {{error}}",
         "cancel": "Échec de l'annulation du téléchargement : {{error}}",
         "delete": "Échec de la suppression du modèle : {{error}}"
-      }
+      },
+      "unknownSize": "Taille inconnue"
     },
     "general": {
       "title": "Général",
@@ -212,7 +221,8 @@
           "restore": "Échec de la restauration du raccourci original",
           "set": "Échec de la définition du raccourci : {{error}}",
           "reset": "Échec de la réinitialisation du raccourci à sa valeur d'origine"
-        }
+        },
+        "changeShortcut": "Modifier le raccourci pour {{name}}"
       },
       "language": {
         "title": "Langue",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Ajuster le volume du signal sonore"
-      }
+      },
+      "previewTheme": "Écouter le thème sonore (joue le début puis la fin)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Clé API",
           "description": "Clé API pour le fournisseur sélectionné.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Afficher la clé API",
+          "hide": "Masquer la clé API"
         },
         "model": {
           "title": "Modèle",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Choisissez un modèle exposé par le fournisseur sélectionné.",
           "placeholderWithOptions": "Rechercher ou sélectionner un modèle",
           "placeholderNoOptions": "Tapez un nom de modèle",
-          "refreshModels": "Actualiser les modèles"
+          "refreshModels": "Actualiser les modèles",
+          "useCustom": "Utiliser « {{input}} »"
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Données de l'application :",
         "models": "Modèles :",
-        "settings": "Paramètres :"
+        "settings": "Paramètres :",
+        "title": "Chemins de débogage",
+        "description": "Afficher les chemins de fichiers et répertoires internes à des fins de débogage"
       },
       "pasteDelay": {
         "title": "Délai de collage (avant)",
@@ -686,7 +702,15 @@
     "open": "Ouvrir",
     "copy": "Copier",
     "clear": "Effacer",
-    "noOptionsFound": "Aucune option trouvée"
+    "noOptionsFound": "Aucune option trouvée",
+    "cancel": "Annuler",
+    "options": "Options",
+    "selectOption": "Sélectionner une option...",
+    "moreInformation": "Plus d'informations",
+    "notAvailable": "Non disponible",
+    "copyToClipboard": "Copier dans le presse-papiers",
+    "play": "Lecture",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy a besoin des autorisations d'accessibilité pour taper le texte transcrit.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Échec de l'enregistrement du paramètre",
     "updateCheckFailed": "Échec de la recherche de mises à jour",
     "updateInstallFailed": "Échec de l'installation de la mise à jour",
-    "openUrlFailed": "Échec de l'ouverture du lien"
+    "openUrlFailed": "Échec de l'ouverture du lien",
+    "unknown": "Erreur inconnue"
   },
   "appLanguage": {
     "title": "Langue de l'application",
@@ -745,5 +770,9 @@
     "learnMore": "Comment résoudre ce problème",
     "recorderBlocked": "Impossible d'enregistrer un raccourci pour le moment : Secure Input de macOS bloque les événements clavier. Résolvez d'abord l'avertissement Secure Input.",
     "dismiss": "Ignorer"
+  },
+  "progress": {
+    "downloading": "Téléchargement...",
+    "downloadingCount": "{{count}} en cours de téléchargement..."
   }
 }

@@ -16,7 +16,8 @@
     "postProcessing": "Efterbehandling",
     "history": "Historik",
     "debug": "Fejlfinding",
-    "about": "Om"
+    "about": "Om",
+    "navigationLabel": "Indstillingssektioner"
   },
   "onboarding": {
     "subtitle": "For at komme i gang skal du vælge en transskriptionsmodel",
@@ -152,6 +153,12 @@
       "translation": "Kan oversætte til engelsk",
       "translate": "Oversæt",
       "streaming": "Viser live transskription, mens du taler"
+    },
+    "statusTitle": "Modelstatus: {{status}}",
+    "errors": {
+      "checkStatus": "Kunne ikke kontrollere modelstatus",
+      "load": "Kunne ikke indlæse model",
+      "switch": "Kunne ikke skifte model"
     }
   },
   "settings": {
@@ -185,7 +192,8 @@
           "restore": "Kunne ikke gendanne den oprindelige genvej",
           "set": "Kunne ikke indstille genvej: {{error}}",
           "reset": "Kunne ikke nulstille genvej til oprindelig indstilling"
-        }
+        },
+        "changeShortcut": "Skift genvej for {{name}}"
       },
       "language": {
         "title": "Sprog",
@@ -221,7 +229,8 @@
       "filters": {
         "allLanguages": "Alle sprog",
         "streaming": "Filtrer modeller, der understøtter live transskription",
-        "translation": "Filtrer modeller, der understøtter oversættelse til engelsk"
+        "translation": "Filtrer modeller, der understøtter oversættelse til engelsk",
+        "language": "Filtrer efter sprog"
       },
       "rescan": {
         "label": "Søg igen",
@@ -234,7 +243,8 @@
         "select": "Kunne ikke skifte model: {{error}}",
         "cancel": "Kunne ikke annullere download: {{error}}",
         "delete": "Kunne ikke slette model: {{error}}"
-      }
+      },
+      "unknownSize": "Ukendt størrelse"
     },
     "sound": {
       "title": "Lyd",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Lydstyrke",
         "description": "Juster lydstyrken for lydfeedback"
-      }
+      },
+      "previewTheme": "Lyt til lydtemaet (afspiller start og derefter stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API-nøgle",
           "description": "API-nøgle til den valgte udbyder.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Vis API-nøgle",
+          "hide": "Skjul API-nøgle"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Vælg en model, der udbydes af den valgte udbyder.",
           "placeholderWithOptions": "Søg eller vælg en model",
           "placeholderNoOptions": "Skriv et modelnavn",
-          "refreshModels": "Opdater modeller"
+          "refreshModels": "Opdater modeller",
+          "useCustom": "Brug \"{{input}}\""
         }
       },
       "prompts": {
@@ -587,7 +601,9 @@
       "paths": {
         "appData": "Appdata:",
         "models": "Modeller:",
-        "settings": "Indstillinger:"
+        "settings": "Indstillinger:",
+        "title": "Fejlsøgningsstier",
+        "description": "Vis interne filstier og mapper til fejlsøgning"
       },
       "pasteDelay": {
         "title": "Forsinkelse af indsættelse (før)",
@@ -689,7 +705,15 @@
     "open": "Åbn",
     "copy": "Kopiér",
     "clear": "Ryd",
-    "noOptionsFound": "Ingen muligheder fundet"
+    "noOptionsFound": "Ingen muligheder fundet",
+    "cancel": "Annuller",
+    "options": "Indstillinger",
+    "selectOption": "Vælg en mulighed...",
+    "moreInformation": "Mere information",
+    "notAvailable": "Ikke tilgængelig",
+    "copyToClipboard": "Kopiér til udklipsholder",
+    "play": "Afspil",
+    "pause": "Pause"
   },
   "accessibility": {
     "permissionsDescription": "Handy har brug for tilgængelighedstilladelser for at skrive den transskriberede tekst.",
@@ -715,7 +739,8 @@
     "settingUpdateFailed": "Kunne ikke gemme indstilling",
     "updateCheckFailed": "Kunne ikke søge efter opdateringer",
     "updateInstallFailed": "Kunne ikke installere opdatering",
-    "openUrlFailed": "Kunne ikke åbne linket"
+    "openUrlFailed": "Kunne ikke åbne linket",
+    "unknown": "Ukendt fejl"
   },
   "appLanguage": {
     "title": "Applikationssprog",
@@ -745,5 +770,9 @@
     "learnMore": "Sådan løser du det",
     "recorderBlocked": "Genveje kan ikke optages lige nu — macOS Secure Input blokerer tastehændelser. Løs advarslen om Secure Input først.",
     "dismiss": "Afvis"
+  },
+  "progress": {
+    "downloading": "Downloader...",
+    "downloadingCount": "{{count}} downloader..."
   }
 }

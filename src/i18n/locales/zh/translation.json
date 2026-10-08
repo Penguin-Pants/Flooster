@@ -16,7 +16,8 @@
     "postProcessing": "后处理",
     "history": "历史记录",
     "debug": "调试",
-    "about": "关于"
+    "about": "关于",
+    "navigationLabel": "设置分区"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -152,7 +153,13 @@
     },
     "cancel": "取消",
     "cancelDownload": "取消下载",
-    "legacy": "旧版"
+    "legacy": "旧版",
+    "statusTitle": "模型状态: {{status}}",
+    "errors": {
+      "checkStatus": "检查模型状态失败",
+      "load": "加载模型失败",
+      "switch": "切换模型失败"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "所有语言",
         "streaming": "筛选支持实时转录的模型",
-        "translation": "筛选支持翻译为英语的模型"
+        "translation": "筛选支持翻译为英语的模型",
+        "language": "按语言筛选"
       },
       "noModelsMatch": "没有符合此筛选条件的模型。",
       "yourModels": "已下载的模型",
@@ -183,7 +191,8 @@
         "select": "切换模型失败: {{error}}",
         "cancel": "取消下载失败: {{error}}",
         "delete": "删除模型失败: {{error}}"
-      }
+      },
+      "unknownSize": "大小未知"
     },
     "general": {
       "title": "通用",
@@ -212,7 +221,8 @@
           "restore": "无法恢复原始快捷键",
           "set": "无法设置快捷键: {{error}}",
           "reset": "无法将快捷键重置为原始值"
-        }
+        },
+        "changeShortcut": "更改 {{name}} 的快捷键"
       },
       "language": {
         "title": "语言",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "音量",
         "description": "调整音频反馈的音量"
-      }
+      },
+      "previewTheme": "试听音效主题（先播放开始音，再播放停止音）"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API 密钥",
           "description": "所选提供商的 API 密钥。",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "显示 API 密钥",
+          "hide": "隐藏 API 密钥"
         },
         "model": {
           "title": "模型",
@@ -445,7 +458,8 @@
           "descriptionDefault": "选择所选提供商提供的模型。",
           "placeholderWithOptions": "搜索或选择模型",
           "placeholderNoOptions": "输入模型名称",
-          "refreshModels": "刷新模型"
+          "refreshModels": "刷新模型",
+          "useCustom": "使用“{{input}}”"
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "应用数据:",
         "models": "模型:",
-        "settings": "设置:"
+        "settings": "设置:",
+        "title": "调试路径",
+        "description": "显示内部文件路径和目录，用于调试"
       },
       "pasteDelay": {
         "title": "粘贴延迟（前）",
@@ -686,7 +702,15 @@
     "open": "打开",
     "copy": "复制",
     "clear": "清除",
-    "noOptionsFound": "未找到选项"
+    "noOptionsFound": "未找到选项",
+    "cancel": "取消",
+    "options": "选项",
+    "selectOption": "请选择一个选项...",
+    "moreInformation": "更多信息",
+    "notAvailable": "不可用",
+    "copyToClipboard": "复制到剪贴板",
+    "play": "播放",
+    "pause": "暂停"
   },
   "accessibility": {
     "permissionsDescription": "Handy 需要辅助功能权限才能输入转录的文字。",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "保存设置失败",
     "updateCheckFailed": "检查更新失败",
     "updateInstallFailed": "安装更新失败",
-    "openUrlFailed": "打开链接失败"
+    "openUrlFailed": "打开链接失败",
+    "unknown": "未知错误"
   },
   "appLanguage": {
     "title": "应用语言",
@@ -745,5 +770,9 @@
     "learnMore": "如何解决",
     "recorderBlocked": "当前无法录制快捷键——macOS 的 Secure Input 正在阻止按键事件。请先解决 Secure Input 警告。",
     "dismiss": "关闭"
+  },
+  "progress": {
+    "downloading": "正在下载...",
+    "downloadingCount": "{{count}} 个正在下载..."
   }
 }

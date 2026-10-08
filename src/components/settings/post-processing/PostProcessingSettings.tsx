@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { RefreshCcw } from "lucide-react";
 import { ask } from "@tauri-apps/plugin-dialog";
 import { toast } from "sonner";
@@ -7,15 +7,9 @@ import { commands } from "@/bindings";
 import { errorMessage } from "@/lib/utils/result";
 
 import { Alert } from "../../ui/Alert";
-import {
-  Dropdown,
-  SettingContainer,
-  SettingsGroup,
-  Textarea,
-} from "@/components/ui";
+import { Dropdown, SettingContainer, SettingsGroup } from "@/components/ui";
 import { Button } from "../../ui/Button";
 import { ResetButton } from "../../ui/ResetButton";
-import { Input } from "../../ui/Input";
 
 import { ProviderSelect } from "../PostProcessingSettingsApi/ProviderSelect";
 import { BaseUrlField } from "../PostProcessingSettingsApi/BaseUrlField";
@@ -23,6 +17,7 @@ import { ApiKeyField } from "../PostProcessingSettingsApi/ApiKeyField";
 import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { ShortcutInput } from "../ShortcutInput";
+import { PromptForm } from "./PromptForm";
 import { useSettings } from "../../../hooks/useSettings";
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
@@ -126,7 +121,6 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               }
               onSelect={state.handleModelSelect}
               onCreate={state.handleModelCreate}
-              onBlur={() => {}}
               className="flex-1 min-w-[380px]"
             />
             <ResetButton
@@ -327,60 +321,32 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         </div>
 
         {!isCreating && hasPrompts && selectedPrompt && (
-          <div className="space-y-3">
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptLabel")}
-              </label>
-              <Input
-                type="text"
-                value={draftName}
-                onChange={(e) => setDraftName(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptLabelPlaceholder",
-                )}
-                variant="compact"
-              />
-            </div>
-
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptInstructions")}
-              </label>
-              <Textarea
-                value={draftText}
-                onChange={(e) => setDraftText(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptInstructionsPlaceholder",
-                )}
-              />
-              <p className="text-xs text-mid-gray/70">
-                <Trans
-                  i18nKey="settings.postProcessing.prompts.promptTip"
-                  components={{ code: <code /> }}
-                />
-              </p>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                onClick={handleUpdatePrompt}
-                variant="primary"
-                size="md"
-                disabled={!draftName.trim() || !draftText.trim() || !isDirty}
-              >
-                {t("settings.postProcessing.prompts.updatePrompt")}
-              </Button>
-              <Button
-                onClick={() => handleDeletePrompt(selectedPromptId)}
-                variant="secondary"
-                size="md"
-                disabled={!selectedPromptId || prompts.length <= 1}
-              >
-                {t("settings.postProcessing.prompts.deletePrompt")}
-              </Button>
-            </div>
-          </div>
+          <PromptForm
+            name={draftName}
+            text={draftText}
+            onNameChange={setDraftName}
+            onTextChange={setDraftText}
+            actions={
+              <>
+                <Button
+                  onClick={handleUpdatePrompt}
+                  variant="primary"
+                  size="md"
+                  disabled={!draftName.trim() || !draftText.trim() || !isDirty}
+                >
+                  {t("settings.postProcessing.prompts.updatePrompt")}
+                </Button>
+                <Button
+                  onClick={() => handleDeletePrompt(selectedPromptId)}
+                  variant="secondary"
+                  size="md"
+                  disabled={!selectedPromptId || prompts.length <= 1}
+                >
+                  {t("settings.postProcessing.prompts.deletePrompt")}
+                </Button>
+              </>
+            }
+          />
         )}
 
         {!isCreating && !selectedPrompt && (
@@ -394,59 +360,31 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         )}
 
         {isCreating && (
-          <div className="space-y-3">
-            <div className="space-y-2 block flex flex-col">
-              <label className="text-sm font-semibold text-text">
-                {t("settings.postProcessing.prompts.promptLabel")}
-              </label>
-              <Input
-                type="text"
-                value={draftName}
-                onChange={(e) => setDraftName(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptLabelPlaceholder",
-                )}
-                variant="compact"
-              />
-            </div>
-
-            <div className="space-y-2 flex flex-col">
-              <label className="text-sm font-semibold">
-                {t("settings.postProcessing.prompts.promptInstructions")}
-              </label>
-              <Textarea
-                value={draftText}
-                onChange={(e) => setDraftText(e.target.value)}
-                placeholder={t(
-                  "settings.postProcessing.prompts.promptInstructionsPlaceholder",
-                )}
-              />
-              <p className="text-xs text-mid-gray/70">
-                <Trans
-                  i18nKey="settings.postProcessing.prompts.promptTip"
-                  components={{ code: <code /> }}
-                />
-              </p>
-            </div>
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                onClick={handleCreatePrompt}
-                variant="primary"
-                size="md"
-                disabled={!draftName.trim() || !draftText.trim()}
-              >
-                {t("settings.postProcessing.prompts.createPrompt")}
-              </Button>
-              <Button
-                onClick={handleCancelCreate}
-                variant="secondary"
-                size="md"
-              >
-                {t("settings.postProcessing.prompts.cancel")}
-              </Button>
-            </div>
-          </div>
+          <PromptForm
+            name={draftName}
+            text={draftText}
+            onNameChange={setDraftName}
+            onTextChange={setDraftText}
+            actions={
+              <>
+                <Button
+                  onClick={handleCreatePrompt}
+                  variant="primary"
+                  size="md"
+                  disabled={!draftName.trim() || !draftText.trim()}
+                >
+                  {t("settings.postProcessing.prompts.createPrompt")}
+                </Button>
+                <Button
+                  onClick={handleCancelCreate}
+                  variant="secondary"
+                  size="md"
+                >
+                  {t("settings.postProcessing.prompts.cancel")}
+                </Button>
+              </>
+            }
+          />
         )}
       </div>
     </SettingContainer>

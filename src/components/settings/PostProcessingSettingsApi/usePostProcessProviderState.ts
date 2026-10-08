@@ -18,7 +18,6 @@ type PostProcessProviderState = {
   handleApiKeyChange: (value: string) => void;
   isApiKeyUpdating: boolean;
   model: string;
-  handleModelChange: (value: string) => void;
   modelOptions: ModelOption[];
   isModelUpdating: boolean;
   isFetchingModels: boolean;
@@ -139,16 +138,6 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     [apiKey, selectedProviderId, updatePostProcessApiKey],
   );
 
-  const handleModelChange = useCallback(
-    (value: string) => {
-      const trimmed = value.trim();
-      if (trimmed !== model) {
-        void updatePostProcessModel(selectedProviderId, trimmed);
-      }
-    },
-    [model, selectedProviderId, updatePostProcessModel],
-  );
-
   const handleModelSelect = useCallback(
     (value: string) => {
       void updatePostProcessModel(selectedProviderId, value.trim());
@@ -223,7 +212,6 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     handleApiKeyChange,
     isApiKeyUpdating,
     model,
-    handleModelChange,
     modelOptions,
     isModelUpdating,
     isFetchingModels,

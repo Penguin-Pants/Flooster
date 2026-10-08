@@ -16,7 +16,8 @@
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
     "debug": "Debug",
-    "about": "Informazioni"
+    "about": "Informazioni",
+    "navigationLabel": "Sezioni delle impostazioni"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -152,7 +153,13 @@
     },
     "cancel": "Annulla",
     "cancelDownload": "Annulla download",
-    "legacy": "Obsoleto"
+    "legacy": "Obsoleto",
+    "statusTitle": "Stato del modello: {{status}}",
+    "errors": {
+      "checkStatus": "Impossibile verificare lo stato del modello",
+      "load": "Impossibile caricare il modello",
+      "switch": "Impossibile cambiare modello"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Tutte le lingue",
         "streaming": "Filtra i modelli che supportano la trascrizione in tempo reale",
-        "translation": "Filtra i modelli che supportano la traduzione in inglese"
+        "translation": "Filtra i modelli che supportano la traduzione in inglese",
+        "language": "Filtra per lingua"
       },
       "noModelsMatch": "Nessun modello corrisponde a questo filtro.",
       "yourModels": "Modelli scaricati",
@@ -183,7 +191,8 @@
         "select": "Impossibile cambiare modello: {{error}}",
         "cancel": "Impossibile annullare il download: {{error}}",
         "delete": "Impossibile eliminare il modello: {{error}}"
-      }
+      },
+      "unknownSize": "Dimensione sconosciuta"
     },
     "general": {
       "title": "Generale",
@@ -212,7 +221,8 @@
           "restore": "Errore nel ripristino della scorciatoia originale",
           "set": "Errore nella configurazione della scorciatoia: {{error}}",
           "reset": "Errore nella reinizializzazione della scorciatoia al valore originale"
-        }
+        },
+        "changeShortcut": "Modifica la scorciatoia per {{name}}"
       },
       "language": {
         "title": "Lingua",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Regola il volume del feedback audio"
-      }
+      },
+      "previewTheme": "Anteprima del tema sonoro (riproduce avvio e poi stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Chiave API",
           "description": "Chiave API per il provider selezionato.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Mostra chiave API",
+          "hide": "Nascondi chiave API"
         },
         "model": {
           "title": "Modello",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Scegli un modello reso disponibile dal provider selezionato.",
           "placeholderWithOptions": "Cerca o scegli un modello",
           "placeholderNoOptions": "Digita il nome di un modello",
-          "refreshModels": "Aggiorna modelli"
+          "refreshModels": "Aggiorna modelli",
+          "useCustom": "Usa \"{{input}}\""
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Dati App:",
         "models": "Modelli:",
-        "settings": "Impostazioni:"
+        "settings": "Impostazioni:",
+        "title": "Percorsi di debug",
+        "description": "Mostra percorsi di file e directory interni a scopo di debug"
       },
       "pasteDelay": {
         "title": "Ritardo incolla (prima)",
@@ -686,7 +702,15 @@
     "open": "Apri",
     "copy": "Copia",
     "clear": "Svuota",
-    "noOptionsFound": "Nessuna opzione trovata"
+    "noOptionsFound": "Nessuna opzione trovata",
+    "cancel": "Annulla",
+    "options": "Opzioni",
+    "selectOption": "Seleziona un'opzione...",
+    "moreInformation": "Maggiori informazioni",
+    "notAvailable": "Non disponibile",
+    "copyToClipboard": "Copia negli appunti",
+    "play": "Riproduci",
+    "pause": "Pausa"
   },
   "accessibility": {
     "permissionsDescription": "Handy ha bisogno dei permessi di accessibilità per digitare il testo trascritto.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Impossibile salvare l'impostazione",
     "updateCheckFailed": "Impossibile verificare la presenza di aggiornamenti",
     "updateInstallFailed": "Impossibile installare l'aggiornamento",
-    "openUrlFailed": "Impossibile aprire il link"
+    "openUrlFailed": "Impossibile aprire il link",
+    "unknown": "Errore sconosciuto"
   },
   "appLanguage": {
     "title": "Lingua Applicazione",
@@ -745,5 +770,9 @@
     "learnMore": "Come risolvere",
     "recorderBlocked": "Non è possibile registrare scorciatoie in questo momento: Secure Input di macOS sta bloccando gli eventi dei tasti. Risolvi prima l'avviso di Secure Input.",
     "dismiss": "Ignora"
+  },
+  "progress": {
+    "downloading": "Download in corso...",
+    "downloadingCount": "{{count}} in download..."
   }
 }

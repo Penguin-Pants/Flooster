@@ -16,7 +16,8 @@
     "postProcessing": "Post proceso",
     "history": "Historial",
     "debug": "Depuración",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "navigationLabel": "Secciones de configuración"
   },
   "onboarding": {
     "subtitle": "Para comenzar, elige un modelo de transcripción",
@@ -152,7 +153,13 @@
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar descarga",
-    "legacy": "Heredado"
+    "legacy": "Heredado",
+    "statusTitle": "Estado del modelo: {{status}}",
+    "errors": {
+      "checkStatus": "Error al comprobar el estado del modelo",
+      "load": "Error al cargar el modelo",
+      "switch": "Error al cambiar de modelo"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Todos los idiomas",
         "streaming": "Filtrar modelos compatibles con la transcripción en vivo",
-        "translation": "Filtrar modelos compatibles con la traducción al inglés"
+        "translation": "Filtrar modelos compatibles con la traducción al inglés",
+        "language": "Filtrar por idioma"
       },
       "noModelsMatch": "Ningún modelo coincide con este filtro.",
       "yourModels": "Modelos descargados",
@@ -183,7 +191,8 @@
         "select": "Error al cambiar de modelo: {{error}}",
         "cancel": "Error al cancelar la descarga: {{error}}",
         "delete": "Error al eliminar el modelo: {{error}}"
-      }
+      },
+      "unknownSize": "Tamaño desconocido"
     },
     "general": {
       "title": "General",
@@ -212,7 +221,8 @@
           "restore": "Error al restaurar el atajo original",
           "set": "Error al configurar el atajo: {{error}}",
           "reset": "Error al restablecer el atajo al valor original"
-        }
+        },
+        "changeShortcut": "Cambiar el atajo de {{name}}"
       },
       "language": {
         "title": "Idioma",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volumen",
         "description": "Ajusta el volumen de los sonidos de retroalimentación de audio"
-      }
+      },
+      "previewTheme": "Escuchar el tema de sonido (reproduce inicio y luego fin)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Clave API",
           "description": "Clave API para el proveedor seleccionado.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Mostrar clave de API",
+          "hide": "Ocultar clave de API"
         },
         "model": {
           "title": "Modelo",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Elige un modelo expuesto por el proveedor seleccionado.",
           "placeholderWithOptions": "Buscar o seleccionar un modelo",
           "placeholderNoOptions": "Escribe un nombre de modelo",
-          "refreshModels": "Actualizar modelos"
+          "refreshModels": "Actualizar modelos",
+          "useCustom": "Usar \"{{input}}\""
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Datos de la aplicación:",
         "models": "Modelos:",
-        "settings": "Configuración:"
+        "settings": "Configuración:",
+        "title": "Rutas de depuración",
+        "description": "Mostrar rutas de archivos y directorios internos para depuración"
       },
       "pasteDelay": {
         "title": "Retraso de pegado (antes)",
@@ -686,7 +702,15 @@
     "open": "Abrir",
     "copy": "Copiar",
     "clear": "Limpiar",
-    "noOptionsFound": "No se encontraron opciones"
+    "noOptionsFound": "No se encontraron opciones",
+    "cancel": "Cancelar",
+    "options": "Opciones",
+    "selectOption": "Selecciona una opción...",
+    "moreInformation": "Más información",
+    "notAvailable": "No disponible",
+    "copyToClipboard": "Copiar al portapapeles",
+    "play": "Reproducir",
+    "pause": "Pausar"
   },
   "accessibility": {
     "permissionsDescription": "Handy necesita permisos de accesibilidad para escribir texto transcrito.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Error al guardar la configuración",
     "updateCheckFailed": "Error al buscar actualizaciones",
     "updateInstallFailed": "Error al instalar la actualización",
-    "openUrlFailed": "Error al abrir el enlace"
+    "openUrlFailed": "Error al abrir el enlace",
+    "unknown": "Error desconocido"
   },
   "appLanguage": {
     "title": "Idioma de la aplicación",
@@ -745,5 +770,9 @@
     "learnMore": "Cómo solucionarlo",
     "recorderBlocked": "Ahora mismo no se pueden grabar atajos: Secure Input de macOS está bloqueando los eventos de teclado. Resuelve primero el aviso de Secure Input.",
     "dismiss": "Descartar"
+  },
+  "progress": {
+    "downloading": "Descargando...",
+    "downloadingCount": "{{count}} descargando..."
   }
 }

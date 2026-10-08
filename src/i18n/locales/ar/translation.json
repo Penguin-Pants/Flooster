@@ -16,7 +16,8 @@
     "history": "السجل",
     "debug": "تصحيح الأخطاء",
     "about": "حول",
-    "models": "النماذج"
+    "models": "النماذج",
+    "navigationLabel": "أقسام الإعدادات"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -152,7 +153,13 @@
       "translate": "ترجمة",
       "streaming": "يعرض النسخ المباشر أثناء التحدث"
     },
-    "legacy": "قديم"
+    "legacy": "قديم",
+    "statusTitle": "حالة النموذج: {{status}}",
+    "errors": {
+      "checkStatus": "فشل التحقق من حالة النموذج",
+      "load": "فشل تحميل النموذج",
+      "switch": "فشل تبديل النموذج"
+    }
   },
   "settings": {
     "general": {
@@ -182,7 +189,8 @@
           "restore": "فشل استعادة الاختصار الأصلي",
           "set": "فشل تعيين الاختصار: {{error}}",
           "reset": "فشل إعادة تعيين الاختصار إلى قيمته الأصلية"
-        }
+        },
+        "changeShortcut": "تغيير اختصار {{name}}"
       },
       "language": {
         "title": "اللغة",
@@ -233,7 +241,8 @@
       "volume": {
         "title": "مستوى الصوت",
         "description": "ضبط مستوى صوت تنبيهات الصوت"
-      }
+      },
+      "previewTheme": "معاينة سمة الصوت (تشغيل صوت البدء ثم صوت التوقف)"
     },
     "advanced": {
       "groups": {
@@ -407,7 +416,9 @@
         "apiKey": {
           "title": "مفتاح API",
           "description": "مفتاح API للمزود المختار.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "إظهار مفتاح API",
+          "hide": "إخفاء مفتاح API"
         },
         "model": {
           "title": "النموذج",
@@ -415,7 +426,8 @@
           "descriptionDefault": "اختر نموذجاً يعرضه المزود المختار.",
           "placeholderWithOptions": "ابحث عن نموذج أو اختره",
           "placeholderNoOptions": "اكتب اسم النموذج",
-          "refreshModels": "تحديث النماذج"
+          "refreshModels": "تحديث النماذج",
+          "useCustom": "استخدام \"{{input}}\""
         }
       },
       "prompts": {
@@ -543,7 +555,9 @@
       "paths": {
         "appData": "بيانات التطبيق:",
         "models": "النماذج:",
-        "settings": "الإعدادات:"
+        "settings": "الإعدادات:",
+        "title": "مسارات تصحيح الأخطاء",
+        "description": "عرض مسارات الملفات والمجلدات الداخلية لأغراض تصحيح الأخطاء"
       },
       "pasteDelay": {
         "title": "تأخير اللصق (قبل)",
@@ -647,7 +661,8 @@
       "filters": {
         "allLanguages": "جميع اللغات",
         "streaming": "تصفية النماذج التي تدعم النسخ المباشر",
-        "translation": "تصفية النماذج التي تدعم الترجمة إلى الإنجليزية"
+        "translation": "تصفية النماذج التي تدعم الترجمة إلى الإنجليزية",
+        "language": "التصفية حسب اللغة"
       },
       "noModelsMatch": "لا توجد نماذج مطابقة لهذا الفلتر.",
       "searchPlaceholder": "ابحث عن النماذج بالاسم…",
@@ -661,7 +676,8 @@
         "select": "فشل تبديل النموذج: {{error}}",
         "cancel": "فشل إلغاء التنزيل: {{error}}",
         "delete": "فشل حذف النموذج: {{error}}"
-      }
+      },
+      "unknownSize": "الحجم غير معروف"
     }
   },
   "footer": {
@@ -686,7 +702,15 @@
     "open": "فتح",
     "copy": "نسخ",
     "clear": "مسح",
-    "noOptionsFound": "لم يتم العثور على خيارات"
+    "noOptionsFound": "لم يتم العثور على خيارات",
+    "cancel": "إلغاء",
+    "options": "الخيارات",
+    "selectOption": "اختر خيارًا...",
+    "moreInformation": "مزيد من المعلومات",
+    "notAvailable": "غير متاح",
+    "copyToClipboard": "نسخ إلى الحافظة",
+    "play": "تشغيل",
+    "pause": "إيقاف مؤقت"
   },
   "accessibility": {
     "permissionsDescription": ".يحتاج Handy إلى أذونات إمكانية الوصول لكتابة النص المفرغ",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "فشل حفظ الإعداد",
     "updateCheckFailed": "فشل التحقق من وجود تحديثات",
     "updateInstallFailed": "فشل تثبيت التحديث",
-    "openUrlFailed": "فشل فتح الرابط"
+    "openUrlFailed": "فشل فتح الرابط",
+    "unknown": "خطأ غير معروف"
   },
   "appLanguage": {
     "title": "لغة التطبيق",
@@ -745,5 +770,9 @@
     "learnMore": "كيفية الإصلاح",
     "recorderBlocked": "لا يمكن تسجيل الاختصارات الآن — يحجب Secure Input في macOS أحداث المفاتيح. عالج تحذير Secure Input أولاً.",
     "dismiss": "تجاهل"
+  },
+  "progress": {
+    "downloading": "جارٍ التنزيل...",
+    "downloadingCount": "جارٍ تنزيل {{count}}..."
   }
 }

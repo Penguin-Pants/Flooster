@@ -16,7 +16,8 @@
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "debug": "Ladění",
-    "about": "O aplikaci"
+    "about": "O aplikaci",
+    "navigationLabel": "Sekce nastavení"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -152,7 +153,13 @@
     },
     "cancel": "Zrušit",
     "cancelDownload": "Zrušit stahování",
-    "legacy": "Zastaralé"
+    "legacy": "Zastaralé",
+    "statusTitle": "Stav modelu: {{status}}",
+    "errors": {
+      "checkStatus": "Nepodařilo se zjistit stav modelu",
+      "load": "Nepodařilo se načíst model",
+      "switch": "Nepodařilo se přepnout model"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Všechny jazyky",
         "streaming": "Filtrovat modely podporující živý přepis",
-        "translation": "Filtrovat modely podporující překlad do angličtiny"
+        "translation": "Filtrovat modely podporující překlad do angličtiny",
+        "language": "Filtrovat podle jazyka"
       },
       "noModelsMatch": "Tomuto filtru neodpovídají žádné modely.",
       "yourModels": "Stažené modely",
@@ -183,7 +191,8 @@
         "select": "Nepodařilo se přepnout model: {{error}}",
         "cancel": "Nepodařilo se zrušit stahování: {{error}}",
         "delete": "Nepodařilo se smazat model: {{error}}"
-      }
+      },
+      "unknownSize": "Neznámá velikost"
     },
     "general": {
       "title": "Obecné",
@@ -212,7 +221,8 @@
           "restore": "Nepodařilo se obnovit původní zkratku",
           "set": "Nepodařilo se nastavit zkratku: {{error}}",
           "reset": "Nepodařilo se vrátit zkratku na původní hodnotu"
-        }
+        },
+        "changeShortcut": "Změnit zkratku pro {{name}}"
       },
       "language": {
         "title": "Jazyk",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Hlasitost",
         "description": "Upravte hlasitost zvukové odezvy"
-      }
+      },
+      "previewTheme": "Poslechnout zvukové téma (přehraje start a poté stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API klíč",
           "description": "API klíč pro vybraného poskytovatele.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Zobrazit klíč API",
+          "hide": "Skrýt klíč API"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Vyberte model dostupný u vybraného poskytovatele.",
           "placeholderWithOptions": "Vyhledejte nebo vyberte model",
           "placeholderNoOptions": "Zadejte název modelu",
-          "refreshModels": "Obnovit modely"
+          "refreshModels": "Obnovit modely",
+          "useCustom": "Použít „{{input}}“"
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Data aplikace:",
         "models": "Modely:",
-        "settings": "Nastavení:"
+        "settings": "Nastavení:",
+        "title": "Ladicí cesty",
+        "description": "Zobrazit interní cesty k souborům a adresářům pro ladění"
       },
       "pasteDelay": {
         "title": "Zpoždění vložení (před)",
@@ -686,7 +702,15 @@
     "open": "Otevřít",
     "copy": "Kopírovat",
     "clear": "Vymazat",
-    "noOptionsFound": "Nenalezeny žádné možnosti"
+    "noOptionsFound": "Nenalezeny žádné možnosti",
+    "cancel": "Zrušit",
+    "options": "Možnosti",
+    "selectOption": "Vyberte možnost...",
+    "moreInformation": "Více informací",
+    "notAvailable": "Není k dispozici",
+    "copyToClipboard": "Kopírovat do schránky",
+    "play": "Přehrát",
+    "pause": "Pozastavit"
   },
   "accessibility": {
     "permissionsDescription": "Handy potřebuje oprávnění usnadnění přístupu, aby mohlo psát přepsaný text.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Nepodařilo se uložit nastavení",
     "updateCheckFailed": "Nepodařilo se zkontrolovat aktualizace",
     "updateInstallFailed": "Nepodařilo se nainstalovat aktualizaci",
-    "openUrlFailed": "Nepodařilo se otevřít odkaz"
+    "openUrlFailed": "Nepodařilo se otevřít odkaz",
+    "unknown": "Neznámá chyba"
   },
   "appLanguage": {
     "title": "Jazyk aplikace",
@@ -745,5 +770,9 @@
     "learnMore": "Jak to vyřešit",
     "recorderBlocked": "Zkratky teď nelze nahrát — Secure Input v macOS blokuje události kláves. Nejprve vyřešte upozornění na Secure Input.",
     "dismiss": "Zavřít"
+  },
+  "progress": {
+    "downloading": "Stahování...",
+    "downloadingCount": "Stahuje se: {{count}}..."
   }
 }

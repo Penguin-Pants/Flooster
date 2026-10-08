@@ -16,7 +16,8 @@
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "debug": "Hata Ayıklama",
-    "about": "Hakkında"
+    "about": "Hakkında",
+    "navigationLabel": "Ayar bölümleri"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -152,7 +153,13 @@
     },
     "cancel": "İptal",
     "cancelDownload": "İndirmeyi iptal et",
-    "legacy": "Eski"
+    "legacy": "Eski",
+    "statusTitle": "Model durumu: {{status}}",
+    "errors": {
+      "checkStatus": "Model durumu denetlenemedi",
+      "load": "Model yüklenemedi",
+      "switch": "Model değiştirilemedi"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Tüm Diller",
         "streaming": "Canlı transkripsiyonu destekleyen modelleri filtrele",
-        "translation": "İngilizce'ye çeviriyi destekleyen modelleri filtrele"
+        "translation": "İngilizce'ye çeviriyi destekleyen modelleri filtrele",
+        "language": "Dile göre filtrele"
       },
       "noModelsMatch": "Bu filtreyle eşleşen model yok.",
       "yourModels": "İndirilen Modeller",
@@ -183,7 +191,8 @@
         "select": "Model değiştirilemedi: {{error}}",
         "cancel": "İndirme iptal edilemedi: {{error}}",
         "delete": "Model silinemedi: {{error}}"
-      }
+      },
+      "unknownSize": "Bilinmeyen boyut"
     },
     "general": {
       "title": "Genel",
@@ -212,7 +221,8 @@
           "restore": "Orijinal kısayol geri yüklenemedi",
           "set": "Kısayol ayarlanamadı: {{error}}",
           "reset": "Kısayol orijinal değerine sıfırlanamadı"
-        }
+        },
+        "changeShortcut": "{{name}} kısayolunu değiştir"
       },
       "language": {
         "title": "Dil",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Ses Seviyesi",
         "description": "Sesli geri bildirimlerin ses seviyesini ayarlayın"
-      }
+      },
+      "previewTheme": "Ses temasını dinle (önce başlat, sonra durdur sesini çalar)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API Anahtarı",
           "description": "Seçili sağlayıcı için API anahtarı.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "API anahtarını göster",
+          "hide": "API anahtarını gizle"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Seçili sağlayıcının sunduğu bir modeli seçin.",
           "placeholderWithOptions": "Model ara veya seç",
           "placeholderNoOptions": "Model adı yazın",
-          "refreshModels": "Modelleri Yenile"
+          "refreshModels": "Modelleri Yenile",
+          "useCustom": "\"{{input}}\" kullan"
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Uygulama Verileri:",
         "models": "Modeller:",
-        "settings": "Ayarlar:"
+        "settings": "Ayarlar:",
+        "title": "Hata Ayıklama Yolları",
+        "description": "Hata ayıklama için dahili dosya yollarını ve dizinleri görüntüle"
       },
       "pasteDelay": {
         "title": "Yapıştırma Gecikmesi (Önce)",
@@ -686,7 +702,15 @@
     "open": "Aç",
     "copy": "Kopyala",
     "clear": "Temizle",
-    "noOptionsFound": "Seçenek bulunamadı"
+    "noOptionsFound": "Seçenek bulunamadı",
+    "cancel": "İptal",
+    "options": "Seçenekler",
+    "selectOption": "Bir seçenek seçin...",
+    "moreInformation": "Daha fazla bilgi",
+    "notAvailable": "Kullanılamıyor",
+    "copyToClipboard": "Panoya kopyala",
+    "play": "Oynat",
+    "pause": "Duraklat"
   },
   "accessibility": {
     "permissionsDescription": "Handy, transkribe edilen metni yazabilmek için erişilebilirlik izinlerine ihtiyaç duyar.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Ayar kaydedilemedi",
     "updateCheckFailed": "Güncellemeler denetlenemedi",
     "updateInstallFailed": "Güncelleme yüklenemedi",
-    "openUrlFailed": "Bağlantı açılamadı"
+    "openUrlFailed": "Bağlantı açılamadı",
+    "unknown": "Bilinmeyen hata"
   },
   "appLanguage": {
     "title": "Uygulama Dili",
@@ -745,5 +770,9 @@
     "learnMore": "Bu nasıl düzeltilir",
     "recorderBlocked": "Şu anda kısayol kaydedilemiyor — macOS Secure Input tuş olaylarını engelliyor. Önce Secure Input uyarısını giderin.",
     "dismiss": "Kapat"
+  },
+  "progress": {
+    "downloading": "İndiriliyor...",
+    "downloadingCount": "{{count}} indiriliyor..."
   }
 }

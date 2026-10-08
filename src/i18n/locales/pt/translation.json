@@ -16,7 +16,8 @@
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
     "debug": "Depuração",
-    "about": "Sobre"
+    "about": "Sobre",
+    "navigationLabel": "Seções de configurações"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -152,7 +153,13 @@
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar download",
-    "legacy": "Legado"
+    "legacy": "Legado",
+    "statusTitle": "Status do modelo: {{status}}",
+    "errors": {
+      "checkStatus": "Falha ao verificar o status do modelo",
+      "load": "Falha ao carregar o modelo",
+      "switch": "Falha ao trocar de modelo"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -185,7 +192,8 @@
           "restore": "Falha ao restaurar atalho original",
           "set": "Falha ao definir atalho: {{error}}",
           "reset": "Falha ao redefinir atalho para o valor original"
-        }
+        },
+        "changeShortcut": "Alterar atalho de {{name}}"
       },
       "language": {
         "title": "Idioma",
@@ -218,7 +226,8 @@
       "filters": {
         "allLanguages": "Todos os Idiomas",
         "streaming": "Filtrar modelos compatíveis com transcrição ao vivo",
-        "translation": "Filtrar modelos compatíveis com tradução para inglês"
+        "translation": "Filtrar modelos compatíveis com tradução para inglês",
+        "language": "Filtrar por idioma"
       },
       "noModelsMatch": "Nenhum modelo corresponde a este filtro.",
       "yourModels": "Modelos baixados",
@@ -234,7 +243,8 @@
         "select": "Falha ao trocar de modelo: {{error}}",
         "cancel": "Falha ao cancelar o download: {{error}}",
         "delete": "Falha ao excluir o modelo: {{error}}"
-      }
+      },
+      "unknownSize": "Tamanho desconhecido"
     },
     "sound": {
       "title": "Som",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Ajustar o volume dos sons de feedback de áudio"
-      }
+      },
+      "previewTheme": "Ouvir o tema de som (toca início e depois fim)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Chave da API",
           "description": "Chave da API para o provedor selecionado.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Mostrar chave de API",
+          "hide": "Ocultar chave de API"
         },
         "model": {
           "title": "Modelo",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Escolha um modelo exposto pelo provedor selecionado.",
           "placeholderWithOptions": "Buscar ou selecionar um modelo",
           "placeholderNoOptions": "Digite o nome de um modelo",
-          "refreshModels": "Atualizar modelos"
+          "refreshModels": "Atualizar modelos",
+          "useCustom": "Usar \"{{input}}\""
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Dados do App:",
         "models": "Modelos:",
-        "settings": "Configurações:"
+        "settings": "Configurações:",
+        "title": "Caminhos de depuração",
+        "description": "Exibir caminhos de arquivos e diretórios internos para depuração"
       },
       "pasteDelay": {
         "title": "Atraso de colagem (antes)",
@@ -686,7 +702,15 @@
     "open": "Abrir",
     "copy": "Copiar",
     "clear": "Limpar",
-    "noOptionsFound": "Nenhuma opção encontrada"
+    "noOptionsFound": "Nenhuma opção encontrada",
+    "cancel": "Cancelar",
+    "options": "Opções",
+    "selectOption": "Selecione uma opção...",
+    "moreInformation": "Mais informações",
+    "notAvailable": "Não disponível",
+    "copyToClipboard": "Copiar para a área de transferência",
+    "play": "Reproduzir",
+    "pause": "Pausar"
   },
   "accessibility": {
     "permissionsDescription": "O Handy precisa de permissões de acessibilidade para digitar o texto transcrito.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Falha ao salvar a configuração",
     "updateCheckFailed": "Falha ao verificar atualizações",
     "updateInstallFailed": "Falha ao instalar a atualização",
-    "openUrlFailed": "Falha ao abrir o link"
+    "openUrlFailed": "Falha ao abrir o link",
+    "unknown": "Erro desconhecido"
   },
   "appLanguage": {
     "title": "Idioma da Aplicação",
@@ -745,5 +770,9 @@
     "learnMore": "Como resolver isso",
     "recorderBlocked": "Não é possível gravar atalhos agora — o Secure Input do macOS está bloqueando os eventos de tecla. Resolva primeiro o aviso do Secure Input.",
     "dismiss": "Dispensar"
+  },
+  "progress": {
+    "downloading": "Baixando...",
+    "downloadingCount": "{{count}} baixando..."
   }
 }

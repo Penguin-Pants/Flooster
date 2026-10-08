@@ -1,6 +1,12 @@
-export const formatModelSize = (sizeMb: number | null | undefined): string => {
+/**
+ * Human-readable model size, or `null` when the size is unknown so the caller
+ * can render a translated placeholder.
+ */
+export const formatModelSize = (
+  sizeMb: number | null | undefined,
+): string | null => {
   if (!sizeMb || !Number.isFinite(sizeMb) || sizeMb <= 0) {
-    return "Unknown size";
+    return null;
   }
 
   if (sizeMb >= 1024) {

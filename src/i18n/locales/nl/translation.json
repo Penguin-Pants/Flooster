@@ -16,7 +16,8 @@
     "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
     "debug": "Probleemoplossing",
-    "about": "Over Handy"
+    "about": "Over Handy",
+    "navigationLabel": "Instellingensecties"
   },
   "onboarding": {
     "subtitle": "Kies een transcriptiemodel om aan de slag te gaan",
@@ -152,6 +153,12 @@
       "translation": "Kan vertalen naar het Engels",
       "translate": "Vertalen",
       "streaming": "Toont live transcriptie tijdens het spreken"
+    },
+    "statusTitle": "Modelstatus: {{status}}",
+    "errors": {
+      "checkStatus": "Modelstatus controleren mislukt",
+      "load": "Model laden mislukt",
+      "switch": "Model wisselen mislukt"
     }
   },
   "settings": {
@@ -185,7 +192,8 @@
           "restore": "Herstellen van originele sneltoets mislukt",
           "set": "Instellen van sneltoets mislukt: {{error}}",
           "reset": "Sneltoets terugzetten naar standaardwaarde mislukt"
-        }
+        },
+        "changeShortcut": "Sneltoets voor {{name}} wijzigen"
       },
       "language": {
         "title": "Taal",
@@ -221,7 +229,8 @@
       "filters": {
         "allLanguages": "Alle talen",
         "streaming": "Filter modellen die live transcriptie ondersteunen",
-        "translation": "Filter modellen die vertaling naar het Engels ondersteunen"
+        "translation": "Filter modellen die vertaling naar het Engels ondersteunen",
+        "language": "Filteren op taal"
       },
       "rescan": {
         "label": "Opnieuw scannen",
@@ -234,7 +243,8 @@
         "select": "Model wisselen mislukt: {{error}}",
         "cancel": "Download annuleren mislukt: {{error}}",
         "delete": "Model verwijderen mislukt: {{error}}"
-      }
+      },
+      "unknownSize": "Onbekende grootte"
     },
     "sound": {
       "title": "Geluid",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Pas het volume van de geluidsfeedback aan"
-      }
+      },
+      "previewTheme": "Geluidsthema beluisteren (speelt start en daarna stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API-sleutel",
           "description": "API-sleutel voor de geselecteerde provider.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "API-sleutel tonen",
+          "hide": "API-sleutel verbergen"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Kies een model dat door de geselecteerde provider wordt aangeboden.",
           "placeholderWithOptions": "Zoek of selecteer een model",
           "placeholderNoOptions": "Typ een modelnaam",
-          "refreshModels": "Modellen verversen"
+          "refreshModels": "Modellen verversen",
+          "useCustom": "\"{{input}}\" gebruiken"
         }
       },
       "prompts": {
@@ -587,7 +601,9 @@
       "paths": {
         "appData": "App-data:",
         "models": "Modellen:",
-        "settings": "Instellingen:"
+        "settings": "Instellingen:",
+        "title": "Debugpaden",
+        "description": "Interne bestandspaden en mappen tonen voor foutopsporing"
       },
       "pasteDelay": {
         "title": "Plakvertraging (voor)",
@@ -689,7 +705,15 @@
     "open": "Openen",
     "copy": "Kopiëren",
     "clear": "Wissen",
-    "noOptionsFound": "Geen opties gevonden"
+    "noOptionsFound": "Geen opties gevonden",
+    "cancel": "Annuleren",
+    "options": "Opties",
+    "selectOption": "Kies een optie...",
+    "moreInformation": "Meer informatie",
+    "notAvailable": "Niet beschikbaar",
+    "copyToClipboard": "Kopiëren naar klembord",
+    "play": "Afspelen",
+    "pause": "Pauzeren"
   },
   "accessibility": {
     "permissionsDescription": "Handy heeft toegankelijkheidsmachtigingen nodig om getranscribeerde tekst te kunnen typen.",
@@ -715,7 +739,8 @@
     "settingUpdateFailed": "Instelling opslaan mislukt",
     "updateCheckFailed": "Controleren op updates mislukt",
     "updateInstallFailed": "Update installeren mislukt",
-    "openUrlFailed": "Link openen mislukt"
+    "openUrlFailed": "Link openen mislukt",
+    "unknown": "Onbekende fout"
   },
   "appLanguage": {
     "title": "Interfacetaal",
@@ -745,5 +770,9 @@
     "learnMore": "Hoe je dit oplost",
     "recorderBlocked": "Sneltoetsen kunnen nu niet worden opgenomen — Secure Input van macOS blokkeert toetsgebeurtenissen. Los eerst de Secure Input-waarschuwing op.",
     "dismiss": "Sluiten"
+  },
+  "progress": {
+    "downloading": "Downloaden...",
+    "downloadingCount": "{{count}} worden gedownload..."
   }
 }

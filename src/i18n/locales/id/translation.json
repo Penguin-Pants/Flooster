@@ -16,7 +16,8 @@
     "postProcessing": "Pascaproses",
     "history": "Riwayat",
     "debug": "Debug",
-    "about": "Tentang"
+    "about": "Tentang",
+    "navigationLabel": "Bagian pengaturan"
   },
   "onboarding": {
     "subtitle": "Untuk memulai, pilih model transkripsi",
@@ -152,6 +153,12 @@
       "translation": "Dapat menerjemahkan ke bahasa Inggris",
       "translate": "Terjemahkan",
       "streaming": "Menampilkan transkripsi langsung saat Anda berbicara"
+    },
+    "statusTitle": "Status model: {{status}}",
+    "errors": {
+      "checkStatus": "Gagal memeriksa status model",
+      "load": "Gagal memuat model",
+      "switch": "Gagal mengganti model"
     }
   },
   "settings": {
@@ -185,7 +192,8 @@
           "restore": "Gagal memulihkan pintasan asli",
           "set": "Gagal mengatur pintasan: {{error}}",
           "reset": "Gagal mengembalikan pintasan ke nilai awal"
-        }
+        },
+        "changeShortcut": "Ubah pintasan untuk {{name}}"
       },
       "language": {
         "title": "Bahasa",
@@ -221,7 +229,8 @@
       "filters": {
         "allLanguages": "Semua Bahasa",
         "streaming": "Saring model yang mendukung transkripsi waktu nyata",
-        "translation": "Saring model yang mendukung penerjemahan ke bahasa Inggris"
+        "translation": "Saring model yang mendukung penerjemahan ke bahasa Inggris",
+        "language": "Filter berdasarkan bahasa"
       },
       "rescan": {
         "label": "Pindai Ulang",
@@ -234,7 +243,8 @@
         "select": "Gagal mengganti model: {{error}}",
         "cancel": "Gagal membatalkan unduhan: {{error}}",
         "delete": "Gagal menghapus model: {{error}}"
-      }
+      },
+      "unknownSize": "Ukuran tidak diketahui"
     },
     "sound": {
       "title": "Suara",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volume",
         "description": "Sesuaikan volume suara umpan balik audio"
-      }
+      },
+      "previewTheme": "Dengarkan tema suara (memutar suara mulai lalu berhenti)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Kunci API",
           "description": "Kunci API untuk penyedia yang dipilih.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Tampilkan kunci API",
+          "hide": "Sembunyikan kunci API"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Pilih model yang disediakan oleh penyedia yang dipilih.",
           "placeholderWithOptions": "Cari atau pilih model",
           "placeholderNoOptions": "Ketik nama model",
-          "refreshModels": "Segarkan model"
+          "refreshModels": "Segarkan model",
+          "useCustom": "Gunakan \"{{input}}\""
         }
       },
       "prompts": {
@@ -587,7 +601,9 @@
       "paths": {
         "appData": "Data Aplikasi:",
         "models": "Model:",
-        "settings": "Pengaturan:"
+        "settings": "Pengaturan:",
+        "title": "Jalur Debug",
+        "description": "Tampilkan jalur file dan direktori internal untuk keperluan debugging"
       },
       "pasteDelay": {
         "title": "Jeda Tempel (Sebelum)",
@@ -689,7 +705,15 @@
     "open": "Buka",
     "copy": "Salin",
     "clear": "Bersihkan",
-    "noOptionsFound": "Tidak ada opsi yang ditemukan"
+    "noOptionsFound": "Tidak ada opsi yang ditemukan",
+    "cancel": "Batal",
+    "options": "Opsi",
+    "selectOption": "Pilih opsi...",
+    "moreInformation": "Informasi selengkapnya",
+    "notAvailable": "Tidak tersedia",
+    "copyToClipboard": "Salin ke papan klip",
+    "play": "Putar",
+    "pause": "Jeda"
   },
   "accessibility": {
     "permissionsDescription": "Handy memerlukan izin aksesibilitas untuk mengetik teks hasil transkripsi.",
@@ -715,7 +739,8 @@
     "settingUpdateFailed": "Gagal menyimpan pengaturan",
     "updateCheckFailed": "Gagal memeriksa pembaruan",
     "updateInstallFailed": "Gagal memasang pembaruan",
-    "openUrlFailed": "Gagal membuka tautan"
+    "openUrlFailed": "Gagal membuka tautan",
+    "unknown": "Kesalahan tidak diketahui"
   },
   "appLanguage": {
     "title": "Bahasa Aplikasi",
@@ -745,5 +770,9 @@
     "learnMore": "Cara memperbaiki",
     "recorderBlocked": "Pintasan tidak dapat direkam saat ini — macOS Secure Input memblokir peristiwa tombol. Selesaikan peringatan Secure Input terlebih dahulu.",
     "dismiss": "Tutup"
+  },
+  "progress": {
+    "downloading": "Mengunduh...",
+    "downloadingCount": "{{count}} sedang diunduh..."
   }
 }

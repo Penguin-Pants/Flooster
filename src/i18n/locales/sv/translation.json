@@ -16,7 +16,8 @@
     "postProcessing": "Efterbearbetning",
     "history": "Historik",
     "debug": "Felsökning",
-    "about": "Om"
+    "about": "Om",
+    "navigationLabel": "Inställningsavsnitt"
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -152,7 +153,13 @@
       "translate": "Översätt till engelska",
       "streaming": "Visar transkription i realtid medan du talar"
     },
-    "legacy": "Äldre"
+    "legacy": "Äldre",
+    "statusTitle": "Modellstatus: {{status}}",
+    "errors": {
+      "checkStatus": "Det gick inte att kontrollera modellens status",
+      "load": "Det gick inte att ladda modellen",
+      "switch": "Det gick inte att byta modell"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -185,7 +192,8 @@
           "restore": "Misslyckades med att återställa ursprungligt kortkommando",
           "set": "Misslyckades med att ställa in kortkommando: {{error}}",
           "reset": "Misslyckades med att återställa kortkommando till ursprungsvärdet"
-        }
+        },
+        "changeShortcut": "Ändra kortkommando för {{name}}"
       },
       "language": {
         "title": "Språk",
@@ -220,7 +228,8 @@
       "filters": {
         "allLanguages": "Alla språk",
         "streaming": "Filtrera modeller som stöder transkription i realtid",
-        "translation": "Filtrera modeller som stöder översättning till engelska"
+        "translation": "Filtrera modeller som stöder översättning till engelska",
+        "language": "Filtrera efter språk"
       },
       "noModelsMatch": "Inga modeller matchar detta filter.",
       "searchPlaceholder": "Sök modeller efter namn…",
@@ -234,7 +243,8 @@
         "select": "Det gick inte att byta modell: {{error}}",
         "cancel": "Det gick inte att avbryta nedladdningen: {{error}}",
         "delete": "Det gick inte att ta bort modellen: {{error}}"
-      }
+      },
+      "unknownSize": "Okänd storlek"
     },
     "sound": {
       "title": "Ljud",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Volym",
         "description": "Justera volymen för ljudåterkopplingsljud"
-      }
+      },
+      "previewTheme": "Lyssna på ljudtemat (spelar start och sedan stopp)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "API-nyckel",
           "description": "API-nyckel för den valda leverantören.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Visa API-nyckel",
+          "hide": "Dölj API-nyckel"
         },
         "model": {
           "title": "Modell",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Välj en modell som exponeras av den valda leverantören.",
           "placeholderWithOptions": "Sök eller välj en modell",
           "placeholderNoOptions": "Ange ett modellnamn",
-          "refreshModels": "Uppdatera modeller"
+          "refreshModels": "Uppdatera modeller",
+          "useCustom": "Använd \"{{input}}\""
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Appdata:",
         "models": "Modeller:",
-        "settings": "Inställningar:"
+        "settings": "Inställningar:",
+        "title": "Felsökningssökvägar",
+        "description": "Visa interna filsökvägar och kataloger för felsökning"
       },
       "pasteDelay": {
         "title": "Fördröjning vid klistra in (före)",
@@ -686,7 +702,15 @@
     "open": "Öppna",
     "copy": "Kopiera",
     "clear": "Rensa",
-    "noOptionsFound": "Inga alternativ hittades"
+    "noOptionsFound": "Inga alternativ hittades",
+    "cancel": "Avbryt",
+    "options": "Alternativ",
+    "selectOption": "Välj ett alternativ...",
+    "moreInformation": "Mer information",
+    "notAvailable": "Inte tillgängligt",
+    "copyToClipboard": "Kopiera till urklipp",
+    "play": "Spela upp",
+    "pause": "Pausa"
   },
   "accessibility": {
     "permissionsDescription": "Handy behöver behörighet för hjälpmedel för att kunna skriva transkriberad text.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Det gick inte att spara inställningen",
     "updateCheckFailed": "Det gick inte att söka efter uppdateringar",
     "updateInstallFailed": "Det gick inte att installera uppdateringen",
-    "openUrlFailed": "Det gick inte att öppna länken"
+    "openUrlFailed": "Det gick inte att öppna länken",
+    "unknown": "Okänt fel"
   },
   "appLanguage": {
     "title": "Applikationsspråk",
@@ -745,5 +770,9 @@
     "learnMore": "Så här löser du det",
     "recorderBlocked": "Det går inte att spela in kortkommandon just nu — macOS Secure Input blockerar tangenthändelser. Lös varningen om Secure Input först.",
     "dismiss": "Avfärda"
+  },
+  "progress": {
+    "downloading": "Laddar ner...",
+    "downloadingCount": "{{count}} laddas ner..."
   }
 }

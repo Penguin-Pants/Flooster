@@ -16,7 +16,8 @@
     "postProcessing": "Postproces",
     "history": "Historia",
     "debug": "Debugowanie",
-    "about": "O programie"
+    "about": "O programie",
+    "navigationLabel": "Sekcje ustawień"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -152,7 +153,13 @@
     },
     "cancel": "Anuluj",
     "cancelDownload": "Anuluj pobieranie",
-    "legacy": "Przestarzałe"
+    "legacy": "Przestarzałe",
+    "statusTitle": "Stan modelu: {{status}}",
+    "errors": {
+      "checkStatus": "Nie udało się sprawdzić stanu modelu",
+      "load": "Nie udało się załadować modelu",
+      "switch": "Nie udało się zmienić modelu"
+    }
   },
   "settings": {
     "modelSettings": {
@@ -167,7 +174,8 @@
       "filters": {
         "allLanguages": "Wszystkie języki",
         "streaming": "Filtruj modele obsługujące transkrypcję na żywo",
-        "translation": "Filtruj modele obsługujące tłumaczenie na język angielski"
+        "translation": "Filtruj modele obsługujące tłumaczenie na język angielski",
+        "language": "Filtruj według języka"
       },
       "noModelsMatch": "Żadne modele nie pasują do tego filtra.",
       "yourModels": "Pobrane modele",
@@ -183,7 +191,8 @@
         "select": "Nie udało się zmienić modelu: {{error}}",
         "cancel": "Nie udało się anulować pobierania: {{error}}",
         "delete": "Nie udało się usunąć modelu: {{error}}"
-      }
+      },
+      "unknownSize": "Nieznany rozmiar"
     },
     "general": {
       "title": "Ogólne",
@@ -212,7 +221,8 @@
           "restore": "Nie udało się przywrócić oryginalnego skrótu",
           "set": "Nie udało się ustawić skrótu: {{error}}",
           "reset": "Nie udało się zresetować skrótu do wartości domyślnej"
-        }
+        },
+        "changeShortcut": "Zmień skrót dla {{name}}"
       },
       "language": {
         "title": "Język",
@@ -263,7 +273,8 @@
       "volume": {
         "title": "Głośność",
         "description": "Dostosuj głośność dźwięków informacyjnych"
-      }
+      },
+      "previewTheme": "Odsłuchaj motyw dźwiękowy (odtwarza start, potem stop)"
     },
     "advanced": {
       "groups": {
@@ -437,7 +448,9 @@
         "apiKey": {
           "title": "Klucz API",
           "description": "Klucz API dla wybranego dostawcy.",
-          "placeholder": "sk-..."
+          "placeholder": "sk-...",
+          "show": "Pokaż klucz API",
+          "hide": "Ukryj klucz API"
         },
         "model": {
           "title": "Model",
@@ -445,7 +458,8 @@
           "descriptionDefault": "Wybierz model udostępniony przez wybranego dostawcę.",
           "placeholderWithOptions": "Wyszukaj lub wybierz model",
           "placeholderNoOptions": "Wpisz nazwę modelu",
-          "refreshModels": "Odśwież modele"
+          "refreshModels": "Odśwież modele",
+          "useCustom": "Użyj „{{input}}”"
         }
       },
       "prompts": {
@@ -573,7 +587,9 @@
       "paths": {
         "appData": "Dane aplikacji:",
         "models": "Modele:",
-        "settings": "Ustawienia:"
+        "settings": "Ustawienia:",
+        "title": "Ścieżki debugowania",
+        "description": "Wyświetl wewnętrzne ścieżki plików i katalogów do celów debugowania"
       },
       "pasteDelay": {
         "title": "Opóźnienie wklejania (przed)",
@@ -686,7 +702,15 @@
     "open": "Otwórz",
     "copy": "Kopiuj",
     "clear": "Wyczyść",
-    "noOptionsFound": "Nie znaleziono opcji"
+    "noOptionsFound": "Nie znaleziono opcji",
+    "cancel": "Anuluj",
+    "options": "Opcje",
+    "selectOption": "Wybierz opcję...",
+    "moreInformation": "Więcej informacji",
+    "notAvailable": "Niedostępne",
+    "copyToClipboard": "Kopiuj do schowka",
+    "play": "Odtwórz",
+    "pause": "Pauza"
   },
   "accessibility": {
     "permissionsDescription": "Handy potrzebuje uprawnień dostępności, aby wpisywać transkrybowany tekst.",
@@ -712,7 +736,8 @@
     "settingUpdateFailed": "Nie udało się zapisać ustawienia",
     "updateCheckFailed": "Nie udało się sprawdzić dostępności aktualizacji",
     "updateInstallFailed": "Nie udało się zainstalować aktualizacji",
-    "openUrlFailed": "Nie udało się otworzyć linku"
+    "openUrlFailed": "Nie udało się otworzyć linku",
+    "unknown": "Nieznany błąd"
   },
   "appLanguage": {
     "title": "Język aplikacji",
@@ -745,5 +770,9 @@
     "learnMore": "Jak to naprawić",
     "recorderBlocked": "Nie można teraz nagrać skrótu — Secure Input w macOS blokuje zdarzenia klawiszy. Najpierw rozwiąż ostrzeżenie o Secure Input.",
     "dismiss": "Odrzuć"
+  },
+  "progress": {
+    "downloading": "Pobieranie...",
+    "downloadingCount": "Pobieranie: {{count}}..."
   }
 }
