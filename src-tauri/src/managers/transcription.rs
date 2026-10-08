@@ -251,8 +251,6 @@ pub struct TranscriptionManager {
     app_handle: AppHandle,
     current_model_id: Arc<Mutex<Option<String>>>,
     last_activity: Arc<AtomicU64>,
-    shutdown_signal: Arc<AtomicBool>,
-    watcher_handle: Arc<Mutex<Option<thread::JoinHandle<()>>>>,
     is_loading: Arc<Mutex<bool>>,
     loading_condvar: Arc<Condvar>,
     reload_model_on_next_use: Arc<AtomicBool>,
@@ -290,8 +288,6 @@ impl TranscriptionManager {
             app_handle: app_handle.clone(),
             current_model_id: Arc::new(Mutex::new(None)),
             last_activity: Arc::new(AtomicU64::new(Self::now_ms())),
-            shutdown_signal: Arc::new(AtomicBool::new(false)),
-            watcher_handle: Arc::new(Mutex::new(None)),
             is_loading: Arc::new(Mutex::new(false)),
             loading_condvar: Arc::new(Condvar::new()),
             reload_model_on_next_use: Arc::new(AtomicBool::new(false)),
@@ -306,16 +302,13 @@ impl TranscriptionManager {
         {
             let app_handle_cloned = app_handle.clone();
             let manager_cloned = manager.clone();
-            let shutdown_signal = manager.shutdown_signal.clone();
-            let handle = thread::spawn(move || {
+            // The watcher lives as long as the process: the manager is never
+            // dropped before exit (Tauri managed state), so a shutdown
+            // signal and join handle were unreachable code.
+            thread::spawn(move || {
                 debug!("Idle watcher thread started");
-                while !shutdown_signal.load(Ordering::Relaxed) {
+                loop {
                     thread::sleep(Duration::from_secs(10)); // Check every 10 seconds
-
-                    // Check shutdown signal again after sleep
-                    if shutdown_signal.load(Ordering::Relaxed) {
-                        break;
-                    }
 
                     let settings = get_settings(&app_handle_cloned);
                     let timeout = settings.model_unload_timeout;
@@ -368,9 +361,7 @@ impl TranscriptionManager {
                         }
                     }
                 }
-                debug!("Idle watcher thread shutting down gracefully");
             });
-            *manager.watcher_handle.lock().unwrap() = Some(handle);
         }
 
         Ok(manager)
@@ -2536,40 +2527,5 @@ mod tests {
         assert!(matches!(plan.task, Task::Transcribe));
         assert_eq!(plan.language.as_deref(), Some("es"));
         assert_eq!(plan.target_language, None);
-    }
-}
-
-impl Drop for TranscriptionManager {
-    fn drop(&mut self) {
-        // Skip shutdown unless this is the very last clone. TranscriptionManager
-        // is cloned by initiate_model_load() and the watcher thread — those
-        // clones dropping must not kill the watcher. The watcher thread holds
-        // its own clone, so onnx's strong_count is always >= 2 while the
-        // watcher is alive. When it reaches 1, only this instance remains
-        // and we can safely shut down.
-        if Arc::strong_count(&self.onnx) > 1 {
-            return;
-        }
-
-        // Signal the watcher thread to shutdown
-        self.shutdown_signal.store(true, Ordering::Relaxed);
-
-        // Wait for the thread to finish gracefully.
-        // Use match instead of unwrap to avoid panicking if the mutex is
-        // poisoned — a panic inside Drop calls abort().
-        let mut guard = match self.watcher_handle.lock() {
-            Ok(g) => g,
-            Err(e) => {
-                warn!("Recovered poisoned watcher_handle mutex during TranscriptionManager drop — a panic occurred earlier this session");
-                e.into_inner()
-            }
-        };
-        if let Some(handle) = guard.take() {
-            if let Err(e) = handle.join() {
-                warn!("Failed to join idle watcher thread: {:?}", e);
-            } else {
-                debug!("Idle watcher thread joined successfully");
-            }
-        }
     }
 }

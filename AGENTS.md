@@ -158,7 +158,7 @@ For translation contribution guidelines, see [CONTRIBUTING_TRANSLATIONS.md](CONT
 
 **Rust:**
 
-- Run `cargo fmt` and `cargo clippy` before committing
+- Run `cargo fmt` and `cargo clippy` before committing. CI runs clippy on Linux only, so check any `clippy --fix` that removes an import against the `#[cfg(target_os)]` modules that may still use it through `use super::*`
 - Handle errors explicitly (avoid unwrap in production)
 - Use descriptive names, add doc comments for public APIs
 

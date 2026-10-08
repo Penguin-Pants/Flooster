@@ -102,7 +102,6 @@ fn reconcile_cancel_shortcut(app: &AppHandle) {
     #[cfg(target_os = "linux")]
     {
         let _ = app;
-        return;
     }
 
     #[cfg(not(target_os = "linux"))]
@@ -459,17 +458,6 @@ pub fn change_keyboard_implementation_setting(
         success: true,
         reset_bindings,
     })
-}
-
-/// Get the current keyboard implementation
-#[tauri::command]
-#[specta::specta]
-pub fn get_keyboard_implementation(app: AppHandle) -> String {
-    let settings = settings::get_settings(&app);
-    match settings.keyboard_implementation {
-        KeyboardImplementation::Tauri => "tauri".to_string(),
-        KeyboardImplementation::HandyKeys => "handy_keys".to_string(),
-    }
 }
 
 // ============================================================================

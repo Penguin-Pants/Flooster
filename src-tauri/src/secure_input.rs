@@ -20,7 +20,11 @@
 
 use serde::Serialize;
 use specta::Type;
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Manager};
+// Used by the macOS implementation below through its `use super::*`; unused
+// (and so flagged by clippy) on the other platforms.
+#[cfg(target_os = "macos")]
+use tauri::Emitter;
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct SecureInputStatus {
